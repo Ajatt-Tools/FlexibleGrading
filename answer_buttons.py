@@ -132,21 +132,53 @@ def append_last_card_ease(links: list, toolbar: Toolbar):
 
     # links.append("<span id=\"last_ease\" title=\"\"></span>")
 
-
-def human_ivl(card_ivl: int) -> str:
-    if card_ivl > 0:
-        ivl = f"{card_ivl} days"
-    elif card_ivl < 0:
-        ivl = f"{card_ivl} seconds"
+def handle_due(card: Card):
+    days = card.ivl
+    months = days / (365 / 12)
+    years = days / 365
+    if years >= 1:
+        ivl = '%.1fy' % years
+    elif months >= 1:
+        ivl = '%.1fmo' % months
     else:
-        ivl = str(card_ivl)
+        ivl = '%dd' % days
+    return ivl
+
+
+def handle_learn(card: Card):
+    minutes = (card.due - time.time()) / 60
+    hours = minutes / 60
+    if hours >= 1:
+        ivl = '%.1fh' % hours
+    else:
+        ivl = '%dm' % minutes
+    return ivl
+
+
+def human_ivl(card: Card) -> str:
+    # https://github.com/ankidroid/Anki-Android/wiki/Database-Structure
+
+    ivl = "unknown"
+
+    print(card.due, card.queue, card.type, card.ivl) # TODO remove
+    if card.queue <= -2:
+        ivl = "buried"
+    elif card.queue == -1:
+        ivl = "suspended"
+    elif card.type == 2:
+        ivl = handle_due(card)
+    elif card.queue == 1 and (card.type == 3 or card.type == 1):
+        ivl = handle_learn(card)
+    elif card.queue == 3 and card.type == 3:
+        ivl = "tomorrow"
+
     return ivl
 
 
 def update_last_ease(reviewer: Reviewer, card: Card, ease: int):
     label = _(config['buttons'][ease]['label'])
     color = config['buttons'][ease]['color']
-    label = f"{label[:1]}: {human_ivl(card.ivl)}"
+    label = f"{label[:1]}: {human_ivl(card)}"
 
     reviewer.mw.toolbar.web.eval(f"""
             elem = document.getElementById("last_ease");
