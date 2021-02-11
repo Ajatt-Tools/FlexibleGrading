@@ -73,7 +73,7 @@ def answer_card(self: Reviewer, ease, _old):
     _old(self, min(self.mw.col.sched.answerButtons(self.card), ease))
 
 
-def leave_pass_fail(buttons: tuple) -> tuple:
+def only_pass_fail(buttons: tuple) -> tuple:
     edited_buttons = []
     for button in buttons:
         ease = button[0]
@@ -91,7 +91,7 @@ def filter_answer_buttons(buttons: tuple, _: Reviewer, __: Card) -> tuple:
     edited_buttons = []
 
     if config['pass_fail'] is True:
-        buttons = leave_pass_fail(buttons)
+        buttons = only_pass_fail(buttons)
 
     for button in buttons:
         ease = button[0]
