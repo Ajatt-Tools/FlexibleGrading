@@ -21,12 +21,15 @@
 import time
 from typing import Callable
 
+import aqt
 from anki.cards import Card
 from anki.hooks import wrap
 from anki.lang import _
 from aqt import mw, gui_hooks
 from aqt.reviewer import Reviewer
 from aqt.toolbar import Toolbar
+
+global_query = ""
 
 config = {
     'buttons': {
@@ -110,15 +113,50 @@ def answer_buttons(self: Reviewer, _old: Callable):
 
 
 def append_last_card_ease(links: list, toolbar: Toolbar):
-    links.append("<span id=\"last_ease\"></span>")
+    def last_ease_click_handler():
+        browser: aqt.browser = aqt.dialogs.open('Browser', mw)
+        browser.activateWindow()
+        browser.form.searchEdit.lineEdit().setText(global_query)
+        if hasattr(browser, 'onSearch'):
+            browser.onSearch()
+        else:
+            browser.onSearchActivated()
+
+    link = toolbar.create_link(
+        "last_ease",
+        "Last Ease",
+        last_ease_click_handler,
+        id="last_ease",
+    )
+    links.append(link)
+
+    # links.append("<span id=\"last_ease\" title=\"\"></span>")
 
 
-def update_last_ease(reviewer, card, ease):
+def human_ivl(card_ivl: int) -> str:
+    if card_ivl > 0:
+        ivl = f"{card_ivl} days"
+    elif card_ivl < 0:
+        ivl = f"{card_ivl} seconds"
+    else:
+        ivl = str(card_ivl)
+    return ivl
+
+
+def update_last_ease(reviewer: Reviewer, card: Card, ease: int):
+    label = _(config['buttons'][ease]['label'])
+    color = config['buttons'][ease]['color']
+    label = f"{label[:1]}: {human_ivl(card.ivl)}"
+
     reviewer.mw.toolbar.web.eval(f"""
             elem = document.getElementById("last_ease");
-            elem.innerHTML = "{config['buttons'][ease]['label']}";
-            elem.style.color = "{config['buttons'][ease]['color']}";
+            elem.innerHTML = "{label}";
+            elem.style.color = "{color}";
+            elem.style.display = "inline";
     """)
+
+    global global_query
+    global_query = f"cid:{card.id}"
 
 
 def erase_last_ease():
