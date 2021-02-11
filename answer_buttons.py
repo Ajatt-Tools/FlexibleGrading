@@ -121,6 +121,14 @@ def update_last_ease(reviewer, card, ease):
     """)
 
 
+def erase_last_ease():
+    mw.toolbar.web.eval(f"""
+            elem = document.getElementById("last_ease");
+            elem.innerHTML = "";
+            elem.style.color = "";
+    """)
+
+
 def main():
     # hooks / wraps
     Reviewer._shortcutKeys = wrap(Reviewer._shortcutKeys, add_vim_shortcuts, "around")
@@ -129,6 +137,7 @@ def main():
     gui_hooks.reviewer_will_init_answer_buttons.append(filter_answer_buttons)
     gui_hooks.top_toolbar_did_init_links.append(append_last_card_ease)
     gui_hooks.reviewer_did_answer_card.append(update_last_ease)
+    gui_hooks.reviewer_will_end.append(erase_last_ease)
 
 
 main()
