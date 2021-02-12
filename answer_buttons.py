@@ -62,7 +62,8 @@ def add_vim_shortcuts(self: Reviewer, _old):
     # Credit: https://ankiweb.net/shared/info/1197299782
     class VimShortcuts:
         _shortcuts = {
-            "u": lambda: mw.onUndo(),  # undo
+            "u": lambda: self.mw.onUndo(),  # undo
+            "i": lambda: self.mw.onEditCurrent(),  # edit
             "h": lambda: self._answerCard(1),  # fail
             "j": lambda: self._answerCard(2),  # hard
             "k": lambda: self._answerCard(3),  # normal
@@ -79,7 +80,7 @@ def add_vim_shortcuts(self: Reviewer, _old):
 
     if config['pass_fail'] is True:
         # PassFail mode. Pressing 'Hard' and 'Easy' is not allowed.
-        # '2' and '4' from the original _shortcutKeys() should be filtered as well.
+        # '2' and '4' from the original _shortcutKeys() should be filtered out as well.
         return VimShortcuts.pass_fail() + [(k, v) for k, v in _old(self) if k != '2' and k != '4']
     else:
         # Default shortcuts.
@@ -89,7 +90,7 @@ def add_vim_shortcuts(self: Reviewer, _old):
 def answer_card(self: Reviewer, ease, _old):
     # Allows answering from the front side
     if config['flexible_grading'] is True and self.state == "question":
-        self.state = 'answer'
+        self.state = "answer"
 
     # min() makes sure the original _answerCard() never skips
     _old(self, min(self.mw.col.sched.answerButtons(self.card), ease))
@@ -139,7 +140,7 @@ def wrap_buttonless_ease_row(html: str) -> str:
            f'style="' \
            f'display: flex;' \
            f'justify-content: space-between;' \
-           f'max-width: 40%;' \
+           f'max-width: 400px;' \
            f'user-select: none;"' \
            f'>{html}</div>'
 
@@ -171,6 +172,7 @@ def append_last_card_ease(links: list, toolbar: Toolbar):
         "Last Ease",
         last_ease_click_handler,
         id=LAST_EASE_ID,
+        tip="Last Ease",
     )
     links.insert(0, link)
 
