@@ -39,7 +39,7 @@ config = {
         3: {"label": "Good", "color": "green"},
         4: {"label": "Easy", "color": "blue"},
     },
-    'remove_buttons': False,
+    'remove_buttons': True,
     'prevent_clicks': True,
     'pass_fail': False,
     'flexible_grading': True,
@@ -106,9 +106,7 @@ def only_pass_fail(buttons: tuple) -> tuple:
 
 
 def filter_answer_buttons(buttons: tuple, _: Reviewer, __: Card) -> tuple:
-    if config['remove_buttons'] is True:
-        return ()
-
+    # Called by _answerButtonList, before _answerButtons is called
     edited_buttons = []
 
     if config['pass_fail'] is True:
@@ -122,12 +120,39 @@ def filter_answer_buttons(buttons: tuple, _: Reviewer, __: Card) -> tuple:
     return tuple(edited_buttons)
 
 
-def answer_buttons(self: Reviewer, _old: Callable):
-    if config['prevent_clicks'] is True:
-        html: str = _old(self)
-        return html.replace('<button', '<button disabled')
+def make_buttonless_ease_row(self: Reviewer) -> str:
+    ease_row = []
+    for ease, label in self._answerButtonList():
+        if config['color_buttons'] is True:
+            color = config['buttons'][ease]['color']
+            attrs = f' style="color: {color};"'
+        else:
+            attrs = ''
+        ease_row.append(f'<div{attrs}>{self._buttonTime(ease)}</div>')
+
+    return ''.join(ease_row)
+
+
+def wrap_buttonless_ease_row(html: str) -> str:
+    return f'<div ' \
+           f'style="' \
+           f'display: flex;' \
+           f'justify-content: space-between;' \
+           f'max-width: 40%;' \
+           f'user-select: none;"' \
+           f'>{html}</div>'
+
+
+def make_answer_buttons(self: Reviewer, _old: Callable):
+    if config['remove_buttons'] is True:
+        html = make_buttonless_ease_row(self)
+        html = wrap_buttonless_ease_row(html)
+    elif config['prevent_clicks'] is True:
+        html: str = _old(self).replace('<button', '<button disabled')
     else:
-        return _old(self)
+        html: str = _old(self)
+
+    return html
 
 
 def append_last_card_ease(links: list, toolbar: Toolbar):
@@ -177,7 +202,7 @@ def human_ivl(card: Card) -> str:
 
     ivl = "unknown"
 
-    print(card.due, card.queue, card.type, card.ivl) # TODO remove
+    print(card.due, card.queue, card.type, card.ivl)  # TODO remove
     if card.queue <= -2:
         ivl = "buried"
     elif card.queue == -1:
@@ -221,7 +246,7 @@ def main():
     # hooks / wraps
     Reviewer._shortcutKeys = wrap(Reviewer._shortcutKeys, add_vim_shortcuts, "around")
     Reviewer._answerCard = wrap(Reviewer._answerCard, answer_card, "around")
-    Reviewer._answerButtons = wrap(Reviewer._answerButtons, answer_buttons, "around")
+    Reviewer._answerButtons = wrap(Reviewer._answerButtons, make_answer_buttons, "around")
     gui_hooks.reviewer_will_init_answer_buttons.append(filter_answer_buttons)
     gui_hooks.top_toolbar_did_init_links.append(append_last_card_ease)
     gui_hooks.reviewer_did_answer_card.append(update_last_ease)
