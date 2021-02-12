@@ -59,13 +59,30 @@ def edit_button_label(ease: int, label: str = None) -> str:
 
 def add_vim_shortcuts(self: Reviewer, _old):
     # Credit: https://ankiweb.net/shared/info/1197299782
-    return [
-               ("h", lambda: self._answerCard(1)),  # fail
-               ("j", lambda: self._answerCard(2)),  # hard
-               ("k", lambda: self._answerCard(3)),  # normal
-               ("l", lambda: self._answerCard(4)),  # easy
-               ("u", lambda: mw.onUndo()),  # undo
-           ] + _old(self)
+    class VimShortcuts:
+        _shortcuts = {
+            "u": lambda: mw.onUndo(),  # undo
+            "h": lambda: self._answerCard(1),  # fail
+            "j": lambda: self._answerCard(2),  # hard
+            "k": lambda: self._answerCard(3),  # normal
+            "l": lambda: self._answerCard(4),  # easy
+        }
+
+        @classmethod
+        def default(cls):
+            return [(k, v) for k, v in cls._shortcuts.items()]
+
+        @classmethod
+        def pass_fail(cls):
+            return [(k, v) for k, v in cls._shortcuts.items() if k != 'j' and k != 'l']
+
+    if config['pass_fail'] is True:
+        # PassFail mode. Pressing 'Hard' and 'Easy' is not allowed.
+        # '2' and '4' from the original _shortcutKeys() should be filtered as well.
+        return VimShortcuts.pass_fail() + [(k, v) for k, v in _old(self) if k != '2' and k != '4']
+    else:
+        # Default shortcuts.
+        return VimShortcuts.default() + _old(self)
 
 
 def answer_card(self: Reviewer, ease, _old):
