@@ -244,15 +244,25 @@ def erase_last_ease():
 
 
 def main():
-    # hooks / wraps
+    # Add vim answer shortcuts
     Reviewer._shortcutKeys = wrap(Reviewer._shortcutKeys, add_vim_shortcuts, "around")
+
+    # Activate flexible grading, if enabled by the user
     Reviewer._answerCard = wrap(Reviewer._answerCard, answer_card, "around")
+
+    # Create html layout for the answer buttons.
+    # Buttons are either removed, disabled or left unchanged depending on config options.
     Reviewer._answerButtons = wrap(Reviewer._answerButtons, make_answer_buttons, "around")
+
+    # Edit (ease, label) tuples which are used to create answer buttons later.
+    # Depending on the settings labels are colored and Hard and Easy buttons are removed.
     gui_hooks.reviewer_will_init_answer_buttons.append(filter_answer_buttons)
+
+    # When Reviewer is open, print the last card's stats on the top toolbar.
     gui_hooks.top_toolbar_did_init_links.append(append_last_card_ease)
     gui_hooks.reviewer_did_answer_card.append(update_last_ease)
 
-    # Don't show the last ease stats when Reviewer is not open.
+    # Don't show the last card's stats when Reviewer is not open.
     gui_hooks.reviewer_will_end.append(erase_last_ease)
     gui_hooks.main_window_did_init.append(erase_last_ease)
 
