@@ -34,10 +34,11 @@ LAST_EASE_ID = "last_ease"
 
 config = {
     'buttons': {
-        1: {"label": "Again", "color": "red"},
-        2: {"label": "Hard", "color": "orange"},
-        3: {"label": "Good", "color": "green"},
-        4: {"label": "Easy", "color": "blue"},
+        # colors https://www.w3schools.com/colors/colors_groups.asp
+        1: {"label": "Again", "color": "FireBrick"},
+        2: {"label": "Hard", "color": "DarkGoldenRod"},
+        3: {"label": "Good", "color": "ForestGreen"},
+        4: {"label": "Easy", "color": "DodgerBlue"},
     },
     'remove_buttons': True,
     'prevent_clicks': True,
