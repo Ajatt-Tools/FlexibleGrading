@@ -30,6 +30,7 @@ from aqt.reviewer import Reviewer
 from aqt.toolbar import Toolbar
 
 global_query = ""
+LAST_EASE_ID = "last_ease"
 
 config = {
     'buttons': {
@@ -123,14 +124,13 @@ def append_last_card_ease(links: list, toolbar: Toolbar):
             browser.onSearchActivated()
 
     link = toolbar.create_link(
-        "last_ease",
+        LAST_EASE_ID,
         "Last Ease",
         last_ease_click_handler,
-        id="last_ease",
+        id=LAST_EASE_ID,
     )
-    links.append(link)
+    links.insert(0, link)
 
-    # links.append("<span id=\"last_ease\" title=\"\"></span>")
 
 def handle_due(card: Card):
     days = card.ivl
@@ -181,7 +181,7 @@ def update_last_ease(reviewer: Reviewer, card: Card, ease: int):
     label = f"{label[:1]}: {human_ivl(card)}"
 
     reviewer.mw.toolbar.web.eval(f"""
-            elem = document.getElementById("last_ease");
+            elem = document.getElementById("{LAST_EASE_ID}");
             elem.innerHTML = "{label}";
             elem.style.color = "{color}";
             elem.style.display = "inline";
@@ -193,9 +193,10 @@ def update_last_ease(reviewer: Reviewer, card: Card, ease: int):
 
 def erase_last_ease():
     mw.toolbar.web.eval(f"""
-            elem = document.getElementById("last_ease");
+            elem = document.getElementById("{LAST_EASE_ID}");
             elem.innerHTML = "";
             elem.style.color = "";
+            elem.style.display = "none";
     """)
 
 
@@ -207,7 +208,10 @@ def main():
     gui_hooks.reviewer_will_init_answer_buttons.append(filter_answer_buttons)
     gui_hooks.top_toolbar_did_init_links.append(append_last_card_ease)
     gui_hooks.reviewer_did_answer_card.append(update_last_ease)
+
+    # Don't show the last ease stats when Reviewer is not open.
     gui_hooks.reviewer_will_end.append(erase_last_ease)
+    gui_hooks.main_window_did_init.append(erase_last_ease)
 
 
 main()
