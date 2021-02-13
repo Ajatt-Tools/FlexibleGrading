@@ -18,49 +18,15 @@
 #
 # Any modifications to this file must keep this entire header intact.
 
-import time
 from typing import Callable
 
-import aqt
 from anki.cards import Card
-from anki.consts import *
 from anki.hooks import wrap
-from anki.lang import _
-from aqt import mw, gui_hooks
+from aqt import gui_hooks
 from aqt.reviewer import Reviewer
-from aqt.toolbar import Toolbar
 
-global_query = ""
-LAST_EASE_ID = "last_ease"
-
-
-class ConfigManager:
-    _map = {
-        BUTTON_ONE: "Again",
-        BUTTON_TWO: "Hard",
-        BUTTON_THREE: "Good",
-        BUTTON_FOUR: "Easy",
-    }
-
-    def __init__(self):
-        self._config = mw.addonManager.getConfig(__name__)
-
-    def get_color(self, ease: int) -> str:
-        return self._config['colors'][self._map[ease]]
-
-    @classmethod
-    def get_label(cls, ease: int) -> str:
-        return _(cls._map[ease])
-
-    def __getitem__(self, key):
-        assert key != 'colors' and key != 'buttons'
-        return self._config[key]
-
-    def write_config(self):
-        mw.addonManager.writeConfig(__name__, self._config)
-
-
-config = ConfigManager()
+from .config import config
+from .toolbar import LastEase
 
 
 def add_vim_shortcuts(self: Reviewer, _old: Callable):
@@ -167,94 +133,6 @@ def make_answer_buttons(self: Reviewer, _old: Callable):
     return html
 
 
-def append_last_card_ease(links: list, toolbar: Toolbar):
-    def last_ease_click_handler():
-        browser: aqt.browser = aqt.dialogs.open('Browser', mw)
-        browser.activateWindow()
-        browser.form.searchEdit.lineEdit().setText(global_query)
-        if hasattr(browser, 'onSearch'):
-            browser.onSearch()
-        else:
-            browser.onSearchActivated()
-
-    link = toolbar.create_link(
-        LAST_EASE_ID,
-        "Last Ease",
-        last_ease_click_handler,
-        id=LAST_EASE_ID,
-        tip="Last Ease",
-    )
-    links.insert(0, link)
-
-
-def handle_due(card: Card):
-    days = card.ivl
-    months = days / (365 / 12)
-    years = days / 365
-    if years >= 1:
-        ivl = '%.1fy' % years
-    elif months >= 1:
-        ivl = '%.1fmo' % months
-    else:
-        ivl = '%dd' % days
-    return ivl
-
-
-def handle_learn(card: Card):
-    minutes = (card.due - time.time()) / 60
-    hours = minutes / 60
-    if hours >= 1:
-        ivl = '%.1fh' % hours
-    else:
-        ivl = '%dm' % minutes
-    return ivl
-
-
-def human_ivl(card: Card) -> str:
-    # https://github.com/ankidroid/Anki-Android/wiki/Database-Structure
-
-    ivl = "unknown"
-
-    print(card.due, card.queue, card.type, card.ivl)  # TODO remove
-    if card.queue <= -2:
-        ivl = "buried"
-    elif card.queue == -1:
-        ivl = "suspended"
-    elif card.type == 2:
-        ivl = handle_due(card)
-    elif card.queue == 1 and (card.type == 3 or card.type == 1):
-        ivl = handle_learn(card)
-    elif card.queue == 3 and card.type == 3:
-        ivl = "tomorrow"
-
-    return ivl
-
-
-def update_last_ease(reviewer: Reviewer, card: Card, ease: int):
-    label = config.get_label(ease)
-    color = config.get_color(ease)
-    label = f"{label[:1]}: {human_ivl(card)}"
-
-    reviewer.mw.toolbar.web.eval(f"""
-            elem = document.getElementById("{LAST_EASE_ID}");
-            elem.innerHTML = "{label}";
-            elem.style.color = "{color}";
-            elem.style.display = "inline";
-    """)
-
-    global global_query
-    global_query = f"cid:{card.id}"
-
-
-def erase_last_ease():
-    mw.toolbar.web.eval(f"""
-            elem = document.getElementById("{LAST_EASE_ID}");
-            elem.innerHTML = "";
-            elem.style.color = "";
-            elem.style.display = "none";
-    """)
-
-
 def main():
     # Add vim answer shortcuts
     Reviewer._shortcutKeys = wrap(Reviewer._shortcutKeys, add_vim_shortcuts, "around")
@@ -271,12 +149,12 @@ def main():
     gui_hooks.reviewer_will_init_answer_buttons.append(filter_answer_buttons)
 
     # When Reviewer is open, print the last card's stats on the top toolbar.
-    gui_hooks.top_toolbar_did_init_links.append(append_last_card_ease)
-    gui_hooks.reviewer_did_answer_card.append(update_last_ease)
+    gui_hooks.top_toolbar_did_init_links.append(LastEase.append_link)
+    gui_hooks.reviewer_did_answer_card.append(LastEase.update)
 
     # Don't show the last card's stats when Reviewer is not open.
-    gui_hooks.reviewer_will_end.append(erase_last_ease)
-    gui_hooks.main_window_did_init.append(erase_last_ease)
+    gui_hooks.reviewer_will_end.append(LastEase.hide)
+    gui_hooks.main_window_did_init.append(LastEase.hide)
 
 
 main()
