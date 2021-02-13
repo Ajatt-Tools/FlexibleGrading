@@ -1,0 +1,13 @@
+{
+  "colors": {
+    "Again": "FireBrick",
+    "Hard": "DarkGoldenRod",
+    "Good": "ForestGreen",
+    "Easy": "DodgerBlue"
+  },
+  "remove_buttons": true,
+  "prevent_clicks": true,
+  "pass_fail": false,
+  "flexible_grading": true,
+  "color_buttons": true
+}

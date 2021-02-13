@@ -23,6 +23,7 @@ from typing import Callable
 
 import aqt
 from anki.cards import Card
+from anki.consts import *
 from anki.hooks import wrap
 from anki.lang import _
 from aqt import mw, gui_hooks
@@ -32,33 +33,37 @@ from aqt.toolbar import Toolbar
 global_query = ""
 LAST_EASE_ID = "last_ease"
 
-config = {
-    'buttons': {
-        # colors https://www.w3schools.com/colors/colors_groups.asp
-        1: {"label": "Again", "color": "FireBrick"},
-        2: {"label": "Hard", "color": "DarkGoldenRod"},
-        3: {"label": "Good", "color": "ForestGreen"},
-        4: {"label": "Easy", "color": "DodgerBlue"},
-    },
-    'remove_buttons': True,
-    'prevent_clicks': True,
-    'pass_fail': False,
-    'flexible_grading': True,
-    'color_buttons': True,
-}
+
+class ConfigManager:
+    _map = {
+        BUTTON_ONE: "Again",
+        BUTTON_TWO: "Hard",
+        BUTTON_THREE: "Good",
+        BUTTON_FOUR: "Easy",
+    }
+
+    def __init__(self):
+        self._config = mw.addonManager.getConfig(__name__)
+
+    def get_color(self, ease: int) -> str:
+        return self._config['colors'][self._map[ease]]
+
+    @classmethod
+    def get_label(cls, ease: int) -> str:
+        return _(cls._map[ease])
+
+    def __getitem__(self, key):
+        assert key != 'colors' and key != 'buttons'
+        return self._config[key]
+
+    def write_config(self):
+        mw.addonManager.writeConfig(__name__, self._config)
 
 
-def edit_button_label(ease: int, label: str = None) -> str:
-    if label is None:
-        label = _(config['buttons'][ease]['label'])
-
-    if config['color_buttons'] is True:
-        label = f"<font color=\"{config['buttons'][ease]['color']}\">{label}</font>"
-
-    return label
+config = ConfigManager()
 
 
-def add_vim_shortcuts(self: Reviewer, _old):
+def add_vim_shortcuts(self: Reviewer, _old: Callable):
     # Credit: https://ankiweb.net/shared/info/1197299782
     class VimShortcuts:
         _shortcuts = {
@@ -87,7 +92,7 @@ def add_vim_shortcuts(self: Reviewer, _old):
         return VimShortcuts.default() + _old(self)
 
 
-def answer_card(self: Reviewer, ease, _old):
+def answer_card(self: Reviewer, ease, _old: Callable):
     # Allows answering from the front side
     if config['flexible_grading'] is True and self.state == "question":
         self.state = "answer"
@@ -107,26 +112,31 @@ def only_pass_fail(buttons: tuple) -> tuple:
     return tuple(edited_buttons)
 
 
+def apply_label_colors(buttons: tuple) -> tuple:
+    def color_label(ease, label):
+        label = f"<font color=\"{config.get_color(ease)}\">{label}</font>"
+        return ease, label
+
+    edited_buttons = [color_label(button[0], button[1]) for button in buttons]
+    return tuple(edited_buttons)
+
+
 def filter_answer_buttons(buttons: tuple, _: Reviewer, __: Card) -> tuple:
     # Called by _answerButtonList, before _answerButtons is called
-    edited_buttons = []
-
     if config['pass_fail'] is True:
         buttons = only_pass_fail(buttons)
 
-    for button in buttons:
-        ease = button[0]
-        label = button[1]
-        edited_buttons.append((ease, edit_button_label(ease, label)))
+    if config['color_buttons'] is True:
+        buttons = apply_label_colors(buttons)
 
-    return tuple(edited_buttons)
+    return buttons
 
 
 def make_buttonless_ease_row(self: Reviewer) -> str:
     ease_row = []
     for ease, label in self._answerButtonList():
         if config['color_buttons'] is True:
-            color = config['buttons'][ease]['color']
+            color = config.get_color(ease)
             attrs = f' style="color: {color};"'
         else:
             attrs = ''
@@ -221,8 +231,8 @@ def human_ivl(card: Card) -> str:
 
 
 def update_last_ease(reviewer: Reviewer, card: Card, ease: int):
-    label = _(config['buttons'][ease]['label'])
-    color = config['buttons'][ease]['color']
+    label = config.get_label(ease)
+    color = config.get_color(ease)
     label = f"{label[:1]}: {human_ivl(card)}"
 
     reviewer.mw.toolbar.web.eval(f"""
