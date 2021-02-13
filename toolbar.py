@@ -72,25 +72,26 @@ def human_ivl(card: Card) -> str:
 
 
 class LastEase:
-    html_link_id = "last_ease"
-    browser_query = ""
+    _html_link_id = "last_ease"
+    _browser_query = ""
+
+    @classmethod
+    def open_last_card(cls):
+        browser: aqt.browser = aqt.dialogs.open('Browser', mw)
+        browser.activateWindow()
+        browser.form.searchEdit.lineEdit().setText(cls._browser_query)
+        if hasattr(browser, 'onSearch'):
+            browser.onSearch()
+        else:
+            browser.onSearchActivated()
 
     @classmethod
     def append_link(cls, links: list, toolbar: Toolbar) -> None:
-        def last_ease_click_handler():
-            browser: aqt.browser = aqt.dialogs.open('Browser', mw)
-            browser.activateWindow()
-            browser.form.searchEdit.lineEdit().setText(cls.browser_query)
-            if hasattr(browser, 'onSearch'):
-                browser.onSearch()
-            else:
-                browser.onSearchActivated()
-
         link = toolbar.create_link(
-            cls.html_link_id,
+            cls._html_link_id,
             "Last Ease",
-            last_ease_click_handler,
-            id=cls.html_link_id,
+            cls.open_last_card,
+            id=cls._html_link_id,
             tip="Last Ease",
         )
         links.insert(0, link)
@@ -102,18 +103,18 @@ class LastEase:
         label = f"{label[:1]}: {human_ivl(card)}"
 
         reviewer.mw.toolbar.web.eval(f"""
-                elem = document.getElementById("{cls.html_link_id}");
+                elem = document.getElementById("{cls._html_link_id}");
                 elem.innerHTML = "{label}";
                 elem.style.color = "{color}";
                 elem.style.display = "inline";
         """)
 
-        cls.browser_query = f"cid:{card.id}"
+        cls._browser_query = f"cid:{card.id}"
 
     @classmethod
     def hide(cls) -> None:
         mw.toolbar.web.eval(f"""
-                elem = document.getElementById("{cls.html_link_id}");
+                elem = document.getElementById("{cls._html_link_id}");
                 elem.innerHTML = "";
                 elem.style.color = "";
                 elem.style.display = "none";

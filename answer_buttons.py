@@ -33,12 +33,13 @@ def add_vim_shortcuts(self: Reviewer, _old: Callable):
     # Credit: https://ankiweb.net/shared/info/1197299782
     class VimShortcuts:
         _shortcuts = {
-            "u": lambda: self.mw.onUndo(),  # undo
-            "i": lambda: self.mw.onEditCurrent(),  # edit
             "h": lambda: self._answerCard(1),  # fail
             "j": lambda: self._answerCard(2),  # hard
             "k": lambda: self._answerCard(3),  # normal
             "l": lambda: self._answerCard(4),  # easy
+            "u": self.mw.onUndo,  # undo
+            "i": self.mw.onEditCurrent,  # edit
+            ":": LastEase.open_last_card,  # last card
         }
 
         @classmethod
