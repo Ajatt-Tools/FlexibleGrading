@@ -7,7 +7,7 @@
   },
   "remove_buttons": true,
   "prevent_clicks": true,
-  "pass_fail": false,
+  "pass_fail": true,
   "flexible_grading": true,
   "color_buttons": true
 }

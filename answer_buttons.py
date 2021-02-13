@@ -83,7 +83,7 @@ def apply_label_colors(buttons: tuple) -> tuple:
         label = f"<font color=\"{config.get_color(ease)}\">{label}</font>"
         return ease, label
 
-    edited_buttons = [color_label(button[0], button[1]) for button in buttons]
+    edited_buttons = [color_label(*button) for button in buttons]
     return tuple(edited_buttons)
 
 

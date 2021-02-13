@@ -19,6 +19,7 @@
 # Any modifications to this file must keep this entire header intact.
 
 from anki.consts import *
+from anki.lang import _
 from aqt import mw
 
 

@@ -57,7 +57,6 @@ def human_ivl(card: Card) -> str:
 
     ivl = "unknown"
 
-    print(card.due, card.queue, card.type, card.ivl)  # TODO remove
     if card.queue <= -2:
         ivl = "buried"
     elif card.queue == -1:
@@ -66,7 +65,7 @@ def human_ivl(card: Card) -> str:
         ivl = handle_due(card)
     elif card.queue == 1 and (card.type == 3 or card.type == 1):
         ivl = handle_learn(card)
-    elif card.queue == 3 and card.type == 3:
+    elif card.queue == 3 and (card.type == 3 or card.type == 1):
         ivl = "tomorrow"
 
     return ivl
