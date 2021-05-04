@@ -82,6 +82,7 @@ class SettingsMenuUI(QDialog):
         self.community_button = QPushButton("Join our community")
         self.donate_button = QPushButton("Donate")
         self.setLayout(self.setup_layout())
+        self.add_tooltips()
 
     def setup_layout(self) -> QBoxLayout:
         layout = QVBoxLayout(self)
@@ -173,6 +174,21 @@ class SettingsMenuUI(QDialog):
 
         self.community_button.setIcon(QIcon(chat_icon_path))
         self.donate_button.setIcon(QIcon(donate_icon_path))
+
+    def add_tooltips(self):
+        self.toggleables['pass_fail'].setToolTip(
+            '"Hard" and "Easy" buttons will be hidden.'
+        )
+        self.toggleables['flexible_grading'].setToolTip(
+            "Grade cards from their front side\nwithout having to reveal the answer."
+        )
+        self.toggleables['remove_buttons'].setToolTip(
+            "Remove answer buttons.\nOnly the corresponding intervals will be visible."
+        )
+        self.toggleables['prevent_clicks'].setToolTip(
+            "Make answer buttons disabled.\n"
+            "Disabled buttons are visible but unusable and un-clickable."
+        )
 
 
 class SettingsMenuDialog(SettingsMenuUI):
