@@ -43,7 +43,10 @@ This software is licensed under <a href="{GITHUB}/FlexibleGrading/blob/main/LICE
 Source code is available on <a href="{GITHUB}/FlexibleGrading">GitHub</a>.
 </p>
 <p>For the list of colors, see <a href="https://www.w3schools.com/colors/colors_groups.asp">w3schools.com</a>.</p>
-<p>A big thanks to all the people who donated to make this project possible.</p>
+<p>
+A big thanks to all the people who donated to make this project possible
+and <a href="https://www.youtube.com/c/MATTvsJapan">mattvsjapan</a> for the idea for this add-on.
+</p>
 """
 DONATE_LINK = "https://tatsumoto-ren.github.io/blog/donating-to-tatsumoto.html"
 COMMUNITY_LINK = "https://tatsumoto-ren.github.io/blog/join-our-community.html"
