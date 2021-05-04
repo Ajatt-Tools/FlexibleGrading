@@ -59,6 +59,8 @@ def make_color_line_edits() -> Dict[str, QLineEdit]:
 def make_toggleables() -> Dict[str, QCheckBox]:
     d = {}
     for toggleable in config.get_toggleables():
+        if toggleable == 'color_buttons':
+            continue
         d[toggleable] = QCheckBox(toggleable.replace('_', ' ').capitalize())
         d[toggleable].setChecked(config[toggleable])
     return d
@@ -71,6 +73,7 @@ class SettingsMenuUI(QDialog):
         self.setMinimumSize(480, 320)
         self.colors = make_color_line_edits()
         self.toggleables = make_toggleables()
+        self.color_buttons_gbox = QGroupBox("Color buttons")
         self.ok_button = QPushButton("Ok")
         self.cancel_button = QPushButton("Cancel")
         self.community_button = QPushButton("Join our community")
@@ -100,13 +103,14 @@ class SettingsMenuUI(QDialog):
     def make_settings_layout(self) -> QBoxLayout:
         layout = QVBoxLayout()
         layout.addWidget(self.make_button_colors_group())
-        layout.addWidget(self.make_toggleables_group())
+        layout.addWidget(self.make_buttons_group())
+        layout.addWidget(self.make_features_group())
         return layout
 
     def make_button_colors_group(self) -> QGroupBox:
-        gbox = QGroupBox("Colors")
-        # gbox.setCheckable(True)
-        # gbox.setChecked(False)
+        gbox = self.color_buttons_gbox
+        gbox.setCheckable(True)
+        gbox.setChecked(config['color_buttons'])
         grid = QGridLayout()
         for y_index, label in enumerate(self.colors.keys()):
             grid.addWidget(QLabel(label), y_index, 0)
@@ -115,11 +119,19 @@ class SettingsMenuUI(QDialog):
         gbox.setLayout(grid)
         return gbox
 
-    def make_toggleables_group(self) -> QGroupBox:
-        gbox = QGroupBox("Toggleables")
-        layout = QVBoxLayout()
-        for _, checkbox in self.toggleables.items():
-            layout.addWidget(checkbox)
+    def make_buttons_group(self) -> QGroupBox:
+        gbox = QGroupBox("Buttons")
+        layout = QHBoxLayout()
+        layout.addWidget(self.toggleables['remove_buttons'])
+        layout.addWidget(self.toggleables['prevent_clicks'])
+        gbox.setLayout(layout)
+        return gbox
+
+    def make_features_group(self) -> QGroupBox:
+        gbox = QGroupBox("Features")
+        layout = QHBoxLayout()
+        layout.addWidget(self.toggleables['pass_fail'])
+        layout.addWidget(self.toggleables['flexible_grading'])
         gbox.setLayout(layout)
         return gbox
 
@@ -152,8 +164,9 @@ class SettingsMenuUI(QDialog):
         return layout
 
     def add_button_icons(self):
-        chat_icon_path = os.path.join(os.path.dirname(__file__), 'img', 'element.svg')
-        donate_icon_path = os.path.join(os.path.dirname(__file__), 'img', 'patreon_logo.svg')
+        img_dir = os.path.join(os.path.dirname(__file__), 'img')
+        chat_icon_path = os.path.join(img_dir, 'element.svg')
+        donate_icon_path = os.path.join(img_dir, 'patreon_logo.svg')
 
         self.community_button.setIcon(QIcon(chat_icon_path))
         self.donate_button.setIcon(QIcon(donate_icon_path))
@@ -171,6 +184,7 @@ class SettingsMenuDialog(SettingsMenuUI):
         self.donate_button.clicked.connect(lambda: openLink(DONATE_LINK))
 
     def on_confirm(self):
+        config['color_buttons'] = self.color_buttons_gbox.isChecked()
         for label, lineedit in self.colors.items():
             config.set_color(label, lineedit.text())
         for key, checkbox in self.toggleables.items():
@@ -180,6 +194,7 @@ class SettingsMenuDialog(SettingsMenuUI):
 
 
 def on_open_settings():
+    mw.moveToState("deckBrowser")
     dialog = SettingsMenuDialog(mw)
     dialog.exec_()
 
