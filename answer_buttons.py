@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 # Any modifications to this file must keep this entire header intact.
-
+import json
 from typing import Callable
 
 from anki.cards import Card
@@ -134,6 +134,42 @@ def make_answer_buttons(self: Reviewer, _old: Callable) -> str:
     return html
 
 
+def get_max_time(self: Reviewer) -> float:
+    return self.card.timeLimit() / 1000 if self.card.shouldShowTimer() else 0
+
+
+def get_front_css() -> str:
+    colors = config.get_colors()
+    return """
+    <style>
+    .fside_style_override {
+        padding: 5px 5px 0px;
+    }
+    .fside_style_override .new-count {
+        color: %s;
+    }
+    .fside_style_override .learn-count {
+        color: %s;
+    }
+    .fside_style_override .review-count {
+        color: %s;
+    }
+    </style>
+    """ % (colors['Easy'], colors['Hard'], colors['Good'])
+
+
+def make_frontside_answer_buttons(self: Reviewer, _old: Callable) -> None:
+    if config['remove_buttons'] is True:
+        if not self.typeCorrect:
+            self.bottom.web.setFocus()
+        middle = get_front_css() + '<div class="fside_style_override">%s</div>' % self._remaining()
+
+        self.bottom.web.eval("showQuestion(%s,%d);" % (json.dumps(middle), get_max_time(self)))
+        self.bottom.web.adjustHeightToFit()
+    else:
+        _old(self)
+
+
 def main():
     # Add vim answer shortcuts
     Reviewer._shortcutKeys = wrap(Reviewer._shortcutKeys, add_vim_shortcuts, "around")
@@ -144,6 +180,9 @@ def main():
     # Create html layout for the answer buttons.
     # Buttons are either removed, disabled or left unchanged depending on config options.
     Reviewer._answerButtons = wrap(Reviewer._answerButtons, make_answer_buttons, "around")
+
+    # Wrap front side button(s).
+    Reviewer._showAnswerButton = wrap(Reviewer._showAnswerButton, make_frontside_answer_buttons, "around")
 
     # Edit (ease, label) tuples which are used to create answer buttons later.
     # Depending on the settings labels are colored and Hard and Easy buttons are removed.
