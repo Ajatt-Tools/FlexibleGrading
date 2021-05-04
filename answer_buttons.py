@@ -102,11 +102,7 @@ def filter_answer_buttons(buttons: tuple, _: Reviewer, __: Card) -> tuple:
 def make_buttonless_ease_row(self: Reviewer) -> str:
     ease_row = []
     for ease, label in self._answerButtonList():
-        if config['color_buttons'] is True:
-            color = config.get_color(ease)
-            attrs = f' style="color: {color};"'
-        else:
-            attrs = ''
+        attrs = f' style="color: {config.get_color(ease)};"' if config['color_buttons'] is True else ''
         ease_row.append(f'<div{attrs}>{self._buttonTime(ease)}</div>')
 
     return ''.join(ease_row)
