@@ -156,6 +156,3 @@ def main():
     # Don't show the last card's stats when Reviewer is not open.
     gui_hooks.reviewer_will_end.append(LastEase.hide)
     gui_hooks.main_window_did_init.append(LastEase.hide)
-
-
-main()

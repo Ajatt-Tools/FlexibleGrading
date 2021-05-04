@@ -41,9 +41,22 @@ class ConfigManager:
     def get_label(cls, ease: int) -> str:
         return _(cls._map[ease])
 
-    def __getitem__(self, key):
+    def __getitem__(self, key) -> bool:
         assert key != 'colors' and key != 'buttons'
         return self._config[key]
+
+    def __setitem__(self, key, value):
+        assert key != 'colors' and key != 'buttons'
+        self._config[key] = value
+
+    def get_buttons(self) -> Dict[str, str]:
+        return self._config['colors']
+
+    def get_toggleables(self):
+        return (key for key in self._config.keys() if key != 'colors')
+
+    def set_color(self, btn_label: str, color: str):
+        self._config['colors'][btn_label] = color
 
     def write_config(self):
         mw.addonManager.writeConfig(__name__, self._config)

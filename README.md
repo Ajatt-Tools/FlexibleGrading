@@ -80,9 +80,7 @@ The following fingers are used:
 
 ## Configuration
 
-To configure the add-on open the Anki Add-on Menu
-via `Tools` > `Add-ons` and select `AJT Flexible Grading`.
-Then click the `Config` button on the right-side of the screen.
+To configure the add-on select `Tools` > `AJT Flexible Grading Options...`.
 
 The most optimal settings come out of the box:
 
