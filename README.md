@@ -1,6 +1,6 @@
 # AJT Flexible Grading
 
-[![Rate on AnkiWeb](https://glutanimate.com/logos/ankiweb-rate.svg)](https://ankiweb.net/shared/info/xxxxx)
+[![Rate on AnkiWeb](https://glutanimate.com/logos/ankiweb-rate.svg)](https://ankiweb.net/shared/info/1715096333)
 [![Chat](https://img.shields.io/badge/chat-join-green)](https://tatsumoto-ren.github.io/blog/join-our-community.html)
 [![Channel](https://shields.io/badge/channel-subscribe-blue?logo=telegram&color=3faee8)](https://t.me/ajatt_tools)
 [![Patreon](https://img.shields.io/badge/patreon-support-orange)](https://www.patreon.com/bePatron?u=43555128)
@@ -50,7 +50,7 @@ It is possible to click on it and bring up the Anki browser with the card select
 
 ## Installation
 
-Install from [AnkiWeb](https://ankiweb.net/shared/info/xxxxxx), or manually with `git`:
+Install from [AnkiWeb](https://ankiweb.net/shared/info/1715096333), or manually with `git`:
 
 ```
 $ git clone 'https://github.com/Ajatt-Tools/FlexibleGrading.git' ~/.local/share/Anki2/addons21/FlexibleGrading
