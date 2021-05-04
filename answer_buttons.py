@@ -122,7 +122,7 @@ def wrap_buttonless_ease_row(html: str) -> str:
            f'>{html}</div>'
 
 
-def make_answer_buttons(self: Reviewer, _old: Callable):
+def make_answer_buttons(self: Reviewer, _old: Callable) -> str:
     if config['remove_buttons'] is True:
         html = make_buttonless_ease_row(self)
         html = wrap_buttonless_ease_row(html)

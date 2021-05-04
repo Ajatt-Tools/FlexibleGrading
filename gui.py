@@ -147,14 +147,14 @@ class SettingsMenuUI(QDialog):
         layout.addStretch()
         return layout
 
-    def make_about_layout(self):
+    def make_about_layout(self) -> QBoxLayout:
         layout = QVBoxLayout()
         layout.addWidget(self.make_about_text())
         layout.addLayout(self.make_social_buttons())
         return layout
 
     @staticmethod
-    def make_about_text():
+    def make_about_text() -> QTextBrowser:
         textedit = QTextBrowser()
         textedit.setReadOnly(True)
         textedit.insertHtml(ABOUT_MSG)
