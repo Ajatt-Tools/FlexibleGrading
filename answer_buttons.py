@@ -108,14 +108,21 @@ def make_buttonless_ease_row(self: Reviewer) -> str:
     return ''.join(ease_row)
 
 
+def get_ease_row_css() -> str:
+    return """
+    <style>
+    .ease_row {
+        display: flex;
+        justify-content: space-between;
+        max-width: 400px;
+        user-select: none;
+    }
+    </style>
+    """
+
+
 def wrap_buttonless_ease_row(html: str) -> str:
-    return f'<div ' \
-           f'style="' \
-           f'display: flex;' \
-           f'justify-content: space-between;' \
-           f'max-width: 400px;' \
-           f'user-select: none;"' \
-           f'>{html}</div>'
+    return get_ease_row_css() + f'<div class="ease_row">{html}</div>'
 
 
 def make_answer_buttons(self: Reviewer, _old: Callable) -> str:
