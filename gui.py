@@ -54,7 +54,7 @@ COMMUNITY_LINK = "https://tatsumoto-ren.github.io/blog/join-our-community.html"
 
 def make_color_line_edits() -> Dict[str, QLineEdit]:
     d = {}
-    for label, color in config.get_buttons().items():
+    for label, color in config.get_colors().items():
         d[label] = QLineEdit(color)
     return d
 

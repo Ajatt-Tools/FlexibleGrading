@@ -37,6 +37,9 @@ class ConfigManager:
     def get_color(self, ease: int) -> str:
         return self._config['colors'][self._map[ease]]
 
+    def get_colors(self) -> Dict[str, str]:
+        return self._config['colors']
+
     @classmethod
     def get_label(cls, ease: int) -> str:
         return _(cls._map[ease])
@@ -48,9 +51,6 @@ class ConfigManager:
     def __setitem__(self, key, value):
         assert key != 'colors' and key != 'buttons'
         self._config[key] = value
-
-    def get_buttons(self) -> Dict[str, str]:
-        return self._config['colors']
 
     def get_toggleables(self):
         return (key for key in self._config.keys() if key != 'colors')
