@@ -82,6 +82,7 @@ class SettingsMenuUI(QDialog):
         self.community_button = QPushButton("Join our community")
         self.donate_button = QPushButton("Donate")
         self.setLayout(self.setup_layout())
+        self.add_button_icons()
         self.add_tooltips()
 
     def setup_layout(self) -> QBoxLayout:
@@ -161,7 +162,6 @@ class SettingsMenuUI(QDialog):
         return textedit
 
     def make_social_buttons(self) -> QHBoxLayout:
-        self.add_button_icons()
         layout = QHBoxLayout()
         layout.addWidget(self.community_button)
         layout.addWidget(self.donate_button)
