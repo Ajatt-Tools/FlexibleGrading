@@ -128,12 +128,16 @@ def wrap_buttonless_ease_row(html: str) -> str:
     return get_ease_row_css() + f'<div class="ease_row">{html}</div>'
 
 
-def make_answer_buttons(self: Reviewer, _old: Callable) -> str:
+def disable_buttons(html: str) -> str:
+    return html.replace('<button', '<button disabled')
+
+
+def make_backside_answer_buttons(self: Reviewer, _old: Callable) -> str:
     if config['remove_buttons'] is True:
         html = make_buttonless_ease_row(self)
         html = wrap_buttonless_ease_row(html)
     elif config['prevent_clicks'] is True:
-        html: str = _old(self).replace('<button', '<button disabled')
+        html: str = disable_buttons(_old(self))
     else:
         html: str = _old(self)
 
