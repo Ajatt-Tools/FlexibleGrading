@@ -48,6 +48,12 @@ by using this feature in combination with the recommended
 * Last grade is shown on the toolbar.
 It is possible to click on it and bring up the Anki browser with the card selected.
 
+<p align="center">
+  <img src="img/front_side_answer_buttons.webp" alt="screenshot">
+</p>
+<p align="center"><i>Flexible Grading with answer buttons enabled.</i></p>
+
+
 ## Installation
 
 Install from [AnkiWeb](https://ankiweb.net/shared/info/1715096333), or manually with `git`:
