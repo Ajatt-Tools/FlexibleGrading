@@ -189,7 +189,8 @@ class SettingsMenuDialog(SettingsMenuUI):
 
 
 def on_open_settings():
-    mw.moveToState("deckBrowser")
+    if mw.state != "deckBrowser":
+        mw.moveToState("deckBrowser")
     dialog = SettingsMenuDialog(mw)
     dialog.exec_()
 
