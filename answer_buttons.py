@@ -18,16 +18,20 @@
 #
 # Any modifications to this file must keep this entire header intact.
 import json
+import re
 from typing import Callable
 
 from anki.cards import Card
 from anki.consts import BUTTON_ONE, BUTTON_THREE
 from anki.hooks import wrap
+from anki.lang import _
 from aqt import gui_hooks
 from aqt.reviewer import Reviewer
 
 from .config import config
 from .toolbar import LastEase
+
+_ans_buttons_default = Reviewer._answerButtons
 
 
 def add_vim_shortcuts(self: Reviewer, _old: Callable):
@@ -148,37 +152,54 @@ def get_max_time(self: Reviewer) -> float:
     return self.card.timeLimit() / 1000 if self.card.shouldShowTimer() else 0
 
 
-def get_front_css() -> str:
-    colors = config.get_colors()
-    return """
-    <style>
-    .fside_style_override {
-        padding: 5px 5px 0px;
-    }
-    .fside_style_override .new-count {
-        color: %s;
-    }
-    .fside_style_override .learn-count {
-        color: %s;
-    }
-    .fside_style_override .review-count {
-        color: %s;
-    }
-    </style>
-    """ % (colors['Easy'], colors['Hard'], colors['Good'])
+def make_show_ans_table_cell(self: Reviewer):
+    stat_txt = make_stat_txt(self)
+    show_answer_button = """<button title="%s" onclick='pycmd("ans");'>%s</button>""" % (
+        _("Shortcut key: %s") % _("Space"),
+        _("Show Answer"),
+    )
+    return f'<td align=center>{stat_txt}{show_answer_button}</td>'
 
 
-def make_buttonless_front_row(self: Reviewer):
-    if not self.typeCorrect:
-        self.bottom.web.setFocus()
-    html = get_front_css() + '<div class="fside_style_override">%s</div>' % self._remaining()
-    self.bottom.web.eval("showQuestion(%s,%d);" % (json.dumps(html), get_max_time(self)))
-    self.bottom.web.adjustHeightToFit()
+def fix_spacer_padding(html: str) -> str:
+    return '<style>.spacer{padding-top: 4px;}</style>' + html
+
+
+def make_flexible_front_row(self: Reviewer) -> str:
+    ans_buttons = _ans_buttons_default(self)
+    cell_positions = [m.start() for m in re.finditer('<td', ans_buttons)]
+    insert_pos = cell_positions[:len(cell_positions) // 2 + 1][-1]
+    html = ans_buttons[:insert_pos] + make_show_ans_table_cell(self) + ans_buttons[insert_pos:]
+    if not self.mw.col.conf["estTimes"]:
+        # If Prefs > Scheduling > Show next review time is False
+        # Move answer buttons down a bit.
+        html = fix_spacer_padding(html)
+    return html
+
+
+def get_stat_txt_style() -> str:
+    padding_top = '5px' if config['remove_buttons'] is True else '4px'
+    return f'padding: {padding_top} 5px 0px;'
+
+
+def make_stat_txt(self: Reviewer) -> str:
+    return f'<div style="{get_stat_txt_style()}">{self._remaining()}</div>'
 
 
 def make_frontside_answer_buttons(self: Reviewer, _old: Callable) -> None:
-    if config['remove_buttons'] is True:
-        return make_buttonless_front_row(self)
+    if config['remove_buttons'] is True or config['flexible_grading'] is True:
+        if not self.typeCorrect:
+            self.bottom.web.setFocus()
+
+        if config['remove_buttons'] is True:
+            html = make_stat_txt(self)
+        else:
+            html = make_flexible_front_row(self)
+            if config['prevent_clicks'] is True:
+                html = disable_buttons(html)
+
+        self.bottom.web.eval("showQuestion(%s,%d);" % (json.dumps(html), get_max_time(self)))
+        self.bottom.web.adjustHeightToFit()
     else:
         _old(self)
 
@@ -190,9 +211,9 @@ def main():
     # Activate Vim shortcuts on the front side, if enabled by the user.
     Reviewer._answerCard = wrap(Reviewer._answerCard, answer_card, "around")
 
-    # Create html layout for the answer buttons on the back side.
+    # (*) Create html layout for the answer buttons on the back side.
     # Buttons are either removed, disabled or left unchanged depending on config options.
-    Reviewer._answerButtons = wrap(Reviewer._answerButtons, make_answer_buttons, "around")
+    Reviewer._answerButtons = wrap(Reviewer._answerButtons, make_backside_answer_buttons, "around")
 
     # Wrap front side button(s).
     Reviewer._showAnswerButton = wrap(Reviewer._showAnswerButton, make_frontside_answer_buttons, "around")
@@ -200,6 +221,7 @@ def main():
     # Edit (ease, label) tuples which are used to create answer buttons.
     # If `color_buttons` is true, labels are colored.
     # If `pass_fail` is true, "Hard" and "Easy" buttons are removed.
+    # This func gets called inside _answerButtonList, which itself gets called inside _answerButtons (*)
     gui_hooks.reviewer_will_init_answer_buttons.append(filter_answer_buttons)
 
     # When Reviewer is open, print the last card's stats on the top toolbar.
