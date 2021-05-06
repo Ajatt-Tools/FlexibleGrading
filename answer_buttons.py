@@ -117,6 +117,9 @@ def get_ease_row_css() -> str:
         max-width: 400px;
         user-select: none;
     }
+    .ease_row > div {
+        padding-top: 1px;
+    }
     </style>
     """
 
