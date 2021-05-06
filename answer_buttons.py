@@ -161,14 +161,17 @@ def get_front_css() -> str:
     """ % (colors['Easy'], colors['Hard'], colors['Good'])
 
 
+def make_buttonless_front_row(self: Reviewer):
+    if not self.typeCorrect:
+        self.bottom.web.setFocus()
+    html = get_front_css() + '<div class="fside_style_override">%s</div>' % self._remaining()
+    self.bottom.web.eval("showQuestion(%s,%d);" % (json.dumps(html), get_max_time(self)))
+    self.bottom.web.adjustHeightToFit()
+
+
 def make_frontside_answer_buttons(self: Reviewer, _old: Callable) -> None:
     if config['remove_buttons'] is True:
-        if not self.typeCorrect:
-            self.bottom.web.setFocus()
-        middle = get_front_css() + '<div class="fside_style_override">%s</div>' % self._remaining()
-
-        self.bottom.web.eval("showQuestion(%s,%d);" % (json.dumps(middle), get_max_time(self)))
-        self.bottom.web.adjustHeightToFit()
+        return make_buttonless_front_row(self)
     else:
         _old(self)
 
