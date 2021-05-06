@@ -90,7 +90,7 @@ def apply_label_colors(buttons: tuple) -> tuple:
 
 
 def filter_answer_buttons(buttons: tuple, _: Reviewer, __: Card) -> tuple:
-    # Called by _answerButtonList, before _answerButtons is called
+    # Called by _answerButtonList, before _answerButtons gets called
     if config['pass_fail'] is True:
         buttons = only_pass_fail(buttons)
 
@@ -105,7 +105,6 @@ def make_buttonless_ease_row(self: Reviewer) -> str:
     for ease, label in self._answerButtonList():
         attrs = f' style="color: {config.get_color(ease)};"' if config['color_buttons'] is True else ''
         ease_row.append(f'<div{attrs}>{self._buttonTime(ease)}</div>')
-
     return ''.join(ease_row)
 
 
@@ -178,18 +177,19 @@ def main():
     # Add vim answer shortcuts
     Reviewer._shortcutKeys = wrap(Reviewer._shortcutKeys, add_vim_shortcuts, "around")
 
-    # Activate flexible grading, if enabled by the user
+    # Activate Vim shortcuts on the front side, if enabled by the user.
     Reviewer._answerCard = wrap(Reviewer._answerCard, answer_card, "around")
 
-    # Create html layout for the answer buttons.
+    # Create html layout for the answer buttons on the back side.
     # Buttons are either removed, disabled or left unchanged depending on config options.
     Reviewer._answerButtons = wrap(Reviewer._answerButtons, make_answer_buttons, "around")
 
     # Wrap front side button(s).
     Reviewer._showAnswerButton = wrap(Reviewer._showAnswerButton, make_frontside_answer_buttons, "around")
 
-    # Edit (ease, label) tuples which are used to create answer buttons later.
-    # Depending on the settings labels are colored and Hard and Easy buttons are removed.
+    # Edit (ease, label) tuples which are used to create answer buttons.
+    # If `color_buttons` is true, labels are colored.
+    # If `pass_fail` is true, "Hard" and "Easy" buttons are removed.
     gui_hooks.reviewer_will_init_answer_buttons.append(filter_answer_buttons)
 
     # When Reviewer is open, print the last card's stats on the top toolbar.
