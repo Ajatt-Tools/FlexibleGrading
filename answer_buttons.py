@@ -21,6 +21,7 @@ import json
 from typing import Callable
 
 from anki.cards import Card
+from anki.consts import BUTTON_ONE, BUTTON_THREE
 from anki.hooks import wrap
 from aqt import gui_hooks
 from aqt.reviewer import Reviewer
@@ -73,7 +74,7 @@ def only_pass_fail(buttons: tuple) -> tuple:
     for button in buttons:
         ease = button[0]
         label = button[1]
-        if ease == 1 or ease == 3:
+        if ease == BUTTON_ONE or ease == BUTTON_THREE:
             edited_buttons.append((ease, label))
 
     return tuple(edited_buttons)
