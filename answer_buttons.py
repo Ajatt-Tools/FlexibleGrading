@@ -148,10 +148,6 @@ def make_backside_answer_buttons(self: Reviewer, _old: Callable) -> str:
     return html
 
 
-def get_max_time(self: Reviewer) -> float:
-    return self.card.timeLimit() / 1000 if self.card.shouldShowTimer() else 0
-
-
 def make_show_ans_table_cell(self: Reviewer):
     stat_txt = make_stat_txt(self)
     show_answer_button = """<button title="%s" onclick='pycmd("ans");'>%s</button>""" % (
@@ -186,22 +182,17 @@ def make_stat_txt(self: Reviewer) -> str:
     return f'<div style="{get_stat_txt_style()}">{self._remaining()}</div>'
 
 
-def make_frontside_answer_buttons(self: Reviewer, _old: Callable) -> None:
-    if config['remove_buttons'] is True or config['flexible_grading'] is True:
-        if not self.typeCorrect:
-            self.bottom.web.setFocus()
-
-        if config['remove_buttons'] is True:
-            html = make_stat_txt(self)
-        else:
-            html = make_flexible_front_row(self)
-            if config['prevent_clicks'] is True:
-                html = disable_buttons(html)
-
-        self.bottom.web.eval("showQuestion(%s,%d);" % (json.dumps(html), get_max_time(self)))
+def make_frontside_answer_buttons(self: Reviewer) -> None:
+    html = None
+    if config['remove_buttons'] is True:
+        html = make_stat_txt(self)
+    elif config['flexible_grading'] is True:
+        html = make_flexible_front_row(self)
+        if config['prevent_clicks'] is True:
+            html = disable_buttons(html)
+    if html is not None:
+        self.bottom.web.eval("showAnswer(%s);" % json.dumps(html))
         self.bottom.web.adjustHeightToFit()
-    else:
-        _old(self)
 
 
 def main():
@@ -216,7 +207,7 @@ def main():
     Reviewer._answerButtons = wrap(Reviewer._answerButtons, make_backside_answer_buttons, "around")
 
     # Wrap front side button(s).
-    Reviewer._showAnswerButton = wrap(Reviewer._showAnswerButton, make_frontside_answer_buttons, "around")
+    Reviewer._showAnswerButton = wrap(Reviewer._showAnswerButton, make_frontside_answer_buttons, "after")
 
     # Edit (ease, label) tuples which are used to create answer buttons.
     # If `color_buttons` is true, labels are colored.
