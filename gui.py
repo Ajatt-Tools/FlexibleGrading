@@ -172,8 +172,7 @@ class SettingsMenuDialog(SettingsMenuUI):
         super(SettingsMenuDialog, self).__init__(*args, **kwargs)
         self.connect_buttons()
         if mw.col.schedVer() != 2:
-            layout = self.layout()
-            layout.addWidget(QLabel(SCHED_NAG_MSG % config.get_color(1)))
+            self.layout().addWidget(QLabel(SCHED_NAG_MSG))
 
     def connect_buttons(self):
         self.ok_button.clicked.connect(self.on_confirm)
