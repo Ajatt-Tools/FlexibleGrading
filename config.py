@@ -17,32 +17,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 # Any modifications to this file must keep this entire header intact.
-
 from anki.consts import *
-from anki.lang import _
 from aqt import mw
 
 
 class ConfigManager:
-    _map = {
-        BUTTON_ONE: "Again",
-        BUTTON_TWO: "Hard",
-        BUTTON_THREE: "Good",
-        BUTTON_FOUR: "Easy",
-    }
-
     def __init__(self):
         self._config = mw.addonManager.getConfig(__name__)
-
-    def get_color(self, ease: int) -> str:
-        return self._config['colors'][self._map[ease]]
-
-    def get_colors(self) -> Dict[str, str]:
-        return self._config['colors']
-
-    @classmethod
-    def get_label(cls, ease: int) -> str:
-        return _(cls._map[ease])
 
     def __getitem__(self, key) -> bool:
         assert key != 'colors' and key != 'buttons'
@@ -51,6 +32,21 @@ class ConfigManager:
     def __setitem__(self, key, value):
         assert key != 'colors' and key != 'buttons'
         self._config[key] = value
+
+    @staticmethod
+    def get_label(ease: int, all_buttons: bool = True) -> str:
+        return {
+            BUTTON_ONE: "Again",
+            BUTTON_TWO: "Hard" if all_buttons else "Good",
+            BUTTON_THREE: "Good" if all_buttons else "Easy",
+            BUTTON_FOUR: "Easy",
+        }[ease]
+
+    def get_color(self, ease: int, all_buttons: bool = True) -> str:
+        return self._config['colors'][self.get_label(ease, all_buttons)]
+
+    def get_colors(self) -> Dict[str, str]:
+        return self._config['colors']
 
     def get_toggleables(self):
         return (key for key in self._config.keys() if key != 'colors')
