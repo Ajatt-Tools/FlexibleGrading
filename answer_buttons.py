@@ -74,43 +74,46 @@ def answer_card(self: Reviewer, ease, _old: Callable):
     _old(self, min(self.mw.col.sched.answerButtons(self.card), ease))
 
 
-def only_pass_fail(buttons: tuple) -> tuple:
+def only_pass_fail(buttons: tuple, self: Reviewer) -> tuple:
     edited_buttons = []
     for button in buttons:
         ease = button[0]
         label = button[1]
-        if ease == BUTTON_ONE or ease == BUTTON_THREE:
+        if ease == BUTTON_ONE or ease == self._defaultEase():
             edited_buttons.append((ease, label))
 
     return tuple(edited_buttons)
 
 
-def apply_label_colors(buttons: tuple) -> tuple:
+def apply_label_colors(buttons: tuple, self: Reviewer) -> tuple:
     def color_label(ease, label):
-        label = f"<font color=\"{config.get_color(ease)}\">{label}</font>"
+        label = f"<font color=\"{config.get_color(ease, self._defaultEase() == 3)}\">{label}</font>"
         return ease, label
 
-    edited_buttons = [color_label(*button) for button in buttons]
-    return tuple(edited_buttons)
+    return tuple(color_label(*button) for button in buttons)
 
 
-def filter_answer_buttons(buttons: tuple, _: Reviewer, __: Card) -> tuple:
+def filter_answer_buttons(buttons: tuple, reviewer: Reviewer, _: Card) -> tuple:
     # Called by _answerButtonList, before _answerButtons gets called
     if config['pass_fail'] is True:
-        buttons = only_pass_fail(buttons)
+        buttons = only_pass_fail(buttons, reviewer)
 
     if config['color_buttons'] is True:
-        buttons = apply_label_colors(buttons)
+        buttons = apply_label_colors(buttons, reviewer)
 
     return buttons
 
 
-def make_buttonless_ease_row(self: Reviewer) -> str:
-    ease_row = []
-    for ease, label in self._answerButtonList():
-        attrs = f' style="color: {config.get_color(ease)};"' if config['color_buttons'] is True else ''
-        ease_row.append(f'<div{attrs}>{self._buttonTime(ease)}</div>')
-    return ''.join(ease_row)
+def get_ease_attrs(self: Reviewer, ease: int) -> str:
+    if config['color_buttons'] is True:
+        return f' style="color: {config.get_color(ease, self._defaultEase() == 3)};"'
+    else:
+        return ''
+
+
+def make_stat_txt(self: Reviewer):
+    padding_top = '5px' if config['remove_buttons'] is True else '4px'
+    return f'<div style="padding: {padding_top} 5px 0px;">{self._remaining()}</div>'
 
 
 def get_ease_row_css() -> str:
@@ -119,7 +122,8 @@ def get_ease_row_css() -> str:
     .ease_row {
         display: flex;
         justify-content: space-between;
-        max-width: 400px;
+        max-width: 450px;
+        min-width: 200px;
         user-select: none;
     }
     .ease_row > div {
@@ -129,8 +133,19 @@ def get_ease_row_css() -> str:
     """
 
 
-def wrap_buttonless_ease_row(html: str) -> str:
-    return get_ease_row_css() + f'<div class="ease_row">{html}</div>'
+def make_buttonless_ease_row(self: Reviewer, front=False) -> str:
+    if front is True and config['flexible_grading'] is False:
+        return make_stat_txt(self)
+    else:
+        ease_row = []
+        ans_buttons = self._answerButtonList()
+
+        for idx, (ease, label) in enumerate(ans_buttons):
+            if front and idx == len(ans_buttons) // 2:
+                ease_row.append(make_stat_txt(self))
+            ease_row.append(f'<div{get_ease_attrs(self, ease)}>{self._buttonTime(ease)}</div>')
+
+        return get_ease_row_css() + f'<div class="ease_row">{"".join(ease_row)}</div>'
 
 
 def disable_buttons(html: str) -> str:
@@ -140,7 +155,6 @@ def disable_buttons(html: str) -> str:
 def make_backside_answer_buttons(self: Reviewer, _old: Callable) -> str:
     if config['remove_buttons'] is True:
         html = make_buttonless_ease_row(self)
-        html = wrap_buttonless_ease_row(html)
     elif config['prevent_clicks'] is True:
         html: str = disable_buttons(_old(self))
     else:
@@ -178,19 +192,10 @@ def make_flexible_front_row(self: Reviewer) -> str:
     return html
 
 
-def get_stat_txt_style() -> str:
-    padding_top = '5px' if config['remove_buttons'] is True else '4px'
-    return f'padding: {padding_top} 5px 0px;'
-
-
-def make_stat_txt(self: Reviewer) -> str:
-    return f'<div style="{get_stat_txt_style()}">{self._remaining()}</div>'
-
-
 def make_frontside_answer_buttons(self: Reviewer) -> None:
     html = None
     if config['remove_buttons'] is True:
-        html = make_stat_txt(self)
+        html = make_buttonless_ease_row(self, front=True)
     elif config['flexible_grading'] is True:
         html = make_flexible_front_row(self)
         if config['prevent_clicks'] is True:
