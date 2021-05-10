@@ -112,7 +112,7 @@ class LastEase:
         cls._browser_query = f"cid:{card.id}"
 
     @classmethod
-    def hide(cls) -> None:
+    def hide(cls, _=None) -> None:
         mw.toolbar.web.eval(f"""
                 elem = document.getElementById("{cls._html_link_id}");
                 elem.innerHTML = "";
@@ -127,5 +127,5 @@ def main():
     gui_hooks.reviewer_did_answer_card.append(LastEase.update)
 
     # Don't show the last card's stats when Reviewer is not open.
+    gui_hooks.collection_did_load.append(LastEase.hide)
     gui_hooks.reviewer_will_end.append(LastEase.hide)
-    gui_hooks.main_window_did_init.append(LastEase.hide)
