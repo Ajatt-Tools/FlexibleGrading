@@ -22,6 +22,7 @@ import time
 
 import aqt
 from anki.cards import Card
+from anki.lang import _
 from aqt import mw, gui_hooks
 from aqt.reviewer import Reviewer
 from aqt.toolbar import Toolbar
@@ -74,6 +75,11 @@ def human_ivl(card: Card) -> str:
 class LastEase:
     _html_link_id = "last_ease"
     _browser_query = ""
+    _4_buttons = True
+
+    @classmethod
+    def remember_current_card(cls, card: Card):
+        cls._4_buttons = mw.col.sched.answerButtons(card) == 4
 
     @classmethod
     def open_last_card(cls):
@@ -98,8 +104,8 @@ class LastEase:
 
     @classmethod
     def update(cls, reviewer: Reviewer, card: Card, ease: int) -> None:
-        label = config.get_label(ease)
-        color = config.get_color(ease)
+        label = _(config.get_label(ease, cls._4_buttons))
+        color = config.get_color(ease, cls._4_buttons)
         label = f"{label[:1]}: {human_ivl(card)}"
 
         reviewer.mw.toolbar.web.eval(f"""
@@ -122,6 +128,9 @@ class LastEase:
 
 
 def main():
+    # Remember if all 4 buttons are shown for the card.
+    gui_hooks.reviewer_did_show_question.append(LastEase.remember_current_card)
+
     # When Reviewer is open, print the last card's stats on the top toolbar.
     gui_hooks.top_toolbar_did_init_links.append(LastEase.append_link)
     gui_hooks.reviewer_did_answer_card.append(LastEase.update)
