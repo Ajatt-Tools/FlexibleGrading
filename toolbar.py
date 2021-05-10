@@ -22,7 +22,7 @@ import time
 
 import aqt
 from anki.cards import Card
-from aqt import mw
+from aqt import mw, gui_hooks
 from aqt.reviewer import Reviewer
 from aqt.toolbar import Toolbar
 
@@ -119,3 +119,13 @@ class LastEase:
                 elem.style.color = "";
                 elem.style.display = "none";
         """)
+
+
+def main():
+    # When Reviewer is open, print the last card's stats on the top toolbar.
+    gui_hooks.top_toolbar_did_init_links.append(LastEase.append_link)
+    gui_hooks.reviewer_did_answer_card.append(LastEase.update)
+
+    # Don't show the last card's stats when Reviewer is not open.
+    gui_hooks.reviewer_will_end.append(LastEase.hide)
+    gui_hooks.main_window_did_init.append(LastEase.hide)

@@ -218,11 +218,3 @@ def main():
     # If `pass_fail` is true, "Hard" and "Easy" buttons are removed.
     # This func gets called inside _answerButtonList, which itself gets called inside _answerButtons (*)
     gui_hooks.reviewer_will_init_answer_buttons.append(filter_answer_buttons)
-
-    # When Reviewer is open, print the last card's stats on the top toolbar.
-    gui_hooks.top_toolbar_did_init_links.append(LastEase.append_link)
-    gui_hooks.reviewer_did_answer_card.append(LastEase.update)
-
-    # Don't show the last card's stats when Reviewer is not open.
-    gui_hooks.reviewer_will_end.append(LastEase.hide)
-    gui_hooks.main_window_did_init.append(LastEase.hide)
