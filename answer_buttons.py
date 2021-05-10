@@ -22,7 +22,7 @@ import re
 from typing import Callable
 
 from anki.cards import Card
-from anki.consts import BUTTON_ONE, BUTTON_THREE
+from anki.consts import *
 from anki.hooks import wrap
 from anki.lang import _
 from aqt import gui_hooks
@@ -34,34 +34,35 @@ from .toolbar import LastEase
 _ans_buttons_default = Reviewer._answerButtons
 
 
-def add_vim_shortcuts(self: Reviewer, _old: Callable):
+def add_vim_shortcuts(self: Reviewer, _old: Callable) -> list:
     # Credit: https://ankiweb.net/shared/info/1197299782
-    class VimShortcuts:
-        _shortcuts = {
-            "h": lambda: self._answerCard(1),  # fail
-            "j": lambda: self._answerCard(2),  # hard
-            "k": lambda: self._answerCard(3),  # normal
-            "l": lambda: self._answerCard(4),  # easy
-            "u": self.mw.onUndo,  # undo
-            "i": self.mw.onEditCurrent,  # edit
-            ":": LastEase.open_last_card,  # last card
-        }
+    class Shortcuts:
+        _vim_shortcuts = [
+            ("h", lambda: self._answerCard(BUTTON_ONE)),  # fail
+            ("j", lambda: self._answerCard(BUTTON_TWO)),  # hard or good
+            ("k", lambda: self._answerCard(self._defaultEase())),  # good
+            ("l", lambda: self._answerCard(BUTTON_FOUR)),  # easy
+            ("u", self.mw.onUndo),  # undo
+            ("i", self.mw.onEditCurrent),  # edit
+            (":", LastEase.open_last_card),  # last card
+        ]
+        _blocklist = ('1', '2', '3', '4',)
+        _pass_fail_blocklist = ('j', 'l',)
 
         @classmethod
-        def default(cls):
-            return [(k, v) for k, v in cls._shortcuts.items()]
+        def default(cls) -> list:
+            return cls._vim_shortcuts + [(k, v) for k, v in _old(self) if k not in cls._blocklist]
 
         @classmethod
-        def pass_fail(cls):
-            return [(k, v) for k, v in cls._shortcuts.items() if k != 'j' and k != 'l']
+        def pass_fail(cls) -> list:
+            return [(k, v) for k, v in cls.default() if k not in cls._pass_fail_blocklist]
 
     if config['pass_fail'] is True:
         # PassFail mode. Pressing 'Hard' and 'Easy' is not allowed.
-        # '2' and '4' from the original _shortcutKeys() should be filtered out as well.
-        return VimShortcuts.pass_fail() + [(k, v) for k, v in _old(self) if k != '2' and k != '4']
+        return Shortcuts.pass_fail()
     else:
         # Default shortcuts.
-        return VimShortcuts.default() + _old(self)
+        return Shortcuts.default()
 
 
 def answer_card(self: Reviewer, ease, _old: Callable):
