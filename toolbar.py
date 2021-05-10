@@ -46,7 +46,9 @@ def handle_due(card: Card) -> str:
 def handle_learn(card: Card) -> str:
     minutes = (card.due - time.time()) / 60
     hours = minutes / 60
-    if hours >= 1:
+    if minutes < 0:
+        ivl = "unknown"
+    elif hours >= 1:
         ivl = '%.1fh' % hours
     else:
         ivl = '%dm' % minutes
@@ -62,12 +64,14 @@ def human_ivl(card: Card) -> str:
         ivl = "buried"
     elif card.queue == -1:
         ivl = "suspended"
-    elif card.type == 2:
-        ivl = handle_due(card)
     elif card.queue == 1 and (card.type == 3 or card.type == 1):
         ivl = handle_learn(card)
     elif card.queue == 3 and (card.type == 3 or card.type == 1):
         ivl = "tomorrow"
+    elif card.queue == 4:
+        ivl = "preview"
+    elif card.type == 2:
+        ivl = handle_due(card)
 
     return ivl
 
