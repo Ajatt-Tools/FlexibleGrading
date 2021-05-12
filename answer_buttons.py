@@ -22,7 +22,6 @@ import re
 from typing import Callable
 
 from anki.cards import Card
-from anki.consts import *
 from anki.hooks import wrap
 from anki.lang import _
 from aqt import gui_hooks
@@ -36,33 +35,46 @@ _ans_buttons_default = Reviewer._answerButtons
 
 def add_vim_shortcuts(self: Reviewer, _old: Callable) -> list:
     # Credit: https://ankiweb.net/shared/info/1197299782
-    class Shortcuts:
-        _vim_shortcuts = [
-            ("h", lambda: self._answerCard(BUTTON_ONE)),  # fail
-            ("j", lambda: self._answerCard(BUTTON_TWO)),  # hard or good
-            ("k", lambda: self._answerCard(self._defaultEase())),  # good
-            ("l", lambda: self._answerCard(BUTTON_FOUR)),  # easy
-            ("u", self.mw.onUndo),  # undo
-            ("i", self.mw.onEditCurrent),  # edit
-            (":", LastEase.open_last_card),  # last card
+    def _filter_out_numbers():
+        return [(k, v) for k, v in _old(self) if k not in ('1', '2', '3', '4',)]
+
+    def _answer_card(grade: str):
+        if grade == 'again':
+            return self._answerCard(1)
+        if grade == 'hard' and self._defaultEase() == 3:
+            return self._answerCard(2)
+        if grade == 'good':
+            return self._answerCard(self._defaultEase())
+        if grade == 'easy':
+            return self._answerCard(self._defaultEase() + 1)
+
+    def _default() -> list:
+        _shortcuts = [
+            ("h", lambda: _answer_card(grade='again')),
+            ("j", lambda: _answer_card(grade='hard')),
+            ("k", lambda: _answer_card(grade='good')),
+            ("l", lambda: _answer_card(grade='easy')),
+
+            ("1", lambda: _answer_card(grade='again')),
+            ("2", lambda: _answer_card(grade='hard')),
+            ("3", lambda: _answer_card(grade='good')),
+            ("4", lambda: _answer_card(grade='easy')),
+
+            ("u", self.mw.onUndo),
+            ("i", self.mw.onEditCurrent),
+            (":", LastEase.open_last_card),
         ]
-        _blocklist = ('1', '2', '3', '4',)
-        _pass_fail_blocklist = ('j', 'l',)
+        return _shortcuts + _filter_out_numbers()
 
-        @classmethod
-        def default(cls) -> list:
-            return cls._vim_shortcuts + [(k, v) for k, v in _old(self) if k not in cls._blocklist]
-
-        @classmethod
-        def pass_fail(cls) -> list:
-            return [(k, v) for k, v in cls.default() if k not in cls._pass_fail_blocklist]
+    def _pass_fail() -> list:
+        return [(k, v) for k, v in _default() if k not in ('j', 'l', '2', '4',)]
 
     if config['pass_fail'] is True:
         # PassFail mode. Pressing 'Hard' and 'Easy' is not allowed.
-        return Shortcuts.pass_fail()
+        return _pass_fail()
     else:
         # Default shortcuts.
-        return Shortcuts.default()
+        return _default()
 
 
 def answer_card(self: Reviewer, ease, _old: Callable):
@@ -79,7 +91,7 @@ def only_pass_fail(buttons: tuple, self: Reviewer) -> tuple:
     for button in buttons:
         ease = button[0]
         label = button[1]
-        if ease == BUTTON_ONE or ease == self._defaultEase():
+        if ease == 1 or ease == self._defaultEase():
             edited_buttons.append((ease, label))
 
     return tuple(edited_buttons)

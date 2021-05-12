@@ -47,6 +47,10 @@ by using this feature in combination with the recommended
 [Options Groups settings](https://tatsumoto-ren.github.io/blog/setting-up-anki.html#options-groups).
 * Last grade is shown on the toolbar.
 It is possible to click on it and bring up the Anki browser with the card selected.
+* Consistent key mappings for the `1234` keys.
+`2`, `3` and `4` always grade `Hard`, `Good` and `Easy` respectively.
+Only relevant for the V1 scheduler.
+V2 scheduler does this out of the box.
 
 <p align="center">
   <img src="img/front_side_answer_buttons.webp" alt="screenshot">
