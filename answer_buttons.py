@@ -99,7 +99,7 @@ def only_pass_fail(buttons: tuple, self: Reviewer) -> tuple:
 
 def apply_label_colors(buttons: tuple, self: Reviewer) -> tuple:
     def color_label(ease, label):
-        label = f"<font color=\"{config.get_color(ease, self._defaultEase() == 3)}\">{label}</font>"
+        label = f"<font color=\"{config.get_color(ease, self._defaultEase())}\">{label}</font>"
         return ease, label
 
     return tuple(color_label(*button) for button in buttons)
@@ -118,7 +118,7 @@ def filter_answer_buttons(buttons: tuple, reviewer: Reviewer, _: Card) -> tuple:
 
 def get_ease_attrs(self: Reviewer, ease: int) -> str:
     if config['color_buttons'] is True:
-        return f' style="color: {config.get_color(ease, self._defaultEase() == 3)};"'
+        return f' style="color: {config.get_color(ease, self._defaultEase())};"'
     else:
         return ''
 

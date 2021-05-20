@@ -79,11 +79,11 @@ def human_ivl(card: Card) -> str:
 class LastEase:
     _html_link_id = "last_ease"
     _browser_query = ""
-    _4_buttons = True
+    _last_default_ease = 0
 
     @classmethod
-    def remember_current_card(cls, card: Card):
-        cls._4_buttons = mw.col.sched.answerButtons(card) == 4
+    def set_last_default_ease(cls, _: Card):
+        cls._last_default_ease = mw.reviewer._defaultEase()
 
     @classmethod
     def open_last_card(cls):
@@ -108,8 +108,8 @@ class LastEase:
 
     @classmethod
     def update(cls, reviewer: Reviewer, card: Card, ease: int) -> None:
-        label = _(config.get_label(ease, cls._4_buttons))
-        color = config.get_color(ease, cls._4_buttons)
+        label = _(config.get_label(ease, cls._last_default_ease))
+        color = config.get_colors().get(label.capitalize(), 'Pink')
         label = f"{label[:1]}: {human_ivl(card)}"
 
         reviewer.mw.toolbar.web.eval(f"""
@@ -133,7 +133,7 @@ class LastEase:
 
 def main():
     # Remember if all 4 buttons are shown for the card.
-    gui_hooks.reviewer_did_show_question.append(LastEase.remember_current_card)
+    gui_hooks.reviewer_did_show_question.append(LastEase.set_last_default_ease)
 
     # When Reviewer is open, print the last card's stats on the top toolbar.
     gui_hooks.top_toolbar_did_init_links.append(LastEase.append_link)

@@ -17,7 +17,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 # Any modifications to this file must keep this entire header intact.
-from anki.consts import *
+from typing import Dict
+
 from aqt import mw
 
 
@@ -34,16 +35,19 @@ class ConfigManager:
         self._config[key] = value
 
     @staticmethod
-    def get_label(ease: int, all_buttons: bool = True) -> str:
-        return {
-            BUTTON_ONE: "Again",
-            BUTTON_TWO: "Hard" if all_buttons else "Good",
-            BUTTON_THREE: "Good" if all_buttons else "Easy",
-            BUTTON_FOUR: "Easy",
-        }[ease]
+    def get_label(ease: int, default_ease: int = 3) -> str:
+        if ease == 1:
+            return "Again"
+        if ease == default_ease:
+            return "Good"
+        if ease == 2:
+            return "Hard"
+        if ease > default_ease:
+            return "Easy"
+        return "Unknown"
 
-    def get_color(self, ease: int, all_buttons: bool = True) -> str:
-        return self._config['colors'][self.get_label(ease, all_buttons)]
+    def get_color(self, ease: int, default_ease: int = 3) -> str:
+        return self._config['colors'][self.get_label(ease, default_ease)]
 
     def get_colors(self) -> Dict[str, str]:
         return self._config['colors']
