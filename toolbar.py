@@ -108,9 +108,9 @@ class LastEase:
 
     @classmethod
     def update(cls, reviewer: Reviewer, card: Card, ease: int) -> None:
-        label = _(config.get_label(ease, cls._last_default_ease))
+        label = config.get_label(ease, cls._last_default_ease)
         color = config.get_colors().get(label.capitalize(), 'Pink')
-        label = f"{label[:1]}: {human_ivl(card)}"
+        label = f"{_(label)[:1]}: {human_ivl(card)}"
 
         reviewer.mw.toolbar.web.eval(f"""
                 elem = document.getElementById("{cls._html_link_id}");
