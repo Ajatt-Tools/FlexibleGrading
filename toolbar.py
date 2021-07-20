@@ -22,7 +22,7 @@ import time
 
 import aqt
 from anki.cards import Card
-from anki.lang import _
+from gettext import gettext as _
 from aqt import mw, gui_hooks
 from aqt.reviewer import Reviewer
 from aqt.toolbar import Toolbar

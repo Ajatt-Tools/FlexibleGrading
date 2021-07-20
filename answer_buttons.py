@@ -23,7 +23,7 @@ from typing import Callable
 
 from anki.cards import Card
 from anki.hooks import wrap
-from anki.lang import _
+from gettext import gettext as _
 from aqt import gui_hooks
 from aqt.reviewer import Reviewer
 
