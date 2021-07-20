@@ -152,7 +152,7 @@ def make_buttonless_ease_row(self: Reviewer, front=False) -> str:
         ease_row = []
         ans_buttons = self._answerButtonList()
 
-        for idx, (ease, label) in enumerate(ans_buttons):
+        for idx, (ease, _) in enumerate(ans_buttons):
             if front and idx == len(ans_buttons) // 2:
                 ease_row.append(make_stat_txt(self))
             ease_row.append(f'<div{get_ease_attrs(self, ease)}>{self._buttonTime(ease)}</div>')
