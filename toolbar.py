@@ -112,23 +112,27 @@ class LastEase:
         color = config.get_colors().get(label.capitalize(), 'Pink')
         status = f"{_(label)[:1]}: {human_ivl(card)}"
 
-        reviewer.mw.toolbar.web.eval(f"""
-                elem = document.getElementById("{cls._html_link_id}");
-                elem.innerHTML = "{status}";
-                elem.style.color = "{color}";
-                elem.style.display = "inline";
-        """)
+        reviewer.mw.toolbar.web.eval("""\
+        {
+            const elem = document.getElementById("%s");
+            elem.innerHTML = "%s";
+            elem.style.color = "%s";
+            elem.style.display = "inline";
+        };
+        """ % (cls._html_link_id, status, color))
 
         cls._browser_query = f"cid:{card.id}"
 
     @classmethod
     def hide(cls, _=None) -> None:
-        mw.toolbar.web.eval(f"""
-                elem = document.getElementById("{cls._html_link_id}");
-                elem.innerHTML = "";
-                elem.style.color = "";
-                elem.style.display = "none";
-        """)
+        mw.toolbar.web.eval("""\
+        {
+            const elem = document.getElementById("%s");
+            elem.innerHTML = "";
+            elem.style.color = "";
+            elem.style.display = "none";
+        };
+        """ % cls._html_link_id)
 
 
 def main():
