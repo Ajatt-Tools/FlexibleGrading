@@ -171,7 +171,7 @@ class SettingsMenuDialog(SettingsMenuUI):
     def __init__(self, *args, **kwargs):
         super(SettingsMenuDialog, self).__init__(*args, **kwargs)
         self.connect_buttons()
-        if mw.col.schedVer() != 2:
+        if mw.col.schedVer() < 2:
             self.layout().addWidget(QLabel(SCHED_NAG_MSG))
 
     def connect_buttons(self):
