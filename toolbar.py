@@ -108,6 +108,9 @@ class LastEase:
 
     @classmethod
     def update(cls, reviewer: Reviewer, card: Card, ease: int) -> None:
+        if config['show_last_review'] is False:
+            return
+
         label = config.get_label(ease, cls._last_default_ease)
         color = config.get_colors().get(label.capitalize(), 'Pink')
         status = f"{_(label)[:1]}: {human_ivl(card)}"

@@ -14,6 +14,7 @@ For the list of colors, see [w3schools.com](https://www.w3schools.com/colors/col
 * `prevent_clicks` - Make answer buttons at the bottom disabled.
 Disabled buttons are visible but unusable and un-clickable.
 * `remove_buttons` - Remove answer buttons. Only the corresponding intervals are visible.
+* `show_last_review` - Print the result of the last review on the toolbar.
 
 By default, answer buttons are removed. Press vim keys on the keyboard to grade cards.
 

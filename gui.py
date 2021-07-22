@@ -113,6 +113,7 @@ class SettingsMenuUI(QDialog):
         layout = QHBoxLayout()
         layout.addWidget(self.toggleables['pass_fail'])
         layout.addWidget(self.toggleables['flexible_grading'])
+        layout.addWidget(self.toggleables['show_last_review'])
         gbox.setLayout(layout)
         return gbox
 
@@ -164,6 +165,9 @@ class SettingsMenuUI(QDialog):
         self.toggleables['prevent_clicks'].setToolTip(
             "Make answer buttons disabled.\n"
             "Disabled buttons are visible but unusable and un-clickable."
+        )
+        self.toggleables['show_last_review'].setToolTip(
+            "Print the result of the last review on the toolbar."
         )
 
 
