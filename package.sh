@@ -1,3 +1,4 @@
 #!/bin/sh
 
-git archive HEAD --format=zip -o flexible_grading.ankiaddon
+cd -- "$(git rev-parse --show-toplevel)" &&
+	git archive HEAD --format=zip -o flexible_grading.ankiaddon
