@@ -16,7 +16,8 @@ Disabled buttons are visible but unusable and un-clickable.
 * `remove_buttons` - Remove answer buttons. Only the corresponding intervals are visible.
 * `show_last_review` - Print the result of the last review on the toolbar.
 
-By default, answer buttons are removed. Press vim keys on the keyboard to grade cards.
+By default, answer buttons aren't shown.
+Press vim keys on the keyboard to grade cards.
 
 * `h` - Again
 * `j` - Hard
