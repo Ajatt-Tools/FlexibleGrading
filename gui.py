@@ -49,7 +49,7 @@ class SettingsMenuUI(QDialog):
     def __init__(self, *args, **kwargs):
         super(SettingsMenuUI, self).__init__(*args, **kwargs)
         self.setWindowTitle(ADDON_NAME)
-        self.setMinimumSize(480, 320)
+        self.setMinimumSize(320, 400)
         self.colors = make_color_line_edits()
         self.toggleables = make_toggleables()
         self.color_buttons_gbox = QGroupBox("Color buttons")
@@ -105,6 +105,7 @@ class SettingsMenuUI(QDialog):
         layout = QHBoxLayout()
         layout.addWidget(self.toggleables['remove_buttons'])
         layout.addWidget(self.toggleables['prevent_clicks'])
+        layout.setAlignment(Qt.AlignLeft)
         gbox.setLayout(layout)
         return gbox
 
@@ -114,6 +115,7 @@ class SettingsMenuUI(QDialog):
         layout.addWidget(self.toggleables['pass_fail'])
         layout.addWidget(self.toggleables['flexible_grading'])
         layout.addWidget(self.toggleables['show_last_review'])
+        layout.setAlignment(Qt.AlignLeft)
         gbox.setLayout(layout)
         return gbox
 
