@@ -19,10 +19,10 @@
 # Any modifications to this file must keep this entire header intact.
 
 import time
+from gettext import gettext as _
 
 import aqt
 from anki.cards import Card
-from gettext import gettext as _
 from aqt import mw, gui_hooks
 from aqt.reviewer import Reviewer
 from aqt.toolbar import Toolbar
