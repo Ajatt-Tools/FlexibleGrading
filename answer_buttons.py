@@ -19,11 +19,11 @@
 # Any modifications to this file must keep this entire header intact.
 import json
 import re
-from typing import Callable
+from gettext import gettext as _
+from typing import Callable, cast, Literal
 
 from anki.cards import Card
 from anki.hooks import wrap
-from gettext import gettext as _
 from aqt import gui_hooks
 from aqt.reviewer import Reviewer
 
@@ -46,7 +46,7 @@ def add_vim_shortcuts(self: Reviewer, _old: Callable) -> list:
         if grade == 'good':
             return self._answerCard(self._defaultEase())
         if grade == 'easy':
-            return self._answerCard(self._defaultEase() + 1)
+            return self._answerCard(cast(Literal[3, 4], self._defaultEase() + 1))
 
     def _default() -> list:
         _shortcuts = [
@@ -60,7 +60,7 @@ def add_vim_shortcuts(self: Reviewer, _old: Callable) -> list:
             ("3", lambda: _answer_card(grade='good')),
             ("4", lambda: _answer_card(grade='easy')),
 
-            ("u", self.mw.onUndo),
+            ("u", self.mw.undo),
             ("i", self.mw.onEditCurrent),
             (":", LastEase.open_last_card),
         ]
