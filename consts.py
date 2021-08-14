@@ -4,13 +4,14 @@ DONATE_LINK = "https://tatsumoto-ren.github.io/blog/donating-to-tatsumoto.html"
 COMMUNITY_LINK = "https://tatsumoto-ren.github.io/blog/join-our-community.html"
 HTML_COLORS_LINK = "https://www.w3schools.com/colors/colors_groups.asp"
 YT_LINK = "https://www.youtube.com/c/MATTvsJapan"
-STYLING = """
+STYLES = """
 <style>
 a { color: SteelBlue; }
 h2 { text-align: center; }
 </style>
 """
-ABOUT_MSG = STYLING + f"""
+ABOUT_MSG = f"""
+{STYLES}
 <h2>{ADDON_NAME}</h2>
 <p>An <a href="{GITHUB}">Ajatt-Tools</a> add-on for fast, smooth and efficient reviewing.</p>
 <p>Copyright © Ren Tatsumoto</p>
