@@ -19,12 +19,12 @@
 # Any modifications to this file must keep this entire header intact.
 
 from typing import Dict
-from .ajt_common import menu_root_entry, ADDON_SERIES
 
 from aqt import mw
 from aqt.qt import *
 from aqt.utils import openLink
 
+from .ajt_common import menu_root_entry, ADDON_SERIES
 from .config import config
 from .consts import *
 
@@ -89,16 +89,30 @@ class SettingsMenuUI(QDialog):
         layout.addWidget(self.make_features_group())
         return layout
 
+    @staticmethod
+    def make_colors_link():
+        label = QLabel()
+        label.setText(
+            f'For the list of colors, see <a style="color: SteelBlue;" href="{HTML_COLORS_LINK}">w3schools.com</a>.'
+        )
+        label.setOpenExternalLinks(True)
+        return label
+
     def make_button_colors_group(self) -> QGroupBox:
         gbox = self.color_buttons_gbox
         gbox.setCheckable(True)
         gbox.setChecked(config['color_buttons'])
+
         grid = QGridLayout()
         for y_index, label in enumerate(self.colors.keys()):
             grid.addWidget(QLabel(label), y_index, 0)
             grid.addWidget(self.colors[label], y_index, 1)
 
-        gbox.setLayout(grid)
+        vbox = QVBoxLayout()
+        vbox.addLayout(grid)
+        vbox.addWidget(self.make_colors_link())
+
+        gbox.setLayout(vbox)
         return gbox
 
     def make_buttons_group(self) -> QGroupBox:
