@@ -1,4 +1,4 @@
-ADDON_NAME = "AJT Flexible Grading"
+ADDON_NAME = "Flexible Grading"
 GITHUB = "https://github.com/Ajatt-Tools"
 DONATE_LINK = "https://tatsumoto-ren.github.io/blog/donating-to-tatsumoto.html"
 COMMUNITY_LINK = "https://tatsumoto-ren.github.io/blog/join-our-community.html"

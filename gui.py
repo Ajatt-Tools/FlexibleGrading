@@ -19,6 +19,7 @@
 # Any modifications to this file must keep this entire header intact.
 
 from typing import Dict
+from .ajt_common import menu_root_entry, ADDON_SERIES
 
 from aqt import mw
 from aqt.qt import *
@@ -48,7 +49,7 @@ def make_toggleables() -> Dict[str, QCheckBox]:
 class SettingsMenuUI(QDialog):
     def __init__(self, *args, **kwargs):
         super(SettingsMenuUI, self).__init__(*args, **kwargs)
-        self.setWindowTitle(ADDON_NAME)
+        self.setWindowTitle(f'{ADDON_SERIES} {ADDON_NAME}')
         self.setMinimumSize(320, 400)
         self.colors = make_color_line_edits()
         self.toggleables = make_toggleables()
@@ -203,11 +204,12 @@ def on_open_settings():
     dialog.exec_()
 
 
-def setup_settings_action():
-    action_settings = QAction(f"{ADDON_NAME} Options...", mw)
+def setup_settings_action(parent: QWidget):
+    action_settings = QAction(f"{ADDON_NAME} Options...", parent)
     qconnect(action_settings.triggered, on_open_settings)
     return action_settings
 
 
 def main():
-    mw.form.menuTools.addAction(setup_settings_action())
+    root_menu = menu_root_entry()
+    root_menu.addAction(setup_settings_action(root_menu))
