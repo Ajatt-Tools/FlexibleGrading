@@ -22,7 +22,6 @@ from typing import Dict
 
 from aqt import mw
 from aqt.qt import *
-from aqt.utils import openLink
 
 from .ajt_common import menu_root_entry, ADDON_SERIES
 from .config import config
@@ -56,31 +55,14 @@ class SettingsMenuUI(QDialog):
         self.color_buttons_gbox = QGroupBox("Color buttons")
         self.ok_button = QPushButton("Ok")
         self.cancel_button = QPushButton("Cancel")
-        self.community_button = QPushButton("Join our community")
-        self.donate_button = QPushButton("Donate")
         self.setLayout(self.setup_layout())
-        self.add_button_icons()
         self.add_tooltips()
 
     def setup_layout(self) -> QBoxLayout:
         layout = QVBoxLayout(self)
-        layout.addWidget(self.make_tabs())
+        layout.addLayout(self.make_settings_layout())
         layout.addLayout(self.make_bottom_buttons())
         return layout
-
-    def make_tabs(self) -> QTabWidget:
-        tabs = QTabWidget()
-
-        tab1 = QWidget()
-        tab2 = QWidget()
-
-        tabs.addTab(tab1, "Settings")
-        tabs.addTab(tab2, "About")
-
-        tab1.setLayout(self.make_settings_layout())
-        tab2.setLayout(self.make_about_layout())
-
-        return tabs
 
     def make_settings_layout(self) -> QBoxLayout:
         layout = QVBoxLayout()
@@ -141,34 +123,6 @@ class SettingsMenuUI(QDialog):
         layout.addStretch()
         return layout
 
-    def make_about_layout(self) -> QBoxLayout:
-        layout = QVBoxLayout()
-        layout.addWidget(self.make_about_text())
-        layout.addLayout(self.make_social_buttons())
-        return layout
-
-    @staticmethod
-    def make_about_text() -> QTextBrowser:
-        textedit = QTextBrowser()
-        textedit.setReadOnly(True)
-        textedit.insertHtml(ABOUT_MSG)
-        textedit.setOpenExternalLinks(True)
-        return textedit
-
-    def make_social_buttons(self) -> QHBoxLayout:
-        layout = QHBoxLayout()
-        layout.addWidget(self.community_button)
-        layout.addWidget(self.donate_button)
-        return layout
-
-    def add_button_icons(self):
-        img_dir = os.path.join(os.path.dirname(__file__), 'img')
-        chat_icon_path = os.path.join(img_dir, 'element.svg')
-        donate_icon_path = os.path.join(img_dir, 'patreon_logo.svg')
-
-        self.community_button.setIcon(QIcon(chat_icon_path))
-        self.donate_button.setIcon(QIcon(donate_icon_path))
-
     def add_tooltips(self):
         self.toggleables['pass_fail'].setToolTip(
             '"Hard" and "Easy" buttons will be hidden.'
@@ -198,8 +152,6 @@ class SettingsMenuDialog(SettingsMenuUI):
     def connect_buttons(self):
         self.ok_button.clicked.connect(self.on_confirm)
         self.cancel_button.clicked.connect(self.reject)
-        self.community_button.clicked.connect(lambda: openLink(COMMUNITY_LINK))
-        self.donate_button.clicked.connect(lambda: openLink(DONATE_LINK))
 
     def on_confirm(self):
         config['color_buttons'] = self.color_buttons_gbox.isChecked()
