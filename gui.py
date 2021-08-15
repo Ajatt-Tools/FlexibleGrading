@@ -22,8 +22,8 @@ from typing import Dict
 
 from aqt import mw
 from aqt.qt import *
-from aqt.utils import openLink
 
+from .ajt_common import menu_root_entry, ADDON_SERIES
 from .config import config
 from .consts import *
 
@@ -48,38 +48,21 @@ def make_toggleables() -> Dict[str, QCheckBox]:
 class SettingsMenuUI(QDialog):
     def __init__(self, *args, **kwargs):
         super(SettingsMenuUI, self).__init__(*args, **kwargs)
-        self.setWindowTitle(ADDON_NAME)
+        self.setWindowTitle(f'{ADDON_SERIES} {ADDON_NAME}')
         self.setMinimumSize(320, 400)
         self.colors = make_color_line_edits()
         self.toggleables = make_toggleables()
         self.color_buttons_gbox = QGroupBox("Color buttons")
         self.ok_button = QPushButton("Ok")
         self.cancel_button = QPushButton("Cancel")
-        self.community_button = QPushButton("Join our community")
-        self.donate_button = QPushButton("Donate")
         self.setLayout(self.setup_layout())
-        self.add_button_icons()
         self.add_tooltips()
 
     def setup_layout(self) -> QBoxLayout:
         layout = QVBoxLayout(self)
-        layout.addWidget(self.make_tabs())
+        layout.addLayout(self.make_settings_layout())
         layout.addLayout(self.make_bottom_buttons())
         return layout
-
-    def make_tabs(self) -> QTabWidget:
-        tabs = QTabWidget()
-
-        tab1 = QWidget()
-        tab2 = QWidget()
-
-        tabs.addTab(tab1, "Settings")
-        tabs.addTab(tab2, "About")
-
-        tab1.setLayout(self.make_settings_layout())
-        tab2.setLayout(self.make_about_layout())
-
-        return tabs
 
     def make_settings_layout(self) -> QBoxLayout:
         layout = QVBoxLayout()
@@ -88,16 +71,30 @@ class SettingsMenuUI(QDialog):
         layout.addWidget(self.make_features_group())
         return layout
 
+    @staticmethod
+    def make_colors_link():
+        label = QLabel()
+        label.setText(
+            f'For the list of colors, see <a style="color: SteelBlue;" href="{HTML_COLORS_LINK}">w3schools.com</a>.'
+        )
+        label.setOpenExternalLinks(True)
+        return label
+
     def make_button_colors_group(self) -> QGroupBox:
         gbox = self.color_buttons_gbox
         gbox.setCheckable(True)
         gbox.setChecked(config['color_buttons'])
+
         grid = QGridLayout()
         for y_index, label in enumerate(self.colors.keys()):
             grid.addWidget(QLabel(label), y_index, 0)
             grid.addWidget(self.colors[label], y_index, 1)
 
-        gbox.setLayout(grid)
+        vbox = QVBoxLayout()
+        vbox.addLayout(grid)
+        vbox.addWidget(self.make_colors_link())
+
+        gbox.setLayout(vbox)
         return gbox
 
     def make_buttons_group(self) -> QGroupBox:
@@ -125,34 +122,6 @@ class SettingsMenuUI(QDialog):
         layout.addWidget(self.cancel_button)
         layout.addStretch()
         return layout
-
-    def make_about_layout(self) -> QBoxLayout:
-        layout = QVBoxLayout()
-        layout.addWidget(self.make_about_text())
-        layout.addLayout(self.make_social_buttons())
-        return layout
-
-    @staticmethod
-    def make_about_text() -> QTextBrowser:
-        textedit = QTextBrowser()
-        textedit.setReadOnly(True)
-        textedit.insertHtml(ABOUT_MSG)
-        textedit.setOpenExternalLinks(True)
-        return textedit
-
-    def make_social_buttons(self) -> QHBoxLayout:
-        layout = QHBoxLayout()
-        layout.addWidget(self.community_button)
-        layout.addWidget(self.donate_button)
-        return layout
-
-    def add_button_icons(self):
-        img_dir = os.path.join(os.path.dirname(__file__), 'img')
-        chat_icon_path = os.path.join(img_dir, 'element.svg')
-        donate_icon_path = os.path.join(img_dir, 'patreon_logo.svg')
-
-        self.community_button.setIcon(QIcon(chat_icon_path))
-        self.donate_button.setIcon(QIcon(donate_icon_path))
 
     def add_tooltips(self):
         self.toggleables['pass_fail'].setToolTip(
@@ -183,8 +152,6 @@ class SettingsMenuDialog(SettingsMenuUI):
     def connect_buttons(self):
         self.ok_button.clicked.connect(self.on_confirm)
         self.cancel_button.clicked.connect(self.reject)
-        self.community_button.clicked.connect(lambda: openLink(COMMUNITY_LINK))
-        self.donate_button.clicked.connect(lambda: openLink(DONATE_LINK))
 
     def on_confirm(self):
         config['color_buttons'] = self.color_buttons_gbox.isChecked()
@@ -203,11 +170,12 @@ def on_open_settings():
     dialog.exec_()
 
 
-def setup_settings_action():
-    action_settings = QAction(f"{ADDON_NAME} Options...", mw)
+def setup_settings_action(parent: QWidget):
+    action_settings = QAction(f"{ADDON_NAME} Options...", parent)
     qconnect(action_settings.triggered, on_open_settings)
     return action_settings
 
 
 def main():
-    mw.form.menuTools.addAction(setup_settings_action())
+    root_menu = menu_root_entry()
+    root_menu.addAction(setup_settings_action(root_menu))
