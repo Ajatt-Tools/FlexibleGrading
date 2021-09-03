@@ -39,14 +39,17 @@ def add_vim_shortcuts(self: Reviewer, _old: Callable) -> list:
         return [(k, v) for k, v in _old(self) if k not in ('1', '2', '3', '4',)]
 
     def _answer_card(grade: str):
-        if grade == 'again':
-            return self._answerCard(1)
-        if grade == 'hard' and self._defaultEase() == 3:
-            return self._answerCard(2)
-        if grade == 'good':
-            return self._answerCard(self._defaultEase())
-        if grade == 'easy':
-            return self._answerCard(cast(Literal[3, 4], self._defaultEase() + 1))
+        try:
+            if grade == 'again':
+                return self._answerCard(1)
+            if grade == 'hard' and self._defaultEase() == 3:
+                return self._answerCard(2)
+            if grade == 'good':
+                return self._answerCard(self._defaultEase())
+            if grade == 'easy':
+                return self._answerCard(cast(Literal[3, 4], self._defaultEase() + 1))
+        except IndexError:
+            print("Flexible grading error: Couldn't answer card due to a bug in Anki.")
 
     def _default() -> list:
         _shortcuts = [
