@@ -20,7 +20,7 @@
 import json
 import re
 from gettext import gettext as _
-from typing import Callable, cast, Literal
+from typing import Callable, cast, Literal, Tuple, List
 
 from anki.cards import Card
 from anki.hooks import wrap
@@ -33,7 +33,7 @@ from .toolbar import LastEase
 _ans_buttons_default = Reviewer._answerButtons
 
 
-def add_vim_shortcuts(self: Reviewer, _old: Callable) -> list:
+def add_vim_shortcuts(self: Reviewer, _old: Callable) -> List[Tuple[str, Callable]]:
     # Credit: https://ankiweb.net/shared/info/1197299782
     def _filter_out_numbers():
         return [(k, v) for k, v in _old(self) if k not in ('1', '2', '3', '4',)]
@@ -80,7 +80,7 @@ def add_vim_shortcuts(self: Reviewer, _old: Callable) -> list:
         return _default()
 
 
-def answer_card(self: Reviewer, ease, _old: Callable):
+def answer_card(self: Reviewer, ease: Literal[1, 2, 3, 4], _old: Callable) -> None:
     # Allows answering from the front side
     if config['flexible_grading'] is True and self.state == "question":
         self.state = "answer"
