@@ -25,7 +25,6 @@ It goes further by removing review buttons and letting you grade your cards from
     * `k` - Good
     * `l` - Easy
     * `u` - Undo
-    * `i` - Edit
 * Flexible grading.
 Grade cards from their front side.
 Save yourself a few extra keypresses if you know that you know the answer.

@@ -20,7 +20,7 @@
 import json
 import re
 from gettext import gettext as _
-from typing import Callable, cast, Literal, Tuple, List
+from typing import Callable, Literal
 
 from anki.cards import Card
 from anki.hooks import wrap
@@ -28,56 +28,8 @@ from aqt import gui_hooks
 from aqt.reviewer import Reviewer
 
 from .config import config
-from .toolbar import LastEase
 
 _ans_buttons_default = Reviewer._answerButtons
-
-
-def add_vim_shortcuts(self: Reviewer, _old: Callable) -> List[Tuple[str, Callable]]:
-    # Credit: https://ankiweb.net/shared/info/1197299782
-    def _filter_out_numbers():
-        return [(k, v) for k, v in _old(self) if k not in ('1', '2', '3', '4',)]
-
-    def _answer_card(grade: str):
-        try:
-            if grade == 'again':
-                return self._answerCard(1)
-            if grade == 'hard' and self._defaultEase() == 3:
-                return self._answerCard(2)
-            if grade == 'good':
-                return self._answerCard(self._defaultEase())
-            if grade == 'easy':
-                return self._answerCard(cast(Literal[3, 4], self._defaultEase() + 1))
-        except IndexError:
-            print("Flexible grading error: Couldn't answer card due to a bug in Anki.")
-
-    def _default() -> list:
-        _shortcuts = [
-            ("h", lambda: _answer_card(grade='again')),
-            ("j", lambda: _answer_card(grade='hard')),
-            ("k", lambda: _answer_card(grade='good')),
-            ("l", lambda: _answer_card(grade='easy')),
-
-            ("1", lambda: _answer_card(grade='again')),
-            ("2", lambda: _answer_card(grade='hard')),
-            ("3", lambda: _answer_card(grade='good')),
-            ("4", lambda: _answer_card(grade='easy')),
-
-            ("u", self.mw.undo),
-            ("i", self.mw.onEditCurrent),
-            (":", LastEase.open_last_card),
-        ]
-        return _shortcuts + _filter_out_numbers()
-
-    def _pass_fail() -> list:
-        return [(k, v) for k, v in _default() if k not in ('j', 'l', '2', '4',)]
-
-    if config['pass_fail'] is True:
-        # PassFail mode. Pressing 'Hard' and 'Easy' is not allowed.
-        return _pass_fail()
-    else:
-        # Default shortcuts.
-        return _default()
 
 
 def answer_card(self: Reviewer, ease: Literal[1, 2, 3, 4], _old: Callable) -> None:
@@ -221,9 +173,6 @@ def make_frontside_answer_buttons(self: Reviewer) -> None:
 
 
 def main():
-    # Add vim answer shortcuts
-    Reviewer._shortcutKeys = wrap(Reviewer._shortcutKeys, add_vim_shortcuts, "around")
-
     # Activate Vim shortcuts on the front side, if enabled by the user.
     Reviewer._answerCard = wrap(Reviewer._answerCard, answer_card, "around")
 
