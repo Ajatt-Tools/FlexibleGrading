@@ -47,7 +47,8 @@ def old_shortcuts(self: Reviewer, _old: Callable[[Reviewer], List]) -> List[Tupl
 
 def add_vim_shortcuts(self: Reviewer, _old: Callable[[Reviewer], List]) -> List[Tuple[str, Callable]]:
     # Credit: https://ankiweb.net/shared/info/1197299782
-    shortcuts = [*old_shortcuts(self, _old), *new_shortcuts(self)]
+    shortcuts = list(dict([*old_shortcuts(self, _old), *new_shortcuts(self)]).items())
+
     if config['pass_fail'] is True:
         # PassFail mode. Pressing 'Hard' and 'Easy' is not allowed.
         return [(k, v) for k, v in shortcuts if k not in ('j', 'l', '2', '4',)]

@@ -1,6 +1,8 @@
 # Copyright: Ren Tatsumoto <tatsu at autistici.org>
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
+from typing import Dict, Iterable
+
 from aqt import mw
 
 
@@ -34,8 +36,8 @@ class ConfigManager:
     def get_colors(self) -> Dict[str, str]:
         return self._config['colors']
 
-    def get_toggleables(self):
-        return (key for key in self._config.keys() if key != 'colors')
+    def get_toggleables(self) -> Iterable[str]:
+        return (key for key, value in self._config.items() if isinstance(value, bool))
 
     def set_color(self, btn_label: str, color: str):
         self._config['colors'][btn_label] = color

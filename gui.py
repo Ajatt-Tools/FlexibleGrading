@@ -24,7 +24,6 @@ def make_toggleables() -> Dict[str, QCheckBox]:
         if toggleable == 'color_buttons':
             continue
         d[toggleable] = QCheckBox(toggleable.replace('_', ' ').capitalize())
-        d[toggleable].setChecked(config[toggleable])
     return d
 
 
@@ -66,7 +65,6 @@ class SettingsMenuUI(QDialog):
     def make_button_colors_group(self) -> QGroupBox:
         gbox = self.color_buttons_gbox
         gbox.setCheckable(True)
-        gbox.setChecked(config['color_buttons'])
 
         grid = QGridLayout()
         for y_index, label in enumerate(self.colors.keys()):
@@ -131,6 +129,12 @@ class SettingsMenuDialog(SettingsMenuUI):
         self.connect_buttons()
         if mw.col.schedVer() < 2:
             self.layout().addWidget(QLabel(SCHED_NAG_MSG))
+        self.restore_values()
+
+    def restore_values(self):
+        self.color_buttons_gbox.setChecked(config['color_buttons'])
+        for key, checkbox in self.toggleables.items():
+            checkbox.setChecked(config[key])
 
     def connect_buttons(self):
         self.ok_button.clicked.connect(self.on_confirm)
