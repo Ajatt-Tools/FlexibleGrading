@@ -31,15 +31,17 @@ def set_zoom_factor(state: str, factor: float):
         tooltip(f"{state.capitalize()} zoom: {round(mw.web.zoomFactor() * 100)}%", period=1000)
 
 
-def on_state_change(new_state: Optional[str], _old_state: str) -> None:
+def on_state_change(new_state: Optional[str], _old_state: Optional[str]) -> None:
     if config['set_zoom_shortcuts']:
         set_zoom_shortcuts()
     else:
         remove_zoom_shortcuts()
+
     if config['remember_zoom_level'] and new_state in relevant_states():
-        # Write previously set values
-        config.write_config()
-        set_zoom_factor(new_state, config.get_zoom_state(new_state))
+        config.write_config()  # Write previously set values
+        saved_factor = config.get_zoom_state(new_state)
+        if mw.web.zoomFactor() != saved_factor:
+            set_zoom_factor(new_state, saved_factor)
 
 
 def reconnect_zoom_actions():
@@ -61,3 +63,4 @@ def init():
 
     gui_hooks.state_did_change.append(on_state_change)
     gui_hooks.profile_will_close.append(lambda: on_state_change(None, mw.state))
+    gui_hooks.deck_browser_did_render.append(lambda *_: on_state_change(mw.state, None))
