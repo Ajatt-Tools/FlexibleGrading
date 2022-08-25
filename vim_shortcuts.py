@@ -1,5 +1,4 @@
-# AJT Flexible Grading add-on for Anki 2.1
-# Copyright (C) 2022  Ren Tatsumoto <tatsu at autistici.org>
+# Copyright: Ren Tatsumoto <tatsu at autistici.org>
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
 from typing import Callable, Literal, cast, List, Tuple
