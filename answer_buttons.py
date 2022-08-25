@@ -116,7 +116,7 @@ def make_backside_answer_buttons(self: Reviewer, _old: Callable) -> str:
 
 def make_show_ans_table_cell(self: Reviewer):
     stat_txt = make_stat_txt(self)
-    show_answer_button = """<button title="%s" onclick='pycmd("ans");'>%s</button>""" % (
+    show_answer_button = """<button title="{}" onclick='pycmd("ans");'>{}</button>""".format(
         _("Shortcut key: %s") % _("Space"),
         _("Show Answer"),
     )

@@ -99,13 +99,13 @@ class LastEase:
         status = f"{_(label)[:1]}: {human_ivl(card)}"
 
         reviewer.mw.toolbar.web.eval("""\
-        {
-            const elem = document.getElementById("%s");
-            elem.innerHTML = "%s";
-            elem.style.color = "%s";
+        {{
+            const elem = document.getElementById("{}");
+            elem.innerHTML = "{}";
+            elem.style.color = "{}";
             elem.style.display = "inline";
-        };
-        """ % (cls._html_link_id, status, color))
+        }};
+        """.format(cls._html_link_id, status, color))
 
         cls._browser_query = f"cid:{card.id}"
 

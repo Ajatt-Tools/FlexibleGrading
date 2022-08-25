@@ -30,7 +30,7 @@ def make_toggleables() -> Dict[str, QCheckBox]:
 
 class SettingsMenuUI(QDialog):
     def __init__(self, *args, **kwargs):
-        super(SettingsMenuUI, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.setWindowTitle(f'{ADDON_SERIES} {ADDON_NAME}')
         self.setMinimumSize(320, 400)
         self.colors = make_color_line_edits()
@@ -127,7 +127,7 @@ class SettingsMenuUI(QDialog):
 
 class SettingsMenuDialog(SettingsMenuUI):
     def __init__(self, *args, **kwargs):
-        super(SettingsMenuDialog, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.connect_buttons()
         if mw.col.schedVer() < 2:
             self.layout().addWidget(QLabel(SCHED_NAG_MSG))
@@ -153,7 +153,7 @@ def on_open_settings():
     dialog.exec_()
 
 
-def setup_settings_action(parent: QWidget):
+def setup_settings_action(parent: QWidget) -> QAction:
     action_settings = QAction(f"{ADDON_NAME} Options...", parent)
     qconnect(action_settings.triggered, on_open_settings)
     return action_settings
