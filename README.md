@@ -20,42 +20,45 @@ It goes further by removing review buttons and letting you grade your cards from
 ## Features
 
 * Vim bindings. Put mouse away when doing your reviews.
-    * `h` - Fail
-    * `j` - Hard
-    * `k` - Good
-    * `l` - Easy
-    * `u` - Undo
+  * `h` - Fail
+  * `j` - Hard
+  * `k` - Good
+  * `l` - Easy
+  * `u` - Undo
 * Flexible grading.
-Grade cards from their front side.
-Save yourself a few extra keypresses if you know that you know the answer.
+  Grade cards from their front side.
+  Save yourself a few extra keypresses if you know that you know the answer.
 * Color coding for answers. Default colors:
-    * `Fail` - Red
-    * `Hard` - Orange
-    * `Good` - Green
-    * `Easy` - Blue
+  * `Fail` - Red
+  * `Hard` - Orange
+  * `Good` - Green
+  * `Easy` - Blue
 * Remove answer buttons. Possible options:
-    * `Hide`. Completely remove answer buttons (enabled by default).
-    * `Disable`. Disabled buttons are unusable and un-clickable.
+  * `Hide`. Completely remove answer buttons (enabled by default).
+  * `Disable`. Disabled buttons are unusable and un-clickable.
 * Toggleable Pass-Fail mode.
-Removes `Hard` and `Easy` buttons and keybindings.
-Make decisions easier by having to choose
-whether you know a card or not instead of how well you know it.
-Avoid being stuck in
-[Ease Hell](https://youtu.be/1XaJjbCSXT0?t=665)
-by using this feature in combination with the recommended
-[Options Groups settings](https://tatsumoto-ren.github.io/blog/setting-up-anki.html#options-groups).
+  Removes `Hard` and `Easy` buttons and keybindings.
+  Make decisions easier by having to choose
+  whether you know a card or not instead of how well you know it.
+  Avoid being stuck in
+  [Ease Hell](https://youtu.be/1XaJjbCSXT0?t=665)
+  by using this feature in combination with the recommended
+  [Options Groups settings](https://tatsumoto-ren.github.io/blog/setting-up-anki.html#options-groups).
 * Last grade is shown on the toolbar.
-It is possible to click on it and bring up the Anki browser with the card selected.
+  It is possible to click on it and bring up the Anki browser with the card selected.
 * Consistent key mappings for the `1234` keys.
-`2`, `3` and `4` always grade `Hard`, `Good` and `Easy` respectively.
-Only relevant for the V1 scheduler.
-V2 scheduler does this out of the box.
+  `2`, `3` and `4` always grade `Hard`, `Good` and `Easy` respectively.
+  Only relevant for the V1 scheduler.
+  V2 scheduler does this out of the box.
+* Zoom shortcuts.
+  Adds zoom shortcuts that aren't present in vanilla Anki.
+  To zoom in, press `Ctrl+Plus`. To zoom out, press `Ctrl+Minus`.
+  The add-on can remember previous zoom levels and restore them when Anki changes state.
 
 <p align="center">
   <img src="img/front_side_answer_buttons.webp" alt="screenshot">
 </p>
 <p align="center"><i>Flexible Grading with answer buttons enabled.</i></p>
-
 
 ## Installation
 
