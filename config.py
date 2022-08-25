@@ -42,6 +42,12 @@ class ConfigManager:
     def set_color(self, btn_label: str, color: str):
         self._config['colors'][btn_label] = color
 
+    def get_zoom_state(self, state: str) -> float:
+        return self._config.setdefault('zoom_states', {}).get(state, 1)
+
+    def set_zoom_state(self, state: str, value: float) -> None:
+        self._config.setdefault('zoom_states', {})[state] = value
+
     def write_config(self):
         mw.addonManager.writeConfig(__name__, self._config)
 

@@ -10,5 +10,8 @@
   "pass_fail": true,
   "flexible_grading": true,
   "color_buttons": true,
-  "show_last_review": true
+  "show_last_review": true,
+  "set_zoom_shortcuts": true,
+  "remember_zoom_level": true,
+  "tooltip_on_zoom_change": true
 }

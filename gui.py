@@ -51,6 +51,7 @@ class SettingsMenuUI(QDialog):
         layout.addWidget(self.make_button_colors_group())
         layout.addWidget(self.make_buttons_group())
         layout.addWidget(self.make_features_group())
+        layout.addWidget(self.make_zoom_group())
         return layout
 
     @staticmethod
@@ -97,6 +98,16 @@ class SettingsMenuUI(QDialog):
         gbox.setLayout(layout)
         return gbox
 
+    def make_zoom_group(self) -> QGroupBox:
+        gbox = QGroupBox("Zoom")
+        layout = QHBoxLayout()
+        layout.addWidget(self.toggleables['set_zoom_shortcuts'])
+        layout.addWidget(self.toggleables['remember_zoom_level'])
+        layout.addWidget(self.toggleables['tooltip_on_zoom_change'])
+        layout.setAlignment(Qt.AlignLeft)
+        gbox.setLayout(layout)
+        return gbox
+
     def make_bottom_buttons(self) -> QBoxLayout:
         layout = QHBoxLayout()
         layout.addWidget(self.ok_button)
@@ -120,6 +131,15 @@ class SettingsMenuUI(QDialog):
         )
         self.toggleables['show_last_review'].setToolTip(
             "Print the result of the last review on the toolbar."
+        )
+        self.toggleables['set_zoom_shortcuts'].setToolTip(
+            "Change zoom value by pressing Ctrl+Plus and Ctrl+Minus."
+        )
+        self.toggleables['remember_zoom_level'].setToolTip(
+            "Remember last zoom level and restore it on state change."
+        )
+        self.toggleables['tooltip_on_zoom_change'].setToolTip(
+            "Show a tooltip when zoom level changes."
         )
 
 
