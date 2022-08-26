@@ -10,12 +10,12 @@ class ConfigManager:
     def __init__(self):
         self._config = mw.addonManager.getConfig(__name__)
 
-    def __getitem__(self, key) -> bool:
-        assert key != 'colors' and key != 'buttons'
+    def __getitem__(self, key: str) -> bool:
+        assert type(self._config[key]) == bool
         return self._config[key]
 
     def __setitem__(self, key, value):
-        assert key != 'colors' and key != 'buttons'
+        assert type(self._config[key]) == bool
         self._config[key] = value
 
     @staticmethod
