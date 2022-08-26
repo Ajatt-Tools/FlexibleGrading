@@ -13,7 +13,7 @@ from .consts import *
 
 def make_color_line_edits() -> Dict[str, QLineEdit]:
     d = {}
-    for label, color in config.get_colors().items():
+    for label, color in config.colors.items():
         d[label] = QLineEdit(color)
     return d
 

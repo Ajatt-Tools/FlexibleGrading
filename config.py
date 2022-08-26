@@ -33,8 +33,10 @@ class ConfigManager:
     def get_color(self, ease: int, default_ease: int = 3) -> str:
         return self._config['colors'][self.get_label(ease, default_ease)]
 
-    def get_colors(self) -> Dict[str, str]:
-        return self._config['colors']
+    @property
+    def colors(self) -> Dict[str, str]:
+        """Returns a dict mapping buttons' labels to their colors."""
+        return dict(self._config['colors'])
 
     def get_toggleables(self) -> Iterable[str]:
         return (key for key, value in self._config.items() if isinstance(value, bool))
