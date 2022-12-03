@@ -141,6 +141,9 @@ class SettingsMenuUI(QDialog):
         self.toggleables['tooltip_on_zoom_change'].setToolTip(
             "Show a tooltip when zoom level changes."
         )
+        self.toggleables['hide_card_type'].setToolTip(
+            "Turn off the indicator that tells you whether a card is new, review, or again."
+        )
 
 
 class SettingsMenuDialog(SettingsMenuUI):
