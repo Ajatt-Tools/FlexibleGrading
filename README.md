@@ -54,6 +54,7 @@ It goes further by removing review buttons and letting you grade your cards from
   Adds zoom shortcuts that aren't present in vanilla Anki.
   To zoom in, press `Ctrl+Plus`. To zoom out, press `Ctrl+Minus`.
   The add-on can remember previous zoom levels and restore them when Anki changes state.
+* An option to turn off the indicator that tells you whether a card is `new`, `review`, or `learn`.
 
 <p align="center">
   <img src="img/front_side_answer_buttons.webp" alt="screenshot">
