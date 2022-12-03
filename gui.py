@@ -1,20 +1,21 @@
 # Copyright: Ren Tatsumoto <tatsu at autistici.org>
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
+from gettext import gettext as _
 from typing import Dict
 
 from aqt import mw
 from aqt.qt import *
 
 from .ajt_common import menu_root_entry, ADDON_SERIES
-from .config import config
+from .config import config, ConfigManager
 from .consts import *
 
 
 def make_color_line_edits() -> Dict[str, QLineEdit]:
     d = {}
-    for label, color in config.colors.items():
-        d[label] = QLineEdit(color)
+    for label, color_text in config.colors.items():
+        d[label] = QLineEdit(color_text)
     return d
 
 
@@ -35,15 +36,20 @@ class SettingsMenuUI(QDialog):
         self.colors = make_color_line_edits()
         self.toggleables = make_toggleables()
         self.color_buttons_gbox = QGroupBox("Color buttons")
-        self.ok_button = QPushButton("Ok")
-        self.cancel_button = QPushButton("Cancel")
+        self.button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel,
+            parent=self,
+        )
+        self.restore_settings_button = self.button_box.addButton(
+            _("Restore &Defaults"), QDialogButtonBox.ButtonRole.ResetRole
+        )
         self.setLayout(self.setup_layout())
         self.add_tooltips()
 
     def setup_layout(self) -> QBoxLayout:
         layout = QVBoxLayout(self)
         layout.addLayout(self.make_settings_layout())
-        layout.addLayout(self.make_bottom_buttons())
+        layout.addWidget(self.button_box)
         return layout
 
     def make_settings_layout(self) -> QBoxLayout:
@@ -109,13 +115,6 @@ class SettingsMenuUI(QDialog):
         gbox.setLayout(layout)
         return gbox
 
-    def make_bottom_buttons(self) -> QBoxLayout:
-        layout = QHBoxLayout()
-        layout.addWidget(self.ok_button)
-        layout.addWidget(self.cancel_button)
-        layout.addStretch()
-        return layout
-
     def add_tooltips(self):
         self.toggleables['pass_fail'].setToolTip(
             '"Hard" and "Easy" buttons will be hidden.'
@@ -152,14 +151,17 @@ class SettingsMenuDialog(SettingsMenuUI):
             self.layout().addWidget(QLabel(SCHED_NAG_MSG))
         self.restore_values()
 
-    def restore_values(self):
-        self.color_buttons_gbox.setChecked(config['color_buttons'])
+    def restore_values(self, cm: ConfigManager = config):
+        self.color_buttons_gbox.setChecked(cm['color_buttons'])
         for key, checkbox in self.toggleables.items():
-            checkbox.setChecked(config[key])
+            checkbox.setChecked(cm[key])
+        for label, color_text in cm.colors.items():
+            self.colors[label].setText(color_text)
 
     def connect_buttons(self):
-        self.ok_button.clicked.connect(self.on_confirm)
-        self.cancel_button.clicked.connect(self.reject)
+        qconnect(self.restore_settings_button.clicked, lambda: self.restore_values(ConfigManager(default=True)))
+        qconnect(self.button_box.accepted, self.on_confirm)
+        qconnect(self.button_box.rejected, self.reject)
 
     def on_confirm(self):
         config['color_buttons'] = self.color_buttons_gbox.isChecked()
@@ -175,7 +177,7 @@ def on_open_settings():
     if mw.state != "deckBrowser":
         mw.moveToState("deckBrowser")
     dialog = SettingsMenuDialog(mw)
-    dialog.exec_()
+    dialog.exec()
 
 
 def setup_settings_action(parent: QWidget) -> QAction:

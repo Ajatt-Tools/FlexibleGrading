@@ -7,8 +7,19 @@ from aqt import mw
 
 
 class ConfigManager:
-    def __init__(self):
-        self._config = mw.addonManager.getConfig(__name__)
+    @staticmethod
+    def _get_default_config():
+        manager = mw.addonManager
+        addon = manager.addonFromModule(__name__)
+        return manager.addonConfigDefaults(addon)
+
+    @staticmethod
+    def _get_config():
+        return mw.addonManager.getConfig(__name__)
+
+    def __init__(self, default: bool = False):
+        self._config = self._get_config() if not default else self._get_default_config()
+        self._default = default
 
     def __getitem__(self, key: str) -> bool:
         assert type(self._config[key]) == bool
@@ -51,6 +62,8 @@ class ConfigManager:
         self._config.setdefault('zoom_states', {})[state] = value
 
     def write_config(self):
+        if self._default:
+            raise RuntimeError("Can't write default config.")
         mw.addonManager.writeConfig(__name__, self._config)
 
 
