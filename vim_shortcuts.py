@@ -20,8 +20,8 @@ def answer_card(self: Reviewer, grade: str):
             return self._answerCard(self._defaultEase())
         if grade == 'easy':
             return self._answerCard(cast(Literal[3, 4], self._defaultEase() + 1))
-    except IndexError:
-        print("Flexible grading error: Couldn't answer card due to a bug in Anki.")
+    except IndexError as e:
+        raise RuntimeError("Flexible grading error: Couldn't answer card due to a bug in Anki.") from e
 
 
 def new_shortcuts(self: Reviewer) -> List[Tuple[str, Callable]]:
