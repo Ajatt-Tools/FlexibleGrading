@@ -94,6 +94,7 @@ class SettingsMenuUI(QDialog):
         layout.addWidget(self.toggleables['pass_fail'])
         layout.addWidget(self.toggleables['flexible_grading'])
         layout.addWidget(self.toggleables['show_last_review'])
+        layout.addWidget(self.toggleables['hide_card_type'])
         layout.setAlignment(Qt.AlignLeft)
         gbox.setLayout(layout)
         return gbox
