@@ -43,8 +43,11 @@ class ColorEditPicker(QWidget):
         super().__init__(*args, **kwargs)
         self._edit = ColorEdit()
         self.setLayout(layout := QHBoxLayout())
+        layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self._edit)
         layout.addWidget(b := QPushButton(_("Pick")))
+        b.setMinimumSize(32, 16)
+        b.setBaseSize(32, 22)
         qconnect(b.clicked, self.choose_color)
 
     def choose_color(self):
@@ -97,7 +100,7 @@ class SettingsMenuUI(QDialog):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setWindowTitle(f'{ADDON_SERIES} {ADDON_NAME}')
-        self.setMinimumSize(320, 400)
+        self.setMinimumSize(480, 512)
         self.colors = make_color_line_edits()
         self.answer_keys = make_answer_key_edits()
         self.toggleables = make_toggleables()
@@ -118,13 +121,14 @@ class SettingsMenuUI(QDialog):
         layout.addWidget(self.button_box)
         return layout
 
-    def make_settings_layout(self) -> QBoxLayout:
-        layout = QVBoxLayout()
-        layout.addWidget(self.make_button_colors_group())
-        layout.addWidget(self.make_shortcuts_group())
-        layout.addWidget(self.make_buttons_group())
-        layout.addWidget(self.make_features_group())
-        layout.addWidget(self.make_zoom_group())
+    def make_settings_layout(self) -> QLayout:
+        layout = QGridLayout()
+        # row, col, row-span, col-span
+        layout.addWidget(self.make_button_colors_group(), 0, 0, 1, 1)
+        layout.addWidget(self.make_shortcuts_group(), 0, 1, 1, 1)
+        layout.addWidget(self.make_buttons_group(), 1, 0, 1, 2)
+        layout.addWidget(self.make_features_group(), 2, 0, 1, 2)
+        layout.addWidget(self.make_zoom_group(), 3, 0, 1, 2)
         return layout
 
     @staticmethod
