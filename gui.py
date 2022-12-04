@@ -8,7 +8,8 @@ from aqt import mw
 from aqt.qt import *
 from aqt.utils import restoreGeom, saveGeom
 
-from .ajt_common import menu_root_entry, ADDON_SERIES
+from .ajt_common.consts import ADDON_SERIES
+from .ajt_common.about_menu import menu_root_entry
 from .config import config, ConfigManager
 from .consts import *
 
