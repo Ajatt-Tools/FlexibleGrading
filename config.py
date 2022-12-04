@@ -27,6 +27,13 @@ class ConfigManager:
     def _get(self, key: str):
         return self._config.get(key, self._default_config[key])
 
+    def _get_sub(self, sub_key: str) -> Dict[str, str]:
+        return {
+            key.lower(): self._config[sub_key].get(key.lower(), default_value)
+            for key, default_value in
+            self._default_config[sub_key].items()
+        }
+
     def __getitem__(self, key: str) -> bool:
         assert type(val := self._get(key)) == bool
         return val
@@ -70,11 +77,18 @@ class ConfigManager:
     @property
     def colors(self) -> Dict[str, str]:
         """Returns a dict mapping buttons' labels to their colors."""
-        return {
-            label.lower(): self._config['colors'].get(label.lower(), color_text)
-            for label, color_text in
-            self._default_config['colors'].items()
-        }
+        return self._get_sub('colors')
+
+    @property
+    def buttons(self) -> Dict[str, str]:
+        """Returns a dict mapping buttons' labels to their key bindings."""
+        return self._get_sub('buttons')
+
+    def get_key(self, answer: str) -> str:
+        return self._config['buttons'].get(answer.lower(), "")
+
+    def set_key(self, answer: str, letter: str):
+        self._config['buttons'][answer.lower()] = letter
 
     def get_toggleables(self) -> Iterable[str]:
         """Returns an iterable of boolean keys in the config."""

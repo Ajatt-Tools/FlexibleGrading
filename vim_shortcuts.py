@@ -1,6 +1,7 @@
 # Copyright: Ren Tatsumoto <tatsu at autistici.org>
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
+import functools
 from typing import Callable, Literal, cast, List, Tuple
 
 from anki.hooks import wrap
@@ -26,19 +27,23 @@ def answer_card(self: Reviewer, grade: str):
 
 def new_shortcuts(self: Reviewer) -> List[Tuple[str, Callable]]:
     return [
-        ("h", lambda: answer_card(self, grade='again')),
-        ("j", lambda: answer_card(self, grade='hard')),
-        ("k", lambda: answer_card(self, grade='good')),
-        ("l", lambda: answer_card(self, grade='easy')),
-
         ("1", lambda: answer_card(self, grade='again')),
         ("2", lambda: answer_card(self, grade='hard')),
         ("3", lambda: answer_card(self, grade='good')),
         ("4", lambda: answer_card(self, grade='easy')),
 
-        ("u", self.mw.undo),
-        (":", LastEase.open_last_card),
+        *[
+            (config.get_key(answer), functools.partial(answer_card, self, grade=answer))
+            for answer in ('again', 'hard', 'good', 'easy')
+        ],
+
+        (config.get_key("undo"), self.mw.undo),
+        (config.get_key("last_card"), LastEase.open_last_card),
     ]
+
+
+def is_key_set(shortcut_key: Tuple[str, Callable]) -> bool:
+    return bool(shortcut_key[0])
 
 
 def old_shortcuts(self: Reviewer, _old: Callable[[Reviewer], List]) -> List[Tuple[str, Callable]]:
@@ -47,7 +52,10 @@ def old_shortcuts(self: Reviewer, _old: Callable[[Reviewer], List]) -> List[Tupl
 
 def add_vim_shortcuts(self: Reviewer, _old: Callable[[Reviewer], List]) -> List[Tuple[str, Callable]]:
     # Credit: https://ankiweb.net/shared/info/1197299782
-    shortcuts = list(dict([*old_shortcuts(self, _old), *new_shortcuts(self)]).items())
+    shortcuts = list(dict([
+        *old_shortcuts(self, _old),
+        *filter(is_key_set, new_shortcuts(self))
+    ]).items())
 
     if config['pass_fail'] is True:
         # PassFail mode. Pressing 'Hard' and 'Easy' is not allowed.

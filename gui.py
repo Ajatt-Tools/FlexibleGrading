@@ -14,10 +14,41 @@ from .config import config, ConfigManager
 from .consts import *
 
 
+def as_label(key: str) -> str:
+    return key.replace('_', ' ').capitalize()
+
+
+class MonoSpaceLineEdit(QLineEdit):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        font = self.font()
+        font.setFamilies((
+            "Noto Mono", "Noto Sans Mono", "DejaVu Sans Mono",
+            "Liberation Mono", "Courier New", "Monospace"
+        ))
+        self.setFont(font)
+
+
+class SimpleKeyEdit(MonoSpaceLineEdit):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        key_regex = QRegularExpression(r'^[-A-Za-z0-9:;<>=?@~|`_/&!#$%^*(){}"+\]\[\\\']?$')
+        key_validator = QRegularExpressionValidator(key_regex, self)
+        self.setValidator(key_validator)
+        self.setPlaceholderText("Key letter")
+
+
 def make_color_line_edits() -> Dict[str, QLineEdit]:
     d = {}
     for label, color_text in config.colors.items():
-        d[label] = QLineEdit(color_text)
+        d[label] = MonoSpaceLineEdit(color_text)
+    return d
+
+
+def make_answer_key_edits() -> Dict[str, QLineEdit]:
+    d = {}
+    for label, button_key in config.buttons.items():
+        d[label] = SimpleKeyEdit(button_key)
     return d
 
 
@@ -26,7 +57,7 @@ def make_toggleables() -> Dict[str, QCheckBox]:
     for toggleable in config.get_toggleables():
         if toggleable == 'color_buttons':
             continue
-        d[toggleable] = QCheckBox(toggleable.replace('_', ' ').capitalize())
+        d[toggleable] = QCheckBox(as_label(toggleable))
     return d
 
 
@@ -38,6 +69,7 @@ class SettingsMenuUI(QDialog):
         self.setWindowTitle(f'{ADDON_SERIES} {ADDON_NAME}')
         self.setMinimumSize(320, 400)
         self.colors = make_color_line_edits()
+        self.answer_keys = make_answer_key_edits()
         self.toggleables = make_toggleables()
         self.color_buttons_gbox = QGroupBox("Color buttons")
         self.button_box = QDialogButtonBox(
@@ -59,6 +91,7 @@ class SettingsMenuUI(QDialog):
     def make_settings_layout(self) -> QBoxLayout:
         layout = QVBoxLayout()
         layout.addWidget(self.make_button_colors_group())
+        layout.addWidget(self.make_shortcuts_group())
         layout.addWidget(self.make_buttons_group())
         layout.addWidget(self.make_features_group())
         layout.addWidget(self.make_zoom_group())
@@ -77,12 +110,19 @@ class SettingsMenuUI(QDialog):
         gbox = self.color_buttons_gbox
         gbox.setCheckable(True)
         form = QFormLayout()
-        for label, lineedit in self.colors.items():
-            form.addRow(label.capitalize(), lineedit)
-        vbox = QVBoxLayout()
-        vbox.addLayout(form)
-        vbox.addWidget(self.make_colors_link())
-        gbox.setLayout(vbox)
+        for key, lineedit in self.colors.items():
+            form.addRow(as_label(key), lineedit)
+        form.addWidget(self.make_colors_link())
+        gbox.setLayout(form)
+        return gbox
+
+    def make_shortcuts_group(self) -> QGroupBox:
+        gbox = QGroupBox("Keys")
+        gbox.setCheckable(False)
+        form = QFormLayout()
+        for key, key_edit in self.answer_keys.items():
+            form.addRow(as_label(key), key_edit)
+        gbox.setLayout(form)
         return gbox
 
     def make_buttons_group(self) -> QGroupBox:
@@ -161,6 +201,8 @@ class SettingsMenuDialog(SettingsMenuUI):
             checkbox.setChecked(cm[key])
         for label, color_text in cm.colors.items():
             self.colors[label].setText(color_text)
+        for label, key_letter in cm.buttons.items():
+            self.answer_keys[label].setText(key_letter)
 
     def connect_buttons(self):
         qconnect(self.restore_settings_button.clicked, lambda: self.restore_values(ConfigManager(default=True)))
@@ -171,6 +213,8 @@ class SettingsMenuDialog(SettingsMenuUI):
         config['color_buttons'] = self.color_buttons_gbox.isChecked()
         for label, lineedit in self.colors.items():
             config.set_color(label, lineedit.text())
+        for label, lineedit in self.answer_keys.items():
+            config.set_key(label, lineedit.text())
         for key, checkbox in self.toggleables.items():
             config[key] = checkbox.isChecked()
         config.write_config()

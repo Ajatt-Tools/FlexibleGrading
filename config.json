@@ -5,6 +5,14 @@
     "good": "ForestGreen",
     "easy": "DodgerBlue"
   },
+  "buttons": {
+    "again": "h",
+    "hard": "j",
+    "good": "k",
+    "easy": "l",
+    "undo": "u",
+    "last_card": ":"
+  },
   "remove_buttons": true,
   "prevent_clicks": true,
   "pass_fail": true,
