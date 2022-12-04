@@ -29,6 +29,12 @@ class MonoSpaceLineEdit(QLineEdit):
         self.setFont(font)
 
 
+class ColorEdit(MonoSpaceLineEdit):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.setPlaceholderText("HTML color code")
+
+
 class SimpleKeyEdit(MonoSpaceLineEdit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -41,7 +47,7 @@ class SimpleKeyEdit(MonoSpaceLineEdit):
 def make_color_line_edits() -> Dict[str, QLineEdit]:
     d = {}
     for label, color_text in config.colors.items():
-        d[label] = MonoSpaceLineEdit(color_text)
+        d[label] = ColorEdit(color_text)
     return d
 
 
