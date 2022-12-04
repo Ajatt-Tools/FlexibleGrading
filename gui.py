@@ -62,7 +62,7 @@ def make_toggleables() -> Dict[str, QCheckBox]:
 
 
 class SettingsMenuUI(QDialog):
-    name = "FlexibleGradingSettingsDialog"
+    name = f"{ADDON_SERIES} {ADDON_NAME} Settings Dialog"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
