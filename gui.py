@@ -130,7 +130,7 @@ class SettingsMenuUI(QDialog):
         layout = QHBoxLayout()
         layout.addWidget(self.toggleables['remove_buttons'])
         layout.addWidget(self.toggleables['prevent_clicks'])
-        layout.setAlignment(Qt.AlignLeft)
+        layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         gbox.setLayout(layout)
         return gbox
 
@@ -141,7 +141,7 @@ class SettingsMenuUI(QDialog):
         layout.addWidget(self.toggleables['flexible_grading'])
         layout.addWidget(self.toggleables['show_last_review'])
         layout.addWidget(self.toggleables['hide_card_type'])
-        layout.setAlignment(Qt.AlignLeft)
+        layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         gbox.setLayout(layout)
         return gbox
 
@@ -151,7 +151,7 @@ class SettingsMenuUI(QDialog):
         layout.addWidget(self.toggleables['set_zoom_shortcuts'])
         layout.addWidget(self.toggleables['remember_zoom_level'])
         layout.addWidget(self.toggleables['tooltip_on_zoom_change'])
-        layout.setAlignment(Qt.AlignLeft)
+        layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         gbox.setLayout(layout)
         return gbox
 
