@@ -72,16 +72,12 @@ class SettingsMenuUI(QDialog):
     def make_button_colors_group(self) -> QGroupBox:
         gbox = self.color_buttons_gbox
         gbox.setCheckable(True)
-
-        grid = QGridLayout()
-        for y_index, label in enumerate(self.colors.keys()):
-            grid.addWidget(QLabel(label), y_index, 0)
-            grid.addWidget(self.colors[label], y_index, 1)
-
+        form = QFormLayout()
+        for label, lineedit in self.colors.items():
+            form.addRow(label.capitalize(), lineedit)
         vbox = QVBoxLayout()
-        vbox.addLayout(grid)
+        vbox.addLayout(form)
         vbox.addWidget(self.make_colors_link())
-
         gbox.setLayout(vbox)
         return gbox
 
