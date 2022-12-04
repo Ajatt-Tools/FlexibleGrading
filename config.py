@@ -17,9 +17,12 @@ class ConfigManager:
     def _get_config():
         return mw.addonManager.getConfig(__name__)
 
+    _default_config = _get_default_config()
+    _config = _get_config()
+
     def __init__(self, default: bool = False):
-        self._default_config = self._get_default_config()
-        self._config = self._default_config if default else self._get_config()
+        if default:
+            self._config = self._default_config
 
     def _get(self, key: str):
         return self._config.get(key, self._default_config[key])
