@@ -35,6 +35,26 @@ class ColorEdit(MonoSpaceLineEdit):
         self.setPlaceholderText("HTML color code")
 
 
+class ColorEditPicker(QWidget):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._edit = ColorEdit()
+        self.setLayout(layout := QHBoxLayout())
+        layout.addWidget(self._edit)
+        layout.addWidget(b := QPushButton(_("Pick")))
+        qconnect(b.clicked, self.choose_color)
+
+    def choose_color(self):
+        color = QColorDialog.getColor(initial=QColor(self._edit.text()))
+        self._edit.setText(color.name())
+
+    def setText(self, text: str):
+        return self._edit.setText(text)
+
+    def text(self):
+        return self._edit.text()
+
+
 class SimpleKeyEdit(MonoSpaceLineEdit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -44,10 +64,10 @@ class SimpleKeyEdit(MonoSpaceLineEdit):
         self.setPlaceholderText("Key letter")
 
 
-def make_color_line_edits() -> Dict[str, QLineEdit]:
+def make_color_line_edits() -> Dict[str, ColorEditPicker]:
     d = {}
-    for label, color_text in config.colors.items():
-        d[label] = ColorEdit(color_text)
+    for label in config.colors:
+        d[label] = ColorEditPicker()
     return d
 
 
