@@ -32,6 +32,9 @@ class MonoSpaceLineEdit(QLineEdit):
 class ColorEdit(MonoSpaceLineEdit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        color_regex = QRegularExpression(r'^#?\w+$')
+        color_validator = QRegularExpressionValidator(color_regex, self)
+        self.setValidator(color_validator)
         self.setPlaceholderText("HTML color code")
 
 
