@@ -6,6 +6,7 @@ from typing import Dict
 
 from aqt import mw
 from aqt.qt import *
+from aqt.utils import restoreGeom, saveGeom
 
 from .ajt_common import menu_root_entry, ADDON_SERIES
 from .config import config, ConfigManager
@@ -29,6 +30,8 @@ def make_toggleables() -> Dict[str, QCheckBox]:
 
 
 class SettingsMenuUI(QDialog):
+    name = "FlexibleGradingSettingsDialog"
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setWindowTitle(f'{ADDON_SERIES} {ADDON_NAME}')
@@ -149,6 +152,7 @@ class SettingsMenuDialog(SettingsMenuUI):
         if mw.col.schedVer() < 2:
             self.layout().addWidget(QLabel(SCHED_NAG_MSG))
         self.restore_values()
+        restoreGeom(self, self.name)
 
     def restore_values(self, cm: ConfigManager = config):
         self.color_buttons_gbox.setChecked(cm['color_buttons'])
@@ -159,17 +163,21 @@ class SettingsMenuDialog(SettingsMenuUI):
 
     def connect_buttons(self):
         qconnect(self.restore_settings_button.clicked, lambda: self.restore_values(ConfigManager(default=True)))
-        qconnect(self.button_box.accepted, self.on_confirm)
+        qconnect(self.button_box.accepted, self.accept)
         qconnect(self.button_box.rejected, self.reject)
 
-    def on_confirm(self):
+    def accept(self) -> None:
         config['color_buttons'] = self.color_buttons_gbox.isChecked()
         for label, lineedit in self.colors.items():
             config.set_color(label, lineedit.text())
         for key, checkbox in self.toggleables.items():
             config[key] = checkbox.isChecked()
         config.write_config()
-        self.accept()
+        return super().accept()
+
+    def done(self, *args, **kwargs) -> None:
+        saveGeom(self, self.name)
+        return super().done(*args, **kwargs)
 
 
 def on_open_settings():
