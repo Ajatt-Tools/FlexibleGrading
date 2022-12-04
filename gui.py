@@ -32,7 +32,7 @@ class MonoSpaceLineEdit(QLineEdit):
 class SimpleKeyEdit(MonoSpaceLineEdit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        key_regex = QRegularExpression(r'^[-A-Za-z0-9:;<>=?@~|`_/&!#$%^*(){}"+\]\[\\\']?$')
+        key_regex = QRegularExpression(r'^[-a-z0-9:;<>=?@~|`_/&!#$%^*(){}"+\]\[\\\']?$')
         key_validator = QRegularExpressionValidator(key_regex, self)
         self.setValidator(key_validator)
         self.setPlaceholderText("Key letter")

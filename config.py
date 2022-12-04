@@ -85,10 +85,10 @@ class ConfigManager:
         return self._get_sub('buttons')
 
     def get_key(self, answer: str) -> str:
-        return self._config['buttons'].get(answer.lower(), "")
+        return self._config['buttons'].get(answer.lower(), "").lower()
 
     def set_key(self, answer: str, letter: str):
-        self._config['buttons'][answer.lower()] = letter
+        self._config['buttons'][answer.lower()] = letter.lower()
 
     def get_toggleables(self) -> Iterable[str]:
         """Returns an iterable of boolean keys in the config."""
