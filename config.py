@@ -85,9 +85,11 @@ class ConfigManager:
         return self._get_sub('buttons')
 
     def get_key(self, answer: str) -> str:
+        """Returns shortcut key for answer button, e.g. 'again'=>'h'."""
         return self._config['buttons'].get(answer.lower(), "").lower()
 
     def set_key(self, answer: str, letter: str):
+        """Sets shortcut key for answer button, e.g. 'again'=>'h'."""
         self._config['buttons'][answer.lower()] = letter.lower()
 
     def get_toggleables(self) -> Iterable[str]:
