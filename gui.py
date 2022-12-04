@@ -48,8 +48,9 @@ class ColorEditPicker(QWidget):
         qconnect(b.clicked, self.choose_color)
 
     def choose_color(self):
-        color = QColorDialog.getColor(initial=QColor(self._edit.text()))
-        self._edit.setText(color.name())
+        color = QColorDialog.getColor(initial=QColor.fromString(self._edit.text()))
+        if color.isValid():
+            self._edit.setText(color.name())
 
     def setText(self, text: str):
         return self._edit.setText(text)
