@@ -1,9 +1,9 @@
 {
   "colors": {
-    "Again": "FireBrick",
-    "Hard": "DarkGoldenRod",
-    "Good": "ForestGreen",
-    "Easy": "DodgerBlue"
+    "again": "FireBrick",
+    "hard": "DarkGoldenRod",
+    "good": "ForestGreen",
+    "easy": "DodgerBlue"
   },
   "remove_buttons": true,
   "prevent_clicks": true,
