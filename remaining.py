@@ -1,8 +1,13 @@
+# Copyright: Ren Tatsumoto <tatsu at autistici.org>
+# License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
+
 import re
 from typing import Callable
-from .config import config
+
 from anki.hooks import wrap
 from aqt.reviewer import Reviewer
+
+from .config import config
 
 
 def strip_html_tags(s: str) -> str:
@@ -21,4 +26,5 @@ def wrap_remaining(self: Reviewer, _old: Callable[[Reviewer], str]):
 
 
 def init():
+    # noinspection PyProtectedMember
     Reviewer._remaining = wrap(Reviewer._remaining, wrap_remaining, "around")
