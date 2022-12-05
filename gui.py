@@ -69,7 +69,7 @@ class SimpleKeyEdit(MonoSpaceLineEdit):
         key_validator = QRegularExpressionValidator(key_regex, self)
         self.setValidator(key_validator)
         self.setPlaceholderText("Key letter")
-        self.setToolTip("If a key is taken by something else,\nit will refuse to work.")
+        self.setToolTip("If a key is taken by something else, it will refuse to work.\nLeave empty to disable.")
 
 
 def make_color_line_edits() -> Dict[str, ColorEditPicker]:
