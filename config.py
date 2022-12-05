@@ -6,17 +6,17 @@ from typing import Dict, Iterable, Union, overload
 from aqt import mw
 
 
+def _get_default_config():
+    manager = mw.addonManager
+    addon = manager.addonFromModule(__name__)
+    return manager.addonConfigDefaults(addon)
+
+
+def _get_config():
+    return mw.addonManager.getConfig(__name__)
+
+
 class ConfigManager:
-    @staticmethod
-    def _get_default_config():
-        manager = mw.addonManager
-        addon = manager.addonFromModule(__name__)
-        return manager.addonConfigDefaults(addon)
-
-    @staticmethod
-    def _get_config():
-        return mw.addonManager.getConfig(__name__)
-
     _default_config = _get_default_config()
     _config = _get_config()
 
