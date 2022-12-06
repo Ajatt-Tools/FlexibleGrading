@@ -4,7 +4,7 @@
 import json
 import re
 from gettext import gettext as _
-from typing import Callable, Literal
+from typing import Callable
 
 from anki.cards import Card
 from anki.hooks import wrap
@@ -16,34 +16,27 @@ from .config import config
 _ans_buttons_default = Reviewer._answerButtons
 
 
+def only_pass_fail(buttons: tuple, default_ease: int) -> tuple[tuple[int, str], ...]:
+    def is_again_or_good(ease: int, _label: str) -> bool:
+        return ease in (1, default_ease)
+
+    return tuple(button for button in buttons if is_again_or_good(*button))
 
 
-
-def only_pass_fail(buttons: tuple, self: Reviewer) -> tuple:
-    edited_buttons = []
-    for button in buttons:
-        ease = button[0]
-        label = button[1]
-        if ease == 1 or ease == self._defaultEase():
-            edited_buttons.append((ease, label))
-
-    return tuple(edited_buttons)
-
-
-def apply_label_colors(buttons: tuple, self: Reviewer) -> tuple[tuple[int, str], ...]:
+def apply_label_colors(buttons: tuple, default_ease: int) -> tuple[tuple[int, str], ...]:
     def color_label(ease: int, label: str) -> tuple[int, str]:
-        return ease, f"<font color=\"{config.get_color(ease, self._defaultEase())}\">{label}</font>"
+        return ease, f"<font color=\"{config.get_color(ease, default_ease)}\">{label}</font>"
 
     return tuple(color_label(*button) for button in buttons)
 
 
-def filter_answer_buttons(buttons: tuple, reviewer: Reviewer, _: Card) -> tuple[tuple[int, str], ...]:
+def filter_answer_buttons(buttons: tuple, self: Reviewer, _: Card) -> tuple[tuple[int, str], ...]:
     # Called by _answerButtonList, before _answerButtons gets called
     if config['pass_fail'] is True:
-        buttons = only_pass_fail(buttons, reviewer)
+        buttons = only_pass_fail(buttons, self._defaultEase())
 
     if config['color_buttons'] is True:
-        buttons = apply_label_colors(buttons, reviewer)
+        buttons = apply_label_colors(buttons, self._defaultEase())
 
     return buttons
 
