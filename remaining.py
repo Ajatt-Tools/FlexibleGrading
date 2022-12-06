@@ -9,9 +9,11 @@ from aqt.reviewer import Reviewer
 
 from .config import config
 
+HTML_TAG = re.compile(r'<[^<>]+>', flags=re.IGNORECASE | re.MULTILINE)
+
 
 def strip_html_tags(s: str) -> str:
-    return re.sub(r'<[^<>]+>', '', s, flags=re.IGNORECASE | re.MULTILINE)
+    return re.sub(HTML_TAG, '', s)
 
 
 def wrap_remaining(self: Reviewer, _old: Callable[[Reviewer], str]):
