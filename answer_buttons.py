@@ -62,8 +62,10 @@ def get_ease_attrs(self: Reviewer, ease: int) -> str:
 
 
 def make_stat_txt(self: Reviewer):
-    padding_top = '5px' if config['remove_buttons'] is True else '4px'
-    return f'<div style="padding: {padding_top} 5px 0px;">{self._remaining()}</div>'
+    def _padding_top():
+        return '5px' if config['remove_buttons'] is True else '4px'
+
+    return f'<div style="padding: {_padding_top()} 5px 0px;">{self._remaining()}</div>'
 
 
 def get_ease_row_css() -> str:
@@ -104,13 +106,11 @@ def disable_buttons(html: str) -> str:
 
 def make_backside_answer_buttons(self: Reviewer, _old: Callable) -> str:
     if config['remove_buttons'] is True:
-        html = make_buttonless_ease_row(self)
+        return make_buttonless_ease_row(self)
     elif config['prevent_clicks'] is True:
-        html: str = disable_buttons(_old(self))
+        return disable_buttons(_old(self))
     else:
-        html: str = _old(self)
-
-    return html
+        return _old(self)
 
 
 def make_show_ans_table_cell(self: Reviewer):
