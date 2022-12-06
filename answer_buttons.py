@@ -41,13 +41,6 @@ def filter_answer_buttons(buttons: tuple, self: Reviewer, _: Card) -> tuple[tupl
     return buttons
 
 
-def get_ease_attrs(self: Reviewer, ease: int) -> str:
-    if config['color_buttons'] is True:
-        return f' style="color: {config.get_color(ease, self._defaultEase())};"'
-    else:
-        return ''
-
-
 def make_stat_txt(self: Reviewer):
     def _padding_top():
         return '5px' if config['remove_buttons'] is True else '4px'
@@ -74,17 +67,26 @@ def get_ease_row_css() -> str:
     """
 
 
-def make_buttonless_ease_row(self: Reviewer, front=False) -> str:
+def button_time(self: Reviewer, ease: int) -> str:
+    if config['color_buttons'] is True:
+        return f'<div style="color: {config.get_color(ease, self._defaultEase())};">{self._buttonTime(ease)}</div>'
+    else:
+        return f'<div>{self._buttonTime(ease)}</div>'
+
+
+def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
+    """Returns ease row html when config.remove_buttons is true"""
+
     if front is True and config['flexible_grading'] is False:
         return make_stat_txt(self)
     else:
         ease_row = []
         ans_buttons = self._answerButtonList()
 
-        for idx, (ease, _) in enumerate(ans_buttons):
+        for idx, (ease, _label) in enumerate(ans_buttons):
             if front and idx == len(ans_buttons) // 2:
                 ease_row.append(make_stat_txt(self))
-            ease_row.append(f'<div{get_ease_attrs(self, ease)}>{self._buttonTime(ease)}</div>')
+            ease_row.append(button_time(self, ease))
 
         return get_ease_row_css() + f'<div class="ease_row">{"".join(ease_row)}</div>'
 
