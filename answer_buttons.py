@@ -36,15 +36,14 @@ def only_pass_fail(buttons: tuple, self: Reviewer) -> tuple:
     return tuple(edited_buttons)
 
 
-def apply_label_colors(buttons: tuple, self: Reviewer) -> tuple:
-    def color_label(ease, label):
-        label = f"<font color=\"{config.get_color(ease, self._defaultEase())}\">{label}</font>"
-        return ease, label
+def apply_label_colors(buttons: tuple, self: Reviewer) -> tuple[tuple[int, str], ...]:
+    def color_label(ease: int, label: str) -> tuple[int, str]:
+        return ease, f"<font color=\"{config.get_color(ease, self._defaultEase())}\">{label}</font>"
 
     return tuple(color_label(*button) for button in buttons)
 
 
-def filter_answer_buttons(buttons: tuple, reviewer: Reviewer, _: Card) -> tuple:
+def filter_answer_buttons(buttons: tuple, reviewer: Reviewer, _: Card) -> tuple[tuple[int, str], ...]:
     # Called by _answerButtonList, before _answerButtons gets called
     if config['pass_fail'] is True:
         buttons = only_pass_fail(buttons, reviewer)

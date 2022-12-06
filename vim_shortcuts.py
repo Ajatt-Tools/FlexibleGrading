@@ -49,7 +49,7 @@ def number_shortcuts(self: Reviewer):
     ]
 
 
-def new_shortcuts(self: Reviewer) -> List[Tuple[str, Callable]]:
+def new_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
     return [
         *number_shortcuts(self),
         *[
@@ -61,16 +61,16 @@ def new_shortcuts(self: Reviewer) -> List[Tuple[str, Callable]]:
     ]
 
 
-def old_shortcuts(self: Reviewer, _old: Callable[[Reviewer], List]) -> List[Tuple[str, Callable]]:
+def old_shortcuts(self: Reviewer, _old: Callable[[Reviewer], list]) -> list[tuple[str, Callable]]:
     # Filter out default number-keys.
     return [(key, func) for key, func in _old(self) if key not in ('1', '2', '3', '4',)]
 
 
-def is_key_set(shortcut_key: Tuple[str, Callable]) -> bool:
+def is_key_set(shortcut_key: tuple[str, Callable]) -> bool:
     return bool(shortcut_key[0])
 
 
-def add_vim_shortcuts(self: Reviewer, _old: Callable[[Reviewer], List]) -> List[Tuple[str, Callable]]:
+def add_vim_shortcuts(self: Reviewer, _old: Callable[[Reviewer], list]) -> list[tuple[str, Callable]]:
     # Credit: https://ankiweb.net/shared/info/1197299782
     return list(dict([
         *old_shortcuts(self, _old),

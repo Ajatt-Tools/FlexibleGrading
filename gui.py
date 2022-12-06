@@ -72,21 +72,21 @@ class SimpleKeyEdit(MonoSpaceLineEdit):
         self.setToolTip("If a key is taken by something else, it will refuse to work.\nLeave empty to disable.")
 
 
-def make_color_line_edits() -> Dict[str, ColorEditPicker]:
+def make_color_line_edits() -> dict[str, ColorEditPicker]:
     d = {}
     for label in config.colors:
         d[label] = ColorEditPicker()
     return d
 
 
-def make_answer_key_edits() -> Dict[str, QLineEdit]:
+def make_answer_key_edits() -> dict[str, QLineEdit]:
     d = {}
     for label, button_key in config.buttons.items():
         d[label] = SimpleKeyEdit(button_key)
     return d
 
 
-def make_toggleables() -> Dict[str, QCheckBox]:
+def make_toggleables() -> dict[str, QCheckBox]:
     d = {}
     for toggleable in config.get_toggleables():
         if toggleable == 'color_buttons':

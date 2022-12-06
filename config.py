@@ -27,7 +27,7 @@ class ConfigManager:
     def _get(self, key: str):
         return self._config.get(key, self._default_config[key])
 
-    def _get_sub(self, sub_key: str) -> Dict[str, str]:
+    def _get_sub(self, sub_key: str) -> dict[str, str]:
         return {
             key.lower(): self._config[sub_key].get(key.lower(), default_value)
             for key, default_value in
@@ -76,12 +76,12 @@ class ConfigManager:
         return self._config['colors'].get(label, self._default_config['colors'].get(label, "Pink"))
 
     @property
-    def colors(self) -> Dict[str, str]:
+    def colors(self) -> dict[str, str]:
         """Returns a dict mapping buttons' labels to their colors."""
         return self._get_sub('colors')
 
     @property
-    def buttons(self) -> Dict[str, str]:
+    def buttons(self) -> dict[str, str]:
         """Returns a dict mapping buttons' labels to their key bindings."""
         return self._get_sub('buttons')
 
