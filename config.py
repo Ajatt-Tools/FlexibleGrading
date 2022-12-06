@@ -35,7 +35,8 @@ class ConfigManager:
         }
 
     def __getitem__(self, key: str) -> bool:
-        assert type(val := self._get(key)) == bool
+        val = self._get(key)
+        assert type(val) == bool
         return val
 
     def __setitem__(self, key, value):
