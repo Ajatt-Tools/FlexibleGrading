@@ -23,12 +23,13 @@ def to_number(s: str) -> Optional[int]:
         return None
 
 
+def sum_remaining(html: str) -> int:
+    return sum(n for split in strip_html_tags(html).split('+') if (n := to_number(split)) is not None)
+
+
 def wrap_remaining(self: Reviewer, _old: Callable[[Reviewer], str]):
     if config["hide_card_type"] is True:
-        html = _old(self)
-        html = strip_html_tags(html)
-        numbers = (n for split in html.split('+') if (n := to_number(split)) is not None)
-        return f'<span class="total-count">Left: {sum(numbers)}</span>'
+        return f'<span class="total-count">Left: {sum_remaining(_old(self))}</span>'
     else:
         return _old(self)
 
