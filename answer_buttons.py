@@ -119,7 +119,7 @@ def fix_spacer_padding(html: str) -> str:
 
 
 def calc_middle_insert_pos(buttons_html_table: str) -> int:
-    cell_positions = [m.start() for m in re.finditer('<td', buttons_html_table)]
+    cell_positions = [m.start() for m in re.finditer(r'<td', buttons_html_table)]
     return cell_positions[:len(cell_positions) // 2 + 1][-1]
 
 
