@@ -61,9 +61,11 @@ def get_ease_row_css() -> str:
     .ease_row {
         display: flex;
         justify-content: space-between;
+        align-items: flex-start;
         max-width: 450px;
         min-width: 200px;
         user-select: none;
+        margin-inline: auto;
     }
     .ease_row > div {
         padding-top: 1px;
