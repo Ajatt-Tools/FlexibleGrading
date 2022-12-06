@@ -16,13 +16,7 @@ from .config import config
 _ans_buttons_default = Reviewer._answerButtons
 
 
-def answer_card(self: Reviewer, ease: Literal[1, 2, 3, 4], _old: Callable) -> None:
-    # Allows answering from the front side
-    if config['flexible_grading'] is True and self.state == "question":
-        self.state = "answer"
 
-    # min() makes sure the original _answerCard() never skips
-    _old(self, min(self.mw.col.sched.answerButtons(self.card), ease))
 
 
 def only_pass_fail(buttons: tuple, self: Reviewer) -> tuple:
@@ -156,9 +150,6 @@ def make_frontside_answer_buttons(self: Reviewer) -> None:
 
 
 def main():
-    # Activate Vim shortcuts on the front side, if enabled by the user.
-    Reviewer._answerCard = wrap(Reviewer._answerCard, answer_card, "around")
-
     # (*) Create html layout for the answer buttons on the back side.
     # Buttons are either removed, disabled or left unchanged depending on config options.
     Reviewer._answerButtons = wrap(Reviewer._answerButtons, make_backside_answer_buttons, "around")

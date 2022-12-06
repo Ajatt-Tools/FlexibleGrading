@@ -2,7 +2,7 @@
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
 import functools
-from typing import Callable, Literal, cast, List, Tuple, Iterable
+from typing import Callable, Literal, cast, Iterable
 
 from anki.hooks import wrap
 from aqt.reviewer import Reviewer
@@ -78,7 +78,21 @@ def add_vim_shortcuts(self: Reviewer, _old: Callable[[Reviewer], list]) -> list[
     ]).items())
 
 
+def activate_vim_keys(self: Reviewer, ease: Literal[1, 2, 3, 4], _old: Callable) -> None:
+    # Allows answering from the front side.
+    # Reviewer._answerCard() is called when pressing default and configured keys.
+    if config['flexible_grading'] is True and self.state == "question":
+        self.state = "answer"
+
+    # min() makes sure the original _answerCard() never skips
+    _old(self, min(self.mw.col.sched.answerButtons(self.card), ease))
+
+
 def main():
     # Add vim answer shortcuts
     # noinspection PyProtectedMember
     Reviewer._shortcutKeys = wrap(Reviewer._shortcutKeys, add_vim_shortcuts, "around")
+
+    # Activate Vim shortcuts on the front side, if enabled by the user.
+    # noinspection PyProtectedMember
+    Reviewer._answerCard = wrap(Reviewer._answerCard, activate_vim_keys, "around")
