@@ -44,7 +44,7 @@ class ConfigManager:
         self._config[key] = value
 
     @property
-    def default(self) -> bool:
+    def is_default(self) -> bool:
         return self._default_config is self._config
 
     @staticmethod
@@ -107,7 +107,7 @@ class ConfigManager:
         self._config.setdefault('zoom_states', {})[state] = value
 
     def write_config(self):
-        if self.default:
+        if self.is_default:
             raise RuntimeError("Can't write default config.")
         mw.addonManager.writeConfig(__name__, self._config)
 

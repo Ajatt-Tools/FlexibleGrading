@@ -2,14 +2,13 @@
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
 from gettext import gettext as _
-from typing import Dict
 
 from aqt import mw
 from aqt.qt import *
 from aqt.utils import restoreGeom, saveGeom
 
-from .ajt_common.consts import ADDON_SERIES
 from .ajt_common.about_menu import menu_root_entry
+from .ajt_common.consts import ADDON_SERIES
 from .config import config, ConfigManager
 from .consts import *
 
@@ -227,10 +226,10 @@ class SettingsMenuDialog(SettingsMenuUI):
         self.connect_buttons()
         if mw.col.schedVer() < 2:
             self.layout().addWidget(QLabel(SCHED_NAG_MSG))
-        self.restore_values()
+        self.restore_values(config)
         restoreGeom(self, self.name)
 
-    def restore_values(self, cm: ConfigManager = config):
+    def restore_values(self, cm: ConfigManager):
         self.color_buttons_gbox.setChecked(cm['color_buttons'])
         for key, checkbox in self.toggleables.items():
             checkbox.setChecked(cm[key])
