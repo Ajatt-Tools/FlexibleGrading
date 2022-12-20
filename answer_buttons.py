@@ -40,54 +40,55 @@ def filter_answer_buttons(buttons: tuple, self: Reviewer, _: Card) -> tuple[tupl
     return buttons
 
 
-def make_stat_txt(self: Reviewer):
-    def _padding_top():
-        return '5px' if config['remove_buttons'] is True else '4px'
-
-    return f'<div style="padding: {_padding_top()} 5px 0px;">{self._remaining()}</div>'
-
-
 def get_ease_row_css() -> str:
     return """
     <style>
-    .ease_row {
+    .ajt__ease_row {
         display: flex;
+        flex-flow: row nowrap;
         justify-content: space-between;
         align-items: flex-start;
         max-width: 450px;
         min-width: 200px;
         user-select: none;
-        margin-inline: auto;
+        margin: -3px auto 0;
     }
-    .ease_row > div {
-        padding-top: 1px;
+    .ajt__ease_row > * {
+        white-space: nowrap;
+        font-size: small;
+        font-weight: normal;
+    }
+    .ajt__ease_row > .ajt__stat_txt:only-child {
+        margin: 0 auto;
     }
     </style>
     """
 
 
-def button_time(self: Reviewer, ease: int) -> str:
-    if config['color_buttons'] is True:
-        return f'<div style="color: {config.get_color(ease, self._defaultEase())};">{self._buttonTime(ease)}</div>'
-    else:
-        return f'<div>{self._buttonTime(ease)}</div>'
-
-
 def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
     """Returns ease row html when config.remove_buttons is true"""
 
-    if front is True and config['flexible_grading'] is False:
-        return make_stat_txt(self)
-    else:
-        ease_row = []
-        ans_buttons = self._answerButtonList()
+    def button_time(ease: int) -> str:
+        """Returns html with button-time text for the specified Ease."""
 
-        for idx, (ease, _label) in enumerate(ans_buttons):
-            if front and idx == len(ans_buttons) // 2:
-                ease_row.append(make_stat_txt(self))
-            ease_row.append(button_time(self, ease))
+        # Get button time from the default function,
+        # but remove `class="nobold"` since it introduces `position: absolute`
+        # which prevents the text from being visible when there is no button.
+        html = self._buttonTime(ease).replace('class="nobold"', '')
+        if config['color_buttons'] is True:
+            html = html.replace('<span', f'<span style="color: {config.get_color(ease, self._defaultEase())};"', )
+        return html
 
-        return get_ease_row_css() + f'<div class="ease_row">{"".join(ease_row)}</div>'
+    def stat_txt():
+        """Returns html showing remaining cards, e.g. 10+70+108"""
+        return f'<div class="ajt__stat_txt">{self._remaining()}</div>'
+
+    ease_row = []
+    if front is False or config['flexible_grading'] is True:
+        ease_row.extend(button_time(ease) for ease, label in self._answerButtonList())
+    if front is True:
+        ease_row.insert(len(ease_row) // 2, stat_txt())
+    return get_ease_row_css() + f'<div class="ajt__ease_row">{"".join(ease_row)}</div>'
 
 
 def disable_buttons(html: str) -> str:
@@ -105,6 +106,7 @@ def make_backside_answer_buttons(self: Reviewer, _old: Callable) -> str:
 
 def make_show_ans_table_cell(self: Reviewer):
     """Creates html code with a table data-cell holding the "Show answer" button."""
+
     def make_show_ans_button() -> str:
         """Copypasted from Reviewer._showAnswerButton, removed id to fix margin-bottom."""
         return """
