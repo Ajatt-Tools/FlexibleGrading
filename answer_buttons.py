@@ -118,10 +118,6 @@ def make_show_ans_table_cell(self: Reviewer):
     return f'<td align=center>{make_show_ans_button()}</td>'
 
 
-def fix_spacer_padding(html: str) -> str:
-    return '<style>.spacer{padding-top: 4px;}</style>' + html
-
-
 def calc_middle_insert_pos(buttons_html_table: str) -> int:
     cell_positions = [m.start() for m in re.finditer(r'<td', buttons_html_table)]
     return cell_positions[:len(cell_positions) // 2 + 1][-1]
@@ -131,10 +127,6 @@ def make_flexible_front_row(self: Reviewer) -> str:
     ans_buttons = _ans_buttons_default(self)
     insert_pos = calc_middle_insert_pos(ans_buttons)
     html = ans_buttons[:insert_pos] + make_show_ans_table_cell(self) + ans_buttons[insert_pos:]
-    if not self.mw.col.conf["estTimes"]:
-        # If Prefs > Scheduling > Show next review time is False
-        # Move answer buttons down a bit.
-        html = fix_spacer_padding(html)
     return html
 
 
