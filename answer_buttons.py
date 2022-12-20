@@ -153,9 +153,11 @@ def make_frontside_answer_buttons(self: Reviewer) -> None:
 def main():
     # (*) Create html layout for the answer buttons on the back side.
     # Buttons are either removed, disabled or left unchanged depending on config options.
+    # noinspection PyProtectedMember
     Reviewer._answerButtons = wrap(Reviewer._answerButtons, make_backside_answer_buttons, "around")
 
     # Wrap front side button(s).
+    # noinspection PyProtectedMember
     Reviewer._showAnswerButton = wrap(Reviewer._showAnswerButton, make_frontside_answer_buttons, "after")
 
     # Edit (ease, label) tuples which are used to create answer buttons.
