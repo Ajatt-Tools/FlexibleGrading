@@ -3,12 +3,11 @@
 
 import json
 import re
-from gettext import gettext as _
 from typing import Callable
 
 from anki.cards import Card
 from anki.hooks import wrap
-from aqt import gui_hooks
+from aqt import gui_hooks, tr
 from aqt.reviewer import Reviewer
 
 from .config import config
@@ -106,12 +105,16 @@ def make_backside_answer_buttons(self: Reviewer, _old: Callable) -> str:
 
 def make_show_ans_table_cell(self: Reviewer):
     def make_show_ans_button() -> str:
-        return """<button title="{}" onclick='pycmd("ans");'>{}</button>""".format(
-            _("Shortcut key: %s") % _("Space"),
-            _("Show Answer"),
+        """Copypasted from Reviewer._showAnswerButton, removed id."""
+        return """
+        <button title="{}" onclick='pycmd("ans");'>{}<span class=stattxt>{}</span></button>
+        """.format(
+            tr.actions_shortcut_key(val=tr.studying_space()),
+            tr.studying_show_answer(),
+            self._remaining(),
         )
 
-    return f'<td align=center>{make_stat_txt(self)}{make_show_ans_button()}</td>'
+    return f'<td align=center>{make_show_ans_button()}</td>'
 
 
 def fix_spacer_padding(html: str) -> str:
