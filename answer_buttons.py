@@ -104,8 +104,9 @@ def make_backside_answer_buttons(self: Reviewer, _old: Callable) -> str:
 
 
 def make_show_ans_table_cell(self: Reviewer):
+    """Creates html code with a table data-cell holding the "Show answer" button."""
     def make_show_ans_button() -> str:
-        """Copypasted from Reviewer._showAnswerButton, removed id."""
+        """Copypasted from Reviewer._showAnswerButton, removed id to fix margin-bottom."""
         return """
         <button title="{}" onclick='pycmd("ans");'>{}<span class=stattxt>{}</span></button>
         """.format(
