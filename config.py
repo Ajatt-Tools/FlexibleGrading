@@ -1,7 +1,7 @@
 # Copyright: Ren Tatsumoto <tatsu at autistici.org>
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
-from typing import Dict, Iterable, Union, overload
+from typing import Iterable, Union, overload
 
 from aqt import mw
 
@@ -35,13 +35,16 @@ class ConfigManager:
         }
 
     def __getitem__(self, key: str) -> bool:
-        val = self._get(key)
-        assert type(val) == bool
-        return val
+        if type(val := self._get(key)) == bool:
+            return val
+        else:
+            raise RuntimeError("Not a bool.")
 
     def __setitem__(self, key, value):
-        assert type(self._get(key)) == bool
-        self._config[key] = value
+        if type(self._get(key)) == bool:
+            self._config[key] = value
+        else:
+            raise RuntimeError("Not a bool.")
 
     @property
     def is_default(self) -> bool:
