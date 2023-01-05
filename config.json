@@ -22,5 +22,6 @@
   "set_zoom_shortcuts": true,
   "remember_zoom_level": true,
   "tooltip_on_zoom_change": true,
-  "hide_card_type": false
+  "hide_card_type": false,
+  "zoom_states": {}
 }

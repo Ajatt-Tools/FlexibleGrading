@@ -9,7 +9,7 @@ from aqt.utils import restoreGeom, saveGeom
 
 from .ajt_common.about_menu import menu_root_entry
 from .ajt_common.consts import ADDON_SERIES
-from .config import config, ConfigManager
+from .config import config, FlexibleGradingConfig
 from .consts import *
 
 
@@ -87,7 +87,7 @@ def make_answer_key_edits() -> dict[str, QLineEdit]:
 
 def make_toggleables() -> dict[str, QCheckBox]:
     d = {}
-    for toggleable in config.get_toggleables():
+    for toggleable in config.bool_keys():
         if toggleable == 'color_buttons':
             continue
         d[toggleable] = QCheckBox(as_label(toggleable))
@@ -229,7 +229,7 @@ class SettingsMenuDialog(SettingsMenuUI):
         self.restore_values(config)
         restoreGeom(self, self.name)
 
-    def restore_values(self, cm: ConfigManager):
+    def restore_values(self, cm: FlexibleGradingConfig):
         self.color_buttons_gbox.setChecked(cm['color_buttons'])
         for key, checkbox in self.toggleables.items():
             checkbox.setChecked(cm[key])
@@ -239,7 +239,7 @@ class SettingsMenuDialog(SettingsMenuUI):
             self.answer_keys[label].setText(key_letter)
 
     def connect_buttons(self):
-        qconnect(self.restore_settings_button.clicked, lambda: self.restore_values(ConfigManager(default=True)))
+        qconnect(self.restore_settings_button.clicked, lambda: self.restore_values(FlexibleGradingConfig(default=True)))
         qconnect(self.button_box.accepted, self.accept)
         qconnect(self.button_box.rejected, self.reject)
 

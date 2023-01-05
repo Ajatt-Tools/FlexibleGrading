@@ -1,32 +1,14 @@
 # Copyright: Ren Tatsumoto <tatsu at autistici.org>
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
-from typing import Iterable, Union, overload
+from typing import Union, overload
 
 from aqt import mw
 
-
-def get_default_config():
-    manager = mw.addonManager
-    addon = manager.addonFromModule(__name__)
-    return manager.addonConfigDefaults(addon)
+from .ajt_common.addon_config import AddonConfigManager
 
 
-def get_config():
-    return mw.addonManager.getConfig(__name__)
-
-
-class ConfigManager:
-    _default_config = get_default_config()
-    _config = get_config()
-
-    def __init__(self, default: bool = False):
-        if default:
-            self._config = self._default_config
-
-    def _get(self, key: str):
-        return self._config.get(key, self._default_config[key])
-
+class FlexibleGradingConfig(AddonConfigManager):
     def _get_sub(self, sub_key: str) -> dict[str, str]:
         return {
             key.lower(): self._config[sub_key].get(key.lower(), default_value)
@@ -35,20 +17,11 @@ class ConfigManager:
         }
 
     def __getitem__(self, key: str) -> bool:
-        if type(val := self._get(key)) == bool:
+        """ Restricted to bools only. """
+        if isinstance(val := super().__getitem__(key), bool):
             return val
         else:
             raise RuntimeError("Not a bool.")
-
-    def __setitem__(self, key, value):
-        if type(self._get(key)) == bool:
-            self._config[key] = value
-        else:
-            raise RuntimeError("Not a bool.")
-
-    @property
-    def is_default(self) -> bool:
-        return self._default_config is self._config
 
     @staticmethod
     def get_label(ease: int, default_ease: int = 3) -> str:
@@ -96,10 +69,6 @@ class ConfigManager:
         """Sets shortcut key for answer button, e.g. 'again'=>'h'."""
         self._config['buttons'][answer.lower()] = letter.lower()
 
-    def get_toggleables(self) -> Iterable[str]:
-        """Returns an iterable of boolean keys in the config."""
-        return (key for key, value in self._default_config.items() if isinstance(value, bool))
-
     def set_color(self, btn_label: str, color: str):
         self._config['colors'][btn_label.lower()] = color
 
@@ -115,4 +84,4 @@ class ConfigManager:
         mw.addonManager.writeConfig(__name__, self._config)
 
 
-config = ConfigManager()
+config = FlexibleGradingConfig()
