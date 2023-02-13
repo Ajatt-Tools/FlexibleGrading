@@ -7,9 +7,9 @@ from typing import Callable
 
 from anki.cards import Card
 from anki.hooks import wrap
+from anki.scheduler.v3 import Scheduler as V3Scheduler
 from aqt import gui_hooks, tr
 from aqt.reviewer import Reviewer
-from anki.scheduler.v3 import Scheduler as V3Scheduler
 
 from .config import config
 
@@ -69,19 +69,18 @@ def get_ease_row_css() -> str:
 def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
     """Returns ease row html when config.remove_buttons is true"""
 
-    def button_time(ease: int) -> str:
-        """Returns html with button-time text for the specified Ease."""
-
+    def get_labels():
         if v3 := self._v3:
             assert isinstance(self.mw.col.sched, V3Scheduler)
-            labels = self.mw.col.sched.describe_next_states(v3.states)
-        else:
-            labels = None
+            return self.mw.col.sched.describe_next_states(v3.states)
+
+    def button_time(ease: int) -> str:
+        """Returns html with button-time text for the specified Ease."""
 
         # Get button time from the default function,
         # but remove `class="nobold"` since it introduces `position: absolute`
         # which prevents the text from being visible when there is no button.
-        html = self._buttonTime(ease, v3_labels=labels).replace('class="nobold"', '')
+        html = self._buttonTime(ease, v3_labels=get_labels()).replace('class="nobold"', '')
         if config['color_buttons'] is True:
             html = html.replace('<span', f'<span style="color: {config.get_color(ease, self._defaultEase())};"', )
         return html
