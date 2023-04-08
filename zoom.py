@@ -28,7 +28,7 @@ def set_zoom_factor(state: str, factor: float):
     mw.web.setZoomFactor(factor)
     config.set_zoom_state(state, round(factor, 2))
     if config['tooltip_on_zoom_change']:
-        tooltip(f"{state.capitalize()} zoom: {round(mw.web.zoomFactor() * 100)}%", period=1000)
+        tooltip(f"{state.capitalize()} zoom: {mw.web.zoomFactor() * 100:.0f}%", period=1000)
 
 
 def on_state_change(new_state: Optional[str], _old_state: Optional[str]) -> None:
