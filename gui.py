@@ -86,6 +86,10 @@ def make_answer_key_edits() -> dict[str, QLineEdit]:
 
 
 def make_toggleables() -> dict[str, QCheckBox]:
+    """
+    Automatically create QCheckBox instances for config keys with bool values.
+    to avoid creating them by hand for each key.
+    """
     d = {}
     for toggleable in config.bool_keys():
         if toggleable == 'color_buttons':
@@ -124,10 +128,16 @@ class SettingsMenuUI(QDialog):
     def make_settings_layout(self) -> QLayout:
         layout = QGridLayout()
         # row, col, row-span, col-span
+
+        # Color buttons (pick colors)
         layout.addWidget(self.make_button_colors_group(), 0, 0, 1, 1)
+        # Keys (assign letters)
         layout.addWidget(self.make_shortcuts_group(), 0, 1, 1, 1)
+        # Buttons (remove, prevent clicks)
         layout.addWidget(self.make_buttons_group(), 1, 0, 1, 2)
+        # Features (disable/enable pass-fail, flexible grading, etc.)
         layout.addWidget(self.make_features_group(), 2, 0, 1, 2)
+        # Zoom behavior
         layout.addWidget(self.make_zoom_group(), 3, 0, 1, 2)
         return layout
 
@@ -204,7 +214,8 @@ class SettingsMenuUI(QDialog):
         )
         self.toggleables['disable_grading_with_space'].setToolTip(
             "Disable grading cards with Space and Enter keys.\n"
-            "Turn on if you occasionally press Space key twice."
+            "Turn on if you occasionally press Space key twice.\n"
+            "You can still reveal the back side with Space or Enter."
         )
         self.toggleables['remove_buttons'].setToolTip(
             "Remove answer buttons.\nOnly the corresponding intervals will be visible."
