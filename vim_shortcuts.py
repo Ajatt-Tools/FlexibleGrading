@@ -88,6 +88,16 @@ def activate_vim_keys(self: Reviewer, ease: Literal[1, 2, 3, 4], _old: Callable)
     _old(self, min(self.mw.col.sched.answerButtons(self.card), ease))
 
 
+def disable_grading_with_space(self: Reviewer, _old: Callable) -> None:
+    """
+    By default, Anki will answer the card "Good" if Space or Enter are pressed.
+    If enabled, don't do anything.
+    """
+    if config['disable_grading_with_space'] and self.state == "answer":
+        return
+    _old(self)
+
+
 def main():
     # Add vim answer shortcuts
     # noinspection PyProtectedMember
@@ -96,3 +106,7 @@ def main():
     # Activate Vim shortcuts on the front side, if enabled by the user.
     # noinspection PyProtectedMember
     Reviewer._answerCard = wrap(Reviewer._answerCard, activate_vim_keys, "around")
+
+    # Optionally disable grading with Space and Enter keys
+    # noinspection PyProtectedMember
+    Reviewer.onEnterKey = wrap(Reviewer.onEnterKey, disable_grading_with_space, "around")

@@ -170,12 +170,18 @@ class SettingsMenuUI(QDialog):
 
     def make_features_group(self) -> QGroupBox:
         gbox = QGroupBox("Features")
-        layout = QHBoxLayout()
-        layout.addWidget(self.toggleables['pass_fail'])
-        layout.addWidget(self.toggleables['flexible_grading'])
-        layout.addWidget(self.toggleables['show_last_review'])
-        layout.addWidget(self.toggleables['hide_card_type'])
-        layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        row1layout = QHBoxLayout()
+        row1layout.addWidget(self.toggleables['pass_fail'])
+        row1layout.addWidget(self.toggleables['flexible_grading'])
+        row1layout.addWidget(self.toggleables['show_last_review'])
+        row1layout.addWidget(self.toggleables['hide_card_type'])
+        row1layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        row2layout = QHBoxLayout()
+        row2layout.addWidget(self.toggleables['disable_grading_with_space'])
+        row2layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        layout = QVBoxLayout()
+        layout.addLayout(row1layout)
+        layout.addLayout(row2layout)
         gbox.setLayout(layout)
         return gbox
 
@@ -195,6 +201,10 @@ class SettingsMenuUI(QDialog):
         )
         self.toggleables['flexible_grading'].setToolTip(
             "Grade cards from their front side\nwithout having to reveal the answer."
+        )
+        self.toggleables['disable_grading_with_space'].setToolTip(
+            "Disable grading cards with Space and Enter keys.\n"
+            "Turn on if you occasionally press Space key twice."
         )
         self.toggleables['remove_buttons'].setToolTip(
             "Remove answer buttons.\nOnly the corresponding intervals will be visible."
