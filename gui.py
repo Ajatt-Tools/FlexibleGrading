@@ -7,6 +7,7 @@ from aqt import mw
 from aqt.qt import *
 from aqt.utils import restoreGeom, saveGeom
 
+from .ajt_common.monospace_line_edit import MonoSpaceLineEdit
 from .ajt_common.about_menu import menu_root_entry
 from .ajt_common.consts import ADDON_SERIES
 from .config import config, FlexibleGradingConfig
@@ -17,18 +18,10 @@ def as_label(key: str) -> str:
     return key.replace('_', ' ').capitalize()
 
 
-class MonoSpaceLineEdit(QLineEdit):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        font = self.font()
-        font.setFamilies((
-            "Noto Mono", "Noto Sans Mono", "DejaVu Sans Mono",
-            "Liberation Mono", "Courier New", "Monospace"
-        ))
-        self.setFont(font)
-
-
 class ColorEdit(MonoSpaceLineEdit):
+    font_size = 14
+    min_height = 24
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         color_regex = QRegularExpression(r'^#?\w+$')
@@ -62,6 +55,9 @@ class ColorEditPicker(QWidget):
 
 
 class SimpleKeyEdit(MonoSpaceLineEdit):
+    font_size = 14
+    min_height = 24
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         key_regex = QRegularExpression(r'^[-a-z0-9:;<>=?@~|`_/&!#$%^*(){}"+\]\[\\\']?$')
