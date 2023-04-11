@@ -7,6 +7,7 @@ from aqt import mw
 from aqt.qt import *
 from aqt.utils import restoreGeom, saveGeom
 
+from .ajt_common.widget_placement import place_widgets_in_grid
 from .ajt_common.monospace_line_edit import MonoSpaceLineEdit
 from .ajt_common.about_menu import menu_root_entry
 from .ajt_common.consts import ADDON_SERIES
@@ -96,6 +97,7 @@ def make_toggleables() -> dict[str, QCheckBox]:
 
 class SettingsMenuUI(QDialog):
     name = f"{ADDON_SERIES} {ADDON_NAME} Settings Dialog"
+    _n_columns = 3
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -166,39 +168,46 @@ class SettingsMenuUI(QDialog):
         return gbox
 
     def make_buttons_group(self) -> QGroupBox:
+        keys = (
+            'remove_buttons',
+            'prevent_clicks',
+        )
         gbox = QGroupBox("Buttons")
-        layout = QHBoxLayout()
-        layout.addWidget(self.toggleables['remove_buttons'])
-        layout.addWidget(self.toggleables['prevent_clicks'])
-        layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        gbox.setLayout(layout)
+        gbox.setCheckable(False)
+        gbox.setLayout(place_widgets_in_grid(
+            (self.toggleables[key] for key in keys),
+            n_columns=self._n_columns,
+        ))
         return gbox
 
     def make_features_group(self) -> QGroupBox:
+        keys = (
+            'pass_fail',
+            'flexible_grading',
+            'show_last_review',
+            'hide_card_type',
+            'disable_grading_with_space',
+        )
         gbox = QGroupBox("Features")
-        row1layout = QHBoxLayout()
-        row1layout.addWidget(self.toggleables['pass_fail'])
-        row1layout.addWidget(self.toggleables['flexible_grading'])
-        row1layout.addWidget(self.toggleables['show_last_review'])
-        row1layout.addWidget(self.toggleables['hide_card_type'])
-        row1layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        row2layout = QHBoxLayout()
-        row2layout.addWidget(self.toggleables['disable_grading_with_space'])
-        row2layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        layout = QVBoxLayout()
-        layout.addLayout(row1layout)
-        layout.addLayout(row2layout)
-        gbox.setLayout(layout)
+        gbox.setCheckable(False)
+        gbox.setLayout(place_widgets_in_grid(
+            (self.toggleables[key] for key in keys),
+            n_columns=self._n_columns,
+        ))
         return gbox
 
     def make_zoom_group(self) -> QGroupBox:
+        keys = (
+            'set_zoom_shortcuts',
+            'remember_zoom_level',
+            'tooltip_on_zoom_change',
+        )
         gbox = QGroupBox("Zoom")
-        layout = QHBoxLayout()
-        layout.addWidget(self.toggleables['set_zoom_shortcuts'])
-        layout.addWidget(self.toggleables['remember_zoom_level'])
-        layout.addWidget(self.toggleables['tooltip_on_zoom_change'])
-        layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        gbox.setLayout(layout)
+        gbox.setCheckable(False)
+        gbox.setLayout(place_widgets_in_grid(
+            (self.toggleables[key] for key in keys),
+            n_columns=self._n_columns,
+        ))
         return gbox
 
     def add_tooltips(self):
