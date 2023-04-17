@@ -9,6 +9,28 @@ You are still using the old scheduler.
 Please enable the V2 scheduler in Preferences.
 </font>
 """
+EASE_ROW_STYLE = """
+<style>
+.ajt__ease_row {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 450px;
+    min-width: 200px;
+    user-select: none;
+    margin: -3px auto 0;
+}
+.ajt__ease_row > * {
+    white-space: nowrap;
+    font-size: small;
+    font-weight: normal;
+}
+.ajt__ease_row > .ajt__stat_txt:only-child {
+    margin: 0 auto;
+}
+</style>
+"""
 BOTTOM_TABLE_STYLE = """
 <style>
 #innertable tr {

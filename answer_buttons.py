@@ -42,29 +42,6 @@ def filter_answer_buttons(buttons: tuple, self: Reviewer, _: Card) -> tuple[tupl
     return buttons
 
 
-def get_ease_row_css() -> str:
-    return """
-    <style>
-    .ajt__ease_row {
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: space-between;
-        align-items: flex-start;
-        max-width: 450px;
-        min-width: 200px;
-        user-select: none;
-        margin: -3px auto 0;
-    }
-    .ajt__ease_row > * {
-        white-space: nowrap;
-        font-size: small;
-        font-weight: normal;
-    }
-    .ajt__ease_row > .ajt__stat_txt:only-child {
-        margin: 0 auto;
-    }
-    </style>
-    """
 
 
 def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
@@ -95,7 +72,7 @@ def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
         ease_row.extend(button_time(ease) for ease, label in self._answerButtonList())
     if front is True:
         ease_row.insert(len(ease_row) // 2, stat_txt())
-    return get_ease_row_css() + f'<div class="ajt__ease_row">{"".join(ease_row)}</div>'
+    return EASE_ROW_STYLE + f'<div class="ajt__ease_row">{"".join(ease_row)}</div>'
 
 
 def disable_buttons(html: str) -> str:
