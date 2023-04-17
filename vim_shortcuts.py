@@ -8,7 +8,7 @@ from anki.hooks import wrap
 from aqt.reviewer import Reviewer
 
 from .config import config
-from .toolbar import LastEase
+from .top_toolbar import LastEase
 
 
 def answer_card(self: Reviewer, grade: str):
