@@ -11,6 +11,7 @@ from anki.scheduler.v3 import Scheduler as V3Scheduler
 from aqt import gui_hooks, tr
 from aqt.reviewer import Reviewer
 
+from .consts import *
 from .config import config
 
 _ans_buttons_default = Reviewer._answerButtons
@@ -151,6 +152,22 @@ def make_frontside_answer_buttons(self: Reviewer) -> None:
         self.bottom.web.adjustHeightToFit()
 
 
+def edit_bottom_html(self: Reviewer, _old: Callable):
+    html = _old(self)
+    if config['remove_buttons'] is True:
+        html = (
+            html
+            .replace('<button ', '<div class="ajt__corner_button" ')
+            .replace('</button>', '</div>')
+            .replace(' class=stat>', ' class=ajt__corner_stat>')
+            .replace(' class=stattxt>', ' class=ajt__time_remaining>')
+        )
+        html += BOTTOM_TABLE_STYLE
+    if config['prevent_clicks'] is True:
+        html = disable_buttons(html)
+    return html
+
+
 def main():
     # (*) Create html layout for the answer buttons on the back side.
     # Buttons are either removed, disabled or left unchanged depending on config options.
@@ -166,3 +183,8 @@ def main():
     # If `pass_fail` is true, "Hard" and "Easy" buttons are removed.
     # This func gets called inside _answerButtonList, which itself gets called inside _answerButtons (*)
     gui_hooks.reviewer_will_init_answer_buttons.append(filter_answer_buttons)
+
+    # Edit the "Edit" and "More" buttons which are shown in the Reviewer.
+    # If the user chooses to remove buttons, convert them to <div>s to free vertical space.
+    # noinspection PyProtectedMember
+    Reviewer._bottomHTML = wrap(Reviewer._bottomHTML, edit_bottom_html, "around")
