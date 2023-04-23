@@ -5,6 +5,8 @@ import functools
 from typing import Callable, Literal, cast, Iterable
 
 from anki.hooks import wrap
+from aqt import gui_hooks, mw
+from aqt.main import MainWindowState
 from aqt.reviewer import Reviewer
 
 from .config import config
@@ -61,20 +63,23 @@ def new_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
     ]
 
 
-def old_shortcuts(self: Reviewer, _old: Callable[[Reviewer], list]) -> list[tuple[str, Callable]]:
+def filter_default_shortcuts(shortcuts: list[tuple[str, Callable]]) -> list[tuple[str, Callable]]:
     # Filter out default number-keys.
-    return [(key, func) for key, func in _old(self) if key not in ('1', '2', '3', '4',)]
+    return [(key, func) for key, func in shortcuts if key not in ('1', '2', '3', '4',)]
 
 
 def is_key_set(shortcut_key: tuple[str, Callable]) -> bool:
     return bool(shortcut_key[0])
 
 
-def add_vim_shortcuts(self: Reviewer, _old: Callable[[Reviewer], list]) -> list[tuple[str, Callable]]:
-    # Credit: https://ankiweb.net/shared/info/1197299782
-    return list(dict([
-        *old_shortcuts(self, _old),
-        *filter(is_key_set, new_shortcuts(self)),
+def add_vim_shortcuts(state: MainWindowState, shortcuts: list[tuple[str, Callable]]) -> None:
+    if state != "review":
+        return
+    default_shortcuts = shortcuts.copy()
+    shortcuts.clear()
+    shortcuts.extend(dict([
+        *filter_default_shortcuts(default_shortcuts),
+        *filter(is_key_set, new_shortcuts(mw.reviewer)),
     ]).items())
 
 
@@ -100,8 +105,7 @@ def disable_grading_with_space(self: Reviewer, _old: Callable) -> None:
 
 def main():
     # Add vim answer shortcuts
-    # noinspection PyProtectedMember
-    Reviewer._shortcutKeys = wrap(Reviewer._shortcutKeys, add_vim_shortcuts, "around")
+    gui_hooks.state_shortcuts_will_change.append(add_vim_shortcuts)
 
     # Activate Vim shortcuts on the front side, if enabled by the user.
     # noinspection PyProtectedMember
