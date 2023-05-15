@@ -74,6 +74,7 @@ def is_key_set(shortcut: tuple[str, Callable]) -> bool:
 def add_vim_shortcuts(state: MainWindowState, shortcuts: list[tuple[str, Callable]]) -> None:
     if state != "review":
         return
+    # Reviewer shortcuts are defined in Reviewer._shortcutKeys
     default_shortcuts = shortcuts.copy()
     shortcuts.clear()
     shortcuts.extend(dict([
