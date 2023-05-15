@@ -11,7 +11,6 @@ List of options:
 For the list of colors, see [w3schools.com](https://www.w3schools.com/colors/colors_groups.asp).
 * `flexible_grading` - Grade cards from their front side without having to reveal the answer.
 * `pass_fail` - Enable Pass/Fail mode. `Hard` and `Easy` buttons will be hidden.
-* `disable_grading_with_space` - Disable grading with Space and Enter keys. Use this if you occasionally press Space twice.
 * `prevent_clicks` - Make answer buttons at the bottom disabled.
 Disabled buttons are visible but unusable and un-clickable.
 * `remove_buttons` - Remove answer buttons. Only the corresponding intervals are visible.

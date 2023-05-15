@@ -186,7 +186,6 @@ class SettingsMenuUI(QDialog):
             'flexible_grading',
             'show_last_review',
             'hide_card_type',
-            'disable_grading_with_space',
         )
         gbox = QGroupBox("Features")
         gbox.setCheckable(False)
@@ -216,11 +215,6 @@ class SettingsMenuUI(QDialog):
         )
         self.toggleables['flexible_grading'].setToolTip(
             "Grade cards from their front side\nwithout having to reveal the answer."
-        )
-        self.toggleables['disable_grading_with_space'].setToolTip(
-            "Disable grading cards with Space and Enter keys.\n"
-            "Turn on if you occasionally press Space key twice.\n"
-            "You can still reveal the back side with Space or Enter."
         )
         self.toggleables['remove_buttons'].setToolTip(
             "Remove answer buttons.\nOnly the corresponding intervals will be visible."

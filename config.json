@@ -20,7 +20,6 @@
   "flexible_grading": true,
   "show_last_review": true,
   "hide_card_type": false,
-  "disable_grading_with_space": false,
   "set_zoom_shortcuts": true,
   "remember_zoom_level": true,
   "tooltip_on_zoom_change": true,
