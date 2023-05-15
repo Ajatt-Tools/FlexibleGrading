@@ -2,12 +2,11 @@
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
 import functools
-from typing import Callable, Literal, cast, Iterable
-
 from anki.hooks import wrap
 from aqt import gui_hooks, mw
 from aqt.main import MainWindowState
 from aqt.reviewer import Reviewer
+from typing import Callable, Literal, cast, Iterable
 
 from .config import config
 from .top_toolbar import LastEase
@@ -63,13 +62,13 @@ def new_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
     ]
 
 
-def filter_default_shortcuts(shortcuts: list[tuple[str, Callable]]) -> list[tuple[str, Callable]]:
-    # Filter out default number-keys.
-    return [(key, func) for key, func in shortcuts if key not in ('1', '2', '3', '4',)]
+def is_not_ease_key(shortcut: tuple[str, Callable]) -> bool:
+    """ Filter out all keys that are used to rate cards by default. """
+    return bool(shortcut[0] not in ('1', '2', '3', '4', 'h', 'j', 'k', 'l',))
 
 
-def is_key_set(shortcut_key: tuple[str, Callable]) -> bool:
-    return bool(shortcut_key[0])
+def is_key_set(shortcut: tuple[str, Callable]) -> bool:
+    return bool(shortcut[0])
 
 
 def add_vim_shortcuts(state: MainWindowState, shortcuts: list[tuple[str, Callable]]) -> None:
@@ -78,7 +77,7 @@ def add_vim_shortcuts(state: MainWindowState, shortcuts: list[tuple[str, Callabl
     default_shortcuts = shortcuts.copy()
     shortcuts.clear()
     shortcuts.extend(dict([
-        *filter_default_shortcuts(default_shortcuts),
+        *filter(is_not_ease_key, default_shortcuts),
         *filter(is_key_set, new_shortcuts(mw.reviewer)),
     ]).items())
 
