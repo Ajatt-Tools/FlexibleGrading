@@ -55,6 +55,8 @@ It goes further by removing review buttons and letting you grade your cards from
   To zoom in, press `Ctrl+Plus`. To zoom out, press `Ctrl+Minus`.
   The add-on can remember previous zoom levels and restore them when Anki changes state.
 * An option to turn off the indicator that tells you whether a card is `new`, `review`, or `learn`.
+* An option to press the `k` key to flip the card while the card is in `question` state.
+  This means that users can easily flip a card and rate it "good" by pressing `kk`.
 
 <p align="center">
   <img src="img/front_side_answer_buttons.webp" alt="screenshot">
