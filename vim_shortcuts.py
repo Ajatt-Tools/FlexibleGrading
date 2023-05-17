@@ -19,6 +19,8 @@ def answer_card(self: Reviewer, grade: str):
         if grade == 'hard' and self._defaultEase() == 3:
             return self._answerCard(2)
         if grade == 'good':
+            if self.state == "question" and config["press_good_key_to_flip_card"] is True:
+                return self._getTypedAnswer()
             return self._answerCard(self._defaultEase())
         if grade == 'easy':
             return self._answerCard(cast(Literal[3, 4], self._defaultEase() + 1))
