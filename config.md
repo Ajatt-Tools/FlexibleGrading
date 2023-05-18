@@ -15,7 +15,7 @@ For the list of colors, see [w3schools.com](https://www.w3schools.com/colors/col
 Disabled buttons are visible but unusable and un-clickable.
 * `remove_buttons` - Remove answer buttons. Only the corresponding intervals are visible.
 * `show_last_review` - Print the result of the last review on the toolbar.
-* `press_answer_key_to_flip_card` - The "good" key (`k` by default) will be used
+* `press_answer_key_to_flip_card` - Answer keys ('h', 'j', 'k', 'l' by default) will be used
   to reveal the back side, similarly to the Space bar.
 
 By default, answer buttons aren't shown.

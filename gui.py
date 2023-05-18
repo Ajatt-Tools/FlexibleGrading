@@ -7,10 +7,10 @@ from aqt import mw
 from aqt.qt import *
 from aqt.utils import restoreGeom, saveGeom
 
-from .ajt_common.widget_placement import place_widgets_in_grid
-from .ajt_common.monospace_line_edit import MonoSpaceLineEdit
 from .ajt_common.about_menu import menu_root_entry
 from .ajt_common.consts import ADDON_SERIES
+from .ajt_common.monospace_line_edit import MonoSpaceLineEdit
+from .ajt_common.widget_placement import place_widgets_in_grid
 from .config import config, FlexibleGradingConfig
 from .consts import *
 
@@ -240,7 +240,7 @@ class SettingsMenuUI(QDialog):
             "Turn off the indicator that tells you whether a card is new, review, or learn."
         )
         self.toggleables['press_answer_key_to_flip_card'].setToolTip(
-            "The \"good\" key (`k` by default) will be used\n"
+            "Answer keys ('h', 'j', 'k', 'l' by default) will be used\n"
             "to reveal the back side, similarly to the Space bar."
         )
 
