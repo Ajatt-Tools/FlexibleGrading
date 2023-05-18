@@ -2,11 +2,12 @@
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
 import functools
+from typing import Callable, Literal, cast, Iterable
+
 from anki.hooks import wrap
 from aqt import gui_hooks, mw
 from aqt.main import MainWindowState
 from aqt.reviewer import Reviewer
-from typing import Callable, Literal, cast, Iterable
 
 from .config import config
 from .top_toolbar import LastEase
@@ -15,9 +16,9 @@ from .top_toolbar import LastEase
 def answer_card(self: Reviewer, grade: str):
     try:
         if (
-            self.state == "question"
-            and grade != None
-            and config["press_good_key_to_flip_card"] is True
+                self.state == "question"
+                and grade
+                and config["press_answer_key_to_flip_card"] is True
         ):
             return self._getTypedAnswer()
         if grade == 'again':

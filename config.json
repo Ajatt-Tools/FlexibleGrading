@@ -23,6 +23,6 @@
   "set_zoom_shortcuts": true,
   "remember_zoom_level": true,
   "tooltip_on_zoom_change": true,
-  "press_good_key_to_flip_card": false,
+  "press_answer_key_to_flip_card": false,
   "zoom_states": {}
 }
