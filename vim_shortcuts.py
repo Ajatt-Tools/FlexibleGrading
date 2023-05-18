@@ -14,11 +14,7 @@ from .top_toolbar import LastEase
 
 def answer_card(self: Reviewer, grade: str):
     try:
-        if (
-            self.state == "question"
-            and grade != None
-            and config["press_good_key_to_flip_card"] is True
-        ):
+        if self.state == "question" and grade != None and config["press_any_answer_to_flip_card"] is True:
             return self._getTypedAnswer()
         if grade == 'again':
             return self._answerCard(1)

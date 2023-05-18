@@ -186,7 +186,7 @@ class SettingsMenuUI(QDialog):
             'flexible_grading',
             'show_last_review',
             'hide_card_type',
-            'press_good_key_to_flip_card',
+            'press_any_answer_to_flip_card',
         )
         gbox = QGroupBox("Features")
         gbox.setCheckable(False)
@@ -239,9 +239,9 @@ class SettingsMenuUI(QDialog):
         self.toggleables['hide_card_type'].setToolTip(
             "Turn off the indicator that tells you whether a card is new, review, or learn."
         )
-        self.toggleables['press_good_key_to_flip_card'].setToolTip(
-            "The \"good\" key (`k` by default) will be used\n"
-            "to reveal the back side, similarly to the Space bar."
+        self.toggleables['press_any_answer_to_flip_card'].setToolTip(
+            "Any specified answer key will be used to reveal\n"
+            "the answer of a card, similarly to the Space bar."
         )
 
 
