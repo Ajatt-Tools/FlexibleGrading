@@ -18,45 +18,41 @@ def handle_due(card: Card) -> str:
     months = days / (365 / 12)
     years = days / 365
     if years >= 1:
-        ivl = '%.1fy' % years
+        return f"{years:.2f}y"
     elif months >= 1:
-        ivl = '%.1fmo' % months
+        return f"{months:.2f}mo"
     else:
-        ivl = '%dd' % days
-    return ivl
+        return f"{days:.0f}d"
 
 
 def handle_learn(card: Card) -> str:
     minutes = (card.due - time.time()) / 60
     hours = minutes / 60
     if minutes < 0:
-        ivl = "unknown"
+        return "unknown"
     elif hours >= 1:
-        ivl = '%.1fh' % hours
+        return f"{hours:.1f}h"
     else:
-        ivl = '%dm' % minutes
-    return ivl
+        return f"{minutes:.0f}m"
 
 
 def human_ivl(card: Card) -> str:
     # https://github.com/ankidroid/Anki-Android/wiki/Database-Structure
 
-    ivl = "unknown"
-
     if card.queue <= -2:
-        ivl = "buried"
+        return "buried"
     elif card.queue == -1:
-        ivl = "suspended"
+        return "suspended"
     elif card.queue == 1 and (card.type == 3 or card.type == 1):
-        ivl = handle_learn(card)
+        return handle_learn(card)
     elif card.queue == 3 and (card.type == 3 or card.type == 1):
-        ivl = "tomorrow"
+        return "tomorrow"
     elif card.queue == 4:
-        ivl = "preview"
+        return "preview"
     elif card.type == 2:
-        ivl = handle_due(card)
-
-    return ivl
+        return handle_due(card)
+    else:
+        return "unknown"
 
 
 class LastEase:

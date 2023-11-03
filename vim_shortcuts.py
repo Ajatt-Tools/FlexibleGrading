@@ -2,7 +2,8 @@
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
 import functools
-from typing import Callable, Literal, cast, Iterable
+from typing import Callable, Literal, cast
+from collections.abc import Iterable
 
 from anki.hooks import wrap
 from aqt import gui_hooks, mw

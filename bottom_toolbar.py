@@ -11,8 +11,8 @@ from anki.scheduler.v3 import Scheduler as V3Scheduler
 from aqt import gui_hooks, tr
 from aqt.reviewer import Reviewer
 
-from .consts import *
 from .config import config
+from .consts import *
 
 _ans_buttons_default = Reviewer._answerButtons
 
@@ -40,8 +40,6 @@ def filter_answer_buttons(buttons: tuple, self: Reviewer, _: Card) -> tuple[tupl
         buttons = apply_label_colors(buttons, self._defaultEase())
 
     return buttons
-
-
 
 
 def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
