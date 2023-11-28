@@ -68,7 +68,7 @@ It goes further by removing review buttons and letting you grade your cards from
 Install from [AnkiWeb](https://ankiweb.net/shared/info/1715096333), or manually with `git`:
 
 ```
-$ git clone 'https://github.com/Ajatt-Tools/FlexibleGrading.git' ~/.local/share/Anki2/addons21/FlexibleGrading
+$ git clone --recurse-submodules 'https://github.com/Ajatt-Tools/FlexibleGrading.git' ~/.local/share/Anki2/addons21/FlexibleGrading
 ```
 
 Make sure to disable other addons that may affect answer buttons or shortcuts, for example:
