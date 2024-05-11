@@ -36,6 +36,14 @@ class FlexibleGradingConfig(AddonConfigManager):
     def scroll(self) -> ScrollKeysConfig:
         return self._scroll
 
+    @property
+    def scroll_amount(self) -> int:
+        return self["scroll_amount"]
+
+    @scroll_amount.setter
+    def scroll_amount(self, amount_px: int) -> None:
+        self["scroll_amount"] = int(amount_px)
+
     def _get_sub(self, sub_key: str) -> dict[str, str]:
         return {
             key.lower(): self._config[sub_key].get(key.lower(), default_value)
