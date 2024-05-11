@@ -68,6 +68,18 @@ class SimpleKeyEdit(MonoSpaceLineEdit):
         self.setToolTip("If a key is taken by something else, it will refuse to work.\nLeave empty to disable.")
 
 
+class ScrollAmountSpinBox(QSpinBox):
+    _default_allowed_range: tuple[int, int] = (10, 1000)
+    _single_step_amount: int = 10
+
+    def __init__(self, initial_value: int = None):
+        super().__init__()
+        self.setRange(*self._default_allowed_range)
+        self.setSingleStep(self._single_step_amount)
+        if initial_value:
+            self.setValue(initial_value)
+
+
 def make_color_line_edits() -> dict[str, ColorEditPicker]:
     d = {}
     for label in config.colors:
