@@ -109,6 +109,7 @@ class SettingsMenuUI(QDialog):
     _toggleables: dict[str, QCheckBox]
     _color_buttons_gbox: QGroupBox  # if unchecked, buttons are not painted.
     _button_box: QDialogButtonBox
+    _restore_settings_button: QPushButton
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -123,7 +124,7 @@ class SettingsMenuUI(QDialog):
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel,
             parent=self,
         )
-        self.restore_settings_button = self._button_box.addButton(
+        self._restore_settings_button = self._button_box.addButton(
             _("Restore &Defaults"), QDialogButtonBox.ButtonRole.ResetRole
         )
         self.setup_layout()
@@ -289,7 +290,7 @@ class SettingsMenuDialog(SettingsMenuUI):
             self._scroll_shortcut_edits[scroll_direction].setValue(shortcut_str)
 
     def connect_buttons(self):
-        qconnect(self.restore_settings_button.clicked, lambda: self.restore_values(FlexibleGradingConfig(default=True)))
+        qconnect(self._restore_settings_button.clicked, lambda: self.restore_values(FlexibleGradingConfig(default=True)))
         qconnect(self._button_box.accepted, self.accept)
         qconnect(self._button_box.rejected, self.reject)
 
