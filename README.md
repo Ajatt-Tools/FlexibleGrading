@@ -95,7 +95,7 @@ The following fingers are used:
 
 ## Configuration
 
-To configure the add-on select `Tools` > `AJT Flexible Grading Options...`.
+To configure the add-on select `AJT` > `Flexible Grading Options...`.
 
 The most optimal settings come out of the box:
 
