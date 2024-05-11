@@ -41,13 +41,6 @@ class FlexibleGradingConfig(AddonConfigManager):
             self._default_config[sub_key].items()
         }
 
-    def __getitem__(self, key: str) -> bool:
-        """ Restricted to bools only. """
-        if isinstance(val := super().__getitem__(key), bool):
-            return val
-        else:
-            raise RuntimeError("Not a bool.")
-
     @staticmethod
     def get_label(ease: int, default_ease: int = 3) -> str:
         if ease == 1:
@@ -60,21 +53,11 @@ class FlexibleGradingConfig(AddonConfigManager):
             return "Easy"
         return "Unknown"
 
-    @overload
-    def get_color(self, ease: int, default_ease: int) -> str:
-        ...
+    def get_ease_color(self, ease: int, default_ease: int) -> str:
+        return self._config['colors'][self.get_label(ease, default_ease).lower()]
 
-    @overload
-    def get_color(self, label: str) -> str:
-        ...
-
-    def get_color(self, ease_or_label: Union[int, str], default_ease: int = 3) -> str:
-        label = (
-            ease_or_label
-            if type(ease_or_label) is str
-            else self.get_label(ease_or_label, default_ease)
-        ).lower()
-        return self._config['colors'].get(label, self._default_config['colors'].get(label, "Pink"))
+    def get_label_color(self, label: str) -> str:
+        return self._config['colors'][label.lower()]
 
     @property
     def colors(self) -> dict[str, str]:

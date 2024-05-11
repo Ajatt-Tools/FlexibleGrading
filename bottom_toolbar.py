@@ -26,7 +26,7 @@ def only_pass_fail(buttons: tuple, default_ease: int) -> tuple[tuple[int, str], 
 
 def apply_label_colors(buttons: tuple, default_ease: int) -> tuple[tuple[int, str], ...]:
     def color_label(ease: int, label: str) -> tuple[int, str]:
-        return ease, f"<font color=\"{config.get_color(ease, default_ease)}\">{label}</font>"
+        return ease, f"<font color=\"{config.get_ease_color(ease, default_ease)}\">{label}</font>"
 
     return tuple(color_label(*button) for button in buttons)
 
@@ -58,7 +58,10 @@ def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
         # which prevents the text from being visible when there is no button.
         html = self._buttonTime(ease, v3_labels=get_labels()).replace('class="nobold"', '')
         if config['color_buttons'] is True:
-            html = html.replace('<span', f'<span style="color: {config.get_color(ease, self._defaultEase())};"', )
+            html = html.replace(
+                '<span',
+                f'<span style="color: {config.get_ease_color(ease, self._defaultEase())};"',
+            )
         return html
 
     def stat_txt():

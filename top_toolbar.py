@@ -93,7 +93,7 @@ class LastEase:
             return
 
         label = config.get_label(ease, cls._last_default_ease)
-        color = config.get_color(label)
+        color = config.get_label_color(label)
         status = f"{_(label)[:1]}: {human_ivl(card)}"
 
         reviewer.mw.toolbar.web.eval("""\
