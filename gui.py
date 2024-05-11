@@ -122,6 +122,7 @@ class SettingsMenuUI(QDialog):
     _color_buttons_gbox: QGroupBox  # if unchecked, buttons are not painted.
     _button_box: QDialogButtonBox
     _restore_settings_button: QPushButton
+    _scroll_amount_spin: QSpinBox
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -132,6 +133,7 @@ class SettingsMenuUI(QDialog):
         self._toggleables = make_toggleables()
         self._scroll_shortcut_edits = make_scroll_shortcut_edits()
         self._color_buttons_gbox = QGroupBox("Color buttons")
+        self._scroll_amount_spin = ScrollAmountSpinBox()
         self._button_box = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel,
             parent=self,
@@ -243,6 +245,7 @@ class SettingsMenuUI(QDialog):
         form = QFormLayout()
         for scroll_direction, key_edit_widget in self._scroll_shortcut_edits.items():
             form.addRow(as_label(scroll_direction), key_edit_widget)
+        form.addRow("Scroll amount", self._scroll_amount_spin)
         gbox.setLayout(form)
         return gbox
 
@@ -300,9 +303,13 @@ class SettingsMenuDialog(SettingsMenuUI):
             self._answer_keys[label].setText(key_letter)
         for scroll_direction, shortcut_str in cm.scroll.items():
             self._scroll_shortcut_edits[scroll_direction].setValue(shortcut_str)
+        self._scroll_amount_spin.setValue(config.scroll_amount)
 
     def connect_buttons(self):
-        qconnect(self._restore_settings_button.clicked, lambda: self.restore_values(FlexibleGradingConfig(default=True)))
+        qconnect(
+            self._restore_settings_button.clicked,
+            lambda: self.restore_values(FlexibleGradingConfig(default=True)),
+        )
         qconnect(self._button_box.accepted, self.accept)
         qconnect(self._button_box.rejected, self.reject)
 
@@ -316,6 +323,7 @@ class SettingsMenuDialog(SettingsMenuUI):
             config[key] = checkbox.isChecked()
         for scroll_direction, key_edit_widget in self._scroll_shortcut_edits.items():
             config.scroll[scroll_direction] = key_edit_widget.value()
+        config.scroll_amount = self._scroll_amount_spin.value()
         config.write_config()
         return super().accept()
 
