@@ -91,11 +91,6 @@ class FlexibleGradingConfig(AddonConfigManager):
     def set_zoom_state(self, state: str, value: float) -> None:
         self._config.setdefault('zoom_states', {})[state] = value
 
-    def write_config(self):
-        if self.is_default:
-            raise RuntimeError("Can't write default config.")
-        mw.addonManager.writeConfig(__name__, self._config)
-
     @property
     def scroll(self) -> ScrollKeysConfig:
         return self._scroll
