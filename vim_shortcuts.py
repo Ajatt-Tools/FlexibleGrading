@@ -1,9 +1,8 @@
 # Copyright: Ren Tatsumoto <tatsu at autistici.org>
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
-
 import functools
-from typing import Callable, Literal, cast
 from collections.abc import Iterable
+from typing import Callable, Literal, cast
 
 from anki.hooks import wrap
 from aqt import gui_hooks, mw
@@ -58,6 +57,10 @@ def number_shortcuts(self: Reviewer):
     ]
 
 
+def scroll_webpage(self: Reviewer, amount_hor: int = 0, amount_vert: int = 0) -> None:
+    self.web.eval(f"  window.scrollBy({amount_hor}, {amount_vert});  ")
+
+
 def new_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
     return [
         *number_shortcuts(self),
@@ -67,6 +70,10 @@ def new_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
         ],
         (config.get_key("undo"), self.mw.undo),
         (config.get_key("last_card"), LastEase.open_last_card),
+        ("Shift+k", functools.partial(scroll_webpage, self=self, amount_vert=-100)),
+        ("Shift+j", functools.partial(scroll_webpage, self=self, amount_vert=100)),
+        ("Shift+h", functools.partial(scroll_webpage, self=self, amount_hor=-100)),
+        ("Shift+l", functools.partial(scroll_webpage, self=self, amount_hor=100)),
     ]
 
 
