@@ -43,7 +43,7 @@ def enabled_number_keys() -> Iterable[str]:
     return ('1', '3') if config['pass_fail'] is True else ('1', '2', '3', '4')
 
 
-def number_shortcuts(self: Reviewer):
+def number_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
     return [
         (key, func)
         for key, func
