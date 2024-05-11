@@ -61,7 +61,7 @@ def scroll_webpage(self: Reviewer, amount_hor: int = 0, amount_vert: int = 0) ->
     self.web.eval(f"  window.scrollBy({amount_hor}, {amount_vert});  ")
 
 
-def scroll_shortcuts(self) -> list[tuple[str, Callable]]:
+def scroll_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
     return [
         (config.scroll.up, functools.partial(scroll_webpage, self=self, amount_vert=-config.scroll_amount)),
         (config.scroll.down, functools.partial(scroll_webpage, self=self, amount_vert=config.scroll_amount)),
