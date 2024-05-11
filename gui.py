@@ -7,6 +7,7 @@ from aqt import mw
 from aqt.qt import *
 from aqt.utils import restoreGeom, saveGeom
 
+from .ajt_common.utils import ui_translate
 from .ajt_common.grab_key import ShortCutGrabButton
 from .ajt_common.about_menu import menu_root_entry
 from .ajt_common.consts import ADDON_SERIES
@@ -16,9 +17,7 @@ from .config import config, FlexibleGradingConfig
 from .consts import *
 
 
-def as_label(key: str) -> str:
-    return key.replace('_', ' ').capitalize()
-
+as_label = ui_translate
 
 class ColorEdit(MonoSpaceLineEdit):
     font_size = 14
