@@ -70,10 +70,10 @@ def new_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
         ],
         (config.get_key("undo"), self.mw.undo),
         (config.get_key("last_card"), LastEase.open_last_card),
-        ("Shift+k", functools.partial(scroll_webpage, self=self, amount_vert=-100)),
-        ("Shift+j", functools.partial(scroll_webpage, self=self, amount_vert=100)),
-        ("Shift+h", functools.partial(scroll_webpage, self=self, amount_hor=-100)),
-        ("Shift+l", functools.partial(scroll_webpage, self=self, amount_hor=100)),
+        (config.scroll.up, functools.partial(scroll_webpage, self=self, amount_vert=-100)),
+        (config.scroll.down, functools.partial(scroll_webpage, self=self, amount_vert=100)),
+        (config.scroll.left, functools.partial(scroll_webpage, self=self, amount_hor=-100)),
+        (config.scroll.right, functools.partial(scroll_webpage, self=self, amount_hor=100)),
     ]
 
 

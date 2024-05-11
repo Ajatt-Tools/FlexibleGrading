@@ -8,7 +8,32 @@ from aqt import mw
 from .ajt_common.addon_config import AddonConfigManager
 
 
+class ScrollKeysConfig:
+    def __init__(self, cfg_dict: dict):
+        self._scroll = cfg_dict["scroll"]
+
+    @property
+    def up(self) -> str:
+        return self._scroll["up"]
+
+    @property
+    def down(self) -> str:
+        return self._scroll["down"]
+
+    @property
+    def left(self) -> str:
+        return self._scroll["left"]
+
+    @property
+    def right(self) -> str:
+        return self._scroll["right"]
+
+
 class FlexibleGradingConfig(AddonConfigManager):
+    def __init__(self, default: bool = False):
+        super().__init__(default)
+        self._scroll = ScrollKeysConfig(cfg_dict=self._config)
+
     def _get_sub(self, sub_key: str) -> dict[str, str]:
         return {
             key.lower(): self._config[sub_key].get(key.lower(), default_value)
@@ -82,6 +107,10 @@ class FlexibleGradingConfig(AddonConfigManager):
         if self.is_default:
             raise RuntimeError("Can't write default config.")
         mw.addonManager.writeConfig(__name__, self._config)
+
+    @property
+    def scroll(self) -> ScrollKeysConfig:
+        return self._scroll
 
 
 config = FlexibleGradingConfig()

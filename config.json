@@ -13,6 +13,12 @@
     "undo": "u",
     "last_card": ":"
   },
+  "scroll": {
+    "up": "Shift+k",
+    "down": "Shift+j",
+    "left": "Shift+h",
+    "right": "Shift+l"
+  },
   "color_buttons": true,
   "remove_buttons": true,
   "prevent_clicks": true,
