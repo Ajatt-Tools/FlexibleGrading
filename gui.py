@@ -104,12 +104,13 @@ class SettingsMenuUI(QDialog):
     name = f"{ADDON_SERIES} {ADDON_NAME} Settings Dialog"
     _n_columns = 2
     _scroll_shortcut_edits: dict[str, ShortCutGrabButton]
+    _colors: dict[str, ColorEditPicker]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setWindowTitle(f'{ADDON_SERIES} {ADDON_NAME}')
         self.setMinimumSize(640, 540)
-        self.colors = make_color_line_edits()
+        self._colors = make_color_line_edits()
         self.answer_keys = make_answer_key_edits()
         self.toggleables = make_toggleables()
         self._scroll_shortcut_edits = make_scroll_shortcut_edits()
@@ -161,7 +162,7 @@ class SettingsMenuUI(QDialog):
         gbox = self.color_buttons_gbox
         gbox.setCheckable(True)
         form = QFormLayout()
-        for key, lineedit in self.colors.items():
+        for key, lineedit in self._colors.items():
             form.addRow(as_label(key), lineedit)
         form.addWidget(self.make_colors_link())
         gbox.setLayout(form)
@@ -277,7 +278,7 @@ class SettingsMenuDialog(SettingsMenuUI):
         for key, checkbox in self.toggleables.items():
             checkbox.setChecked(cm[key])
         for label, color_text in cm.colors.items():
-            self.colors[label].setText(color_text)
+            self._colors[label].setText(color_text)
         for label, key_letter in cm.buttons.items():
             self.answer_keys[label].setText(key_letter)
         for scroll_direction, shortcut_str in cm.scroll.items():
@@ -290,7 +291,7 @@ class SettingsMenuDialog(SettingsMenuUI):
 
     def accept(self) -> None:
         config['color_buttons'] = self.color_buttons_gbox.isChecked()
-        for label, lineedit in self.colors.items():
+        for label, lineedit in self._colors.items():
             config.set_color(label, lineedit.text())
         for label, lineedit in self.answer_keys.items():
             config.set_key(label, lineedit.text())
