@@ -108,6 +108,7 @@ class SettingsMenuUI(QDialog):
     _answer_keys: dict[str, QLineEdit]
     _toggleables: dict[str, QCheckBox]
     _color_buttons_gbox: QGroupBox  # if unchecked, buttons are not painted.
+    _button_box: QDialogButtonBox
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -118,11 +119,11 @@ class SettingsMenuUI(QDialog):
         self._toggleables = make_toggleables()
         self._scroll_shortcut_edits = make_scroll_shortcut_edits()
         self._color_buttons_gbox = QGroupBox("Color buttons")
-        self.button_box = QDialogButtonBox(
+        self._button_box = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel,
             parent=self,
         )
-        self.restore_settings_button = self.button_box.addButton(
+        self.restore_settings_button = self._button_box.addButton(
             _("Restore &Defaults"), QDialogButtonBox.ButtonRole.ResetRole
         )
         self.setup_layout()
@@ -131,7 +132,7 @@ class SettingsMenuUI(QDialog):
     def setup_layout(self) -> None:
         layout = QVBoxLayout(self)
         layout.addLayout(self.make_settings_layout())
-        layout.addWidget(self.button_box)
+        layout.addWidget(self._button_box)
         self.setLayout(layout)
 
     def make_settings_layout(self) -> QLayout:
@@ -289,8 +290,8 @@ class SettingsMenuDialog(SettingsMenuUI):
 
     def connect_buttons(self):
         qconnect(self.restore_settings_button.clicked, lambda: self.restore_values(FlexibleGradingConfig(default=True)))
-        qconnect(self.button_box.accepted, self.accept)
-        qconnect(self.button_box.rejected, self.reject)
+        qconnect(self._button_box.accepted, self.accept)
+        qconnect(self._button_box.rejected, self.reject)
 
     def accept(self) -> None:
         config['color_buttons'] = self._color_buttons_gbox.isChecked()
