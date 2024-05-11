@@ -106,6 +106,7 @@ class SettingsMenuUI(QDialog):
     _scroll_shortcut_edits: dict[str, ShortCutGrabButton]
     _colors: dict[str, ColorEditPicker]
     _answer_keys: dict[str, QLineEdit]
+    _toggleables: dict[str, QCheckBox]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -113,7 +114,7 @@ class SettingsMenuUI(QDialog):
         self.setMinimumSize(640, 540)
         self._colors = make_color_line_edits()
         self._answer_keys = make_answer_key_edits()
-        self.toggleables = make_toggleables()
+        self._toggleables = make_toggleables()
         self._scroll_shortcut_edits = make_scroll_shortcut_edits()
         self.color_buttons_gbox = QGroupBox("Color buttons")
         self.button_box = QDialogButtonBox(
@@ -186,7 +187,7 @@ class SettingsMenuUI(QDialog):
         gbox = QGroupBox("Buttons")
         gbox.setCheckable(False)
         gbox.setLayout(place_widgets_in_grid(
-            (self.toggleables[key] for key in keys),
+            (self._toggleables[key] for key in keys),
             n_columns=self._n_columns,
         ))
         return gbox
@@ -202,7 +203,7 @@ class SettingsMenuUI(QDialog):
         gbox = QGroupBox("Features")
         gbox.setCheckable(False)
         gbox.setLayout(place_widgets_in_grid(
-            (self.toggleables[key] for key in keys),
+            (self._toggleables[key] for key in keys),
             n_columns=self._n_columns,
         ))
         return gbox
@@ -216,7 +217,7 @@ class SettingsMenuUI(QDialog):
         gbox = QGroupBox("Zoom")
         gbox.setCheckable(False)
         gbox.setLayout(place_widgets_in_grid(
-            (self.toggleables[key] for key in keys),
+            (self._toggleables[key] for key in keys),
             n_columns=self._n_columns,
         ))
         return gbox
@@ -231,35 +232,35 @@ class SettingsMenuUI(QDialog):
         return gbox
 
     def add_tooltips(self):
-        self.toggleables['pass_fail'].setToolTip(
+        self._toggleables['pass_fail'].setToolTip(
             '"Hard" and "Easy" buttons will be hidden.'
         )
-        self.toggleables['flexible_grading'].setToolTip(
+        self._toggleables['flexible_grading'].setToolTip(
             "Grade cards from their front side\nwithout having to reveal the answer."
         )
-        self.toggleables['remove_buttons'].setToolTip(
+        self._toggleables['remove_buttons'].setToolTip(
             "Remove answer buttons.\nOnly the corresponding intervals will be visible."
         )
-        self.toggleables['prevent_clicks'].setToolTip(
+        self._toggleables['prevent_clicks'].setToolTip(
             "Make answer buttons disabled.\n"
             "Disabled buttons are visible but unusable and un-clickable."
         )
-        self.toggleables['show_last_review'].setToolTip(
+        self._toggleables['show_last_review'].setToolTip(
             "Print the result of the last review on the toolbar."
         )
-        self.toggleables['set_zoom_shortcuts'].setToolTip(
+        self._toggleables['set_zoom_shortcuts'].setToolTip(
             "Change zoom value by pressing Ctrl+Plus and Ctrl+Minus."
         )
-        self.toggleables['remember_zoom_level'].setToolTip(
+        self._toggleables['remember_zoom_level'].setToolTip(
             "Remember last zoom level and restore it on state change."
         )
-        self.toggleables['tooltip_on_zoom_change'].setToolTip(
+        self._toggleables['tooltip_on_zoom_change'].setToolTip(
             "Show a tooltip when zoom level changes."
         )
-        self.toggleables['hide_card_type'].setToolTip(
+        self._toggleables['hide_card_type'].setToolTip(
             "Turn off the indicator that tells you whether a card is new, review, or learn."
         )
-        self.toggleables['press_answer_key_to_flip_card'].setToolTip(
+        self._toggleables['press_answer_key_to_flip_card'].setToolTip(
             "Answer keys ('h', 'j', 'k', 'l' by default) will be used\n"
             "to reveal the back side, similarly to the Space bar."
         )
@@ -276,7 +277,7 @@ class SettingsMenuDialog(SettingsMenuUI):
 
     def restore_values(self, cm: FlexibleGradingConfig):
         self.color_buttons_gbox.setChecked(cm['color_buttons'])
-        for key, checkbox in self.toggleables.items():
+        for key, checkbox in self._toggleables.items():
             checkbox.setChecked(cm[key])
         for label, color_text in cm.colors.items():
             self._colors[label].setText(color_text)
@@ -296,7 +297,7 @@ class SettingsMenuDialog(SettingsMenuUI):
             config.set_color(label, lineedit.text())
         for label, lineedit in self._answer_keys.items():
             config.set_key(label, lineedit.text())
-        for key, checkbox in self.toggleables.items():
+        for key, checkbox in self._toggleables.items():
             config[key] = checkbox.isChecked()
         for scroll_direction, key_edit_widget in self._scroll_shortcut_edits.items():
             config.scroll[scroll_direction] = key_edit_widget.value()
