@@ -61,14 +61,15 @@ class LastEase:
     _last_default_ease = 0
 
     @classmethod
-    def set_last_default_ease(cls, _: Card):
+    def set_last_default_ease(cls, _: Card) -> None:
+        # noinspection PyProtectedMember
         cls._last_default_ease = mw.reviewer._defaultEase()
 
     @classmethod
-    def open_last_card(cls):
+    def open_last_card(cls) -> None:
         browser: aqt.browser = aqt.dialogs.open('Browser', mw)
         browser.activateWindow()
-        browser.form.searchEdit.lineEdit().setText(cls._browser_query)
+        browser.form.searchEdit.lineEdit().setText(cls._browser_query) # search_for
         if hasattr(browser, 'onSearch'):
             browser.onSearch()
         else:

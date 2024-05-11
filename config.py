@@ -46,7 +46,7 @@ class FlexibleGradingConfig(AddonConfigManager):
     def get_color(self, ease_or_label: Union[int, str], default_ease: int = 3) -> str:
         label = (
             ease_or_label
-            if type(ease_or_label) == str
+            if type(ease_or_label) is str
             else self.get_label(ease_or_label, default_ease)
         ).lower()
         return self._config['colors'].get(label, self._default_config['colors'].get(label, "Pink"))
