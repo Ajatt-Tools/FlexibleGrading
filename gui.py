@@ -90,6 +90,7 @@ def make_toggleables() -> dict[str, QCheckBox]:
     d = {}
     for toggleable in config.bool_keys():
         if toggleable == 'color_buttons':
+            # handled separately by a checkable groupbox
             continue
         d[toggleable] = QCheckBox(as_label(toggleable))
     return d
