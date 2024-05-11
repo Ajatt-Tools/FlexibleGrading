@@ -1,43 +1,40 @@
 # Copyright: Ren Tatsumoto <tatsu at autistici.org>
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
-from typing import Union, overload
-
-from aqt import mw
-
-from .ajt_common.addon_config import AddonConfigManager
+from .ajt_common.addon_config import AddonConfigManager, ConfigSubViewBase
 
 
-class ScrollKeysConfig:
-    _scroll: dict[str, str]
+class ScrollKeysConfig(ConfigSubViewBase):
+    _view_key: str = "scroll"
 
-    def __init__(self, cfg_dict: dict):
-        self._scroll = cfg_dict["scroll"]
-
-    def keys(self):
-        return self._scroll.keys()
+    def __init__(self, default: bool):
+        super().__init__(default)
 
     @property
     def up(self) -> str:
-        return self._scroll["up"]
+        return self["up"]
 
     @property
     def down(self) -> str:
-        return self._scroll["down"]
+        return self["down"]
 
     @property
     def left(self) -> str:
-        return self._scroll["left"]
+        return self["left"]
 
     @property
     def right(self) -> str:
-        return self._scroll["right"]
+        return self["right"]
 
 
 class FlexibleGradingConfig(AddonConfigManager):
     def __init__(self, default: bool = False):
         super().__init__(default)
-        self._scroll = ScrollKeysConfig(cfg_dict=self._config)
+        self._scroll = ScrollKeysConfig(default)
+
+    @property
+    def scroll(self) -> ScrollKeysConfig:
+        return self._scroll
 
     def _get_sub(self, sub_key: str) -> dict[str, str]:
         return {
@@ -90,10 +87,6 @@ class FlexibleGradingConfig(AddonConfigManager):
 
     def set_zoom_state(self, state: str, value: float) -> None:
         self._config.setdefault('zoom_states', {})[state] = value
-
-    @property
-    def scroll(self) -> ScrollKeysConfig:
-        return self._scroll
 
 
 config = FlexibleGradingConfig()
