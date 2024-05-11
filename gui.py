@@ -7,17 +7,17 @@ from aqt import mw
 from aqt.qt import *
 from aqt.utils import restoreGeom, saveGeom
 
-from .consts import ADDON_NAME, HTML_COLORS_LINK, SCHED_NAG_MSG
-from .ajt_common.utils import ui_translate
-from .ajt_common.grab_key import ShortCutGrabButton
 from .ajt_common.about_menu import menu_root_entry
 from .ajt_common.consts import ADDON_SERIES
+from .ajt_common.grab_key import ShortCutGrabButton
 from .ajt_common.monospace_line_edit import MonoSpaceLineEdit
+from .ajt_common.utils import ui_translate
 from .ajt_common.widget_placement import place_widgets_in_grid
 from .config import config, FlexibleGradingConfig
-
+from .consts import ADDON_NAME, HTML_COLORS_LINK, SCHED_NAG_MSG
 
 as_label = ui_translate
+
 
 class ColorEdit(MonoSpaceLineEdit):
     font_size = 14
