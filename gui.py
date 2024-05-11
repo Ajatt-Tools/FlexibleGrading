@@ -107,6 +107,7 @@ class SettingsMenuUI(QDialog):
     _colors: dict[str, ColorEditPicker]
     _answer_keys: dict[str, QLineEdit]
     _toggleables: dict[str, QCheckBox]
+    _color_buttons_gbox: QGroupBox  # if unchecked, buttons are not painted.
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -116,7 +117,7 @@ class SettingsMenuUI(QDialog):
         self._answer_keys = make_answer_key_edits()
         self._toggleables = make_toggleables()
         self._scroll_shortcut_edits = make_scroll_shortcut_edits()
-        self.color_buttons_gbox = QGroupBox("Color buttons")
+        self._color_buttons_gbox = QGroupBox("Color buttons")
         self.button_box = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel,
             parent=self,
@@ -161,7 +162,7 @@ class SettingsMenuUI(QDialog):
         return label
 
     def make_button_colors_group(self) -> QGroupBox:
-        gbox = self.color_buttons_gbox
+        gbox = self._color_buttons_gbox
         gbox.setCheckable(True)
         form = QFormLayout()
         for key, lineedit in self._colors.items():
@@ -276,7 +277,7 @@ class SettingsMenuDialog(SettingsMenuUI):
         restoreGeom(self, self.name)
 
     def restore_values(self, cm: FlexibleGradingConfig):
-        self.color_buttons_gbox.setChecked(cm['color_buttons'])
+        self._color_buttons_gbox.setChecked(cm['color_buttons'])
         for key, checkbox in self._toggleables.items():
             checkbox.setChecked(cm[key])
         for label, color_text in cm.colors.items():
@@ -292,7 +293,7 @@ class SettingsMenuDialog(SettingsMenuUI):
         qconnect(self.button_box.rejected, self.reject)
 
     def accept(self) -> None:
-        config['color_buttons'] = self.color_buttons_gbox.isChecked()
+        config['color_buttons'] = self._color_buttons_gbox.isChecked()
         for label, lineedit in self._colors.items():
             config.set_color(label, lineedit.text())
         for label, lineedit in self._answer_keys.items():
