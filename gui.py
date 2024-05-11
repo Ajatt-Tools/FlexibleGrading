@@ -102,13 +102,13 @@ def make_scroll_shortcut_edits() -> dict[str, ShortCutGrabButton]:
 
 class SettingsMenuUI(QDialog):
     name = f"{ADDON_SERIES} {ADDON_NAME} Settings Dialog"
-    _n_columns = 3
+    _n_columns = 2
     _scroll_shortcut_edits: dict[str, ShortCutGrabButton]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setWindowTitle(f'{ADDON_SERIES} {ADDON_NAME}')
-        self.setMinimumSize(480, 512)
+        self.setMinimumSize(640, 540)
         self.colors = make_color_line_edits()
         self.answer_keys = make_answer_key_edits()
         self.toggleables = make_toggleables()
@@ -121,14 +121,14 @@ class SettingsMenuUI(QDialog):
         self.restore_settings_button = self.button_box.addButton(
             _("Restore &Defaults"), QDialogButtonBox.ButtonRole.ResetRole
         )
-        self.setLayout(self.setup_layout())
+        self.setup_layout()
         self.add_tooltips()
 
-    def setup_layout(self) -> QBoxLayout:
+    def setup_layout(self) -> None:
         layout = QVBoxLayout(self)
         layout.addLayout(self.make_settings_layout())
         layout.addWidget(self.button_box)
-        return layout
+        self.setLayout(layout)
 
     def make_settings_layout(self) -> QLayout:
         layout = QGridLayout()
@@ -139,11 +139,11 @@ class SettingsMenuUI(QDialog):
         # Keys (assign letters)
         layout.addWidget(self.make_shortcuts_group(), 0, 1, 1, 1)
         # Buttons (remove, prevent clicks)
-        layout.addWidget(self.make_buttons_group(), 1, 0, 1, 2)
+        layout.addWidget(self.make_buttons_group(), 1, 0, 1, 1)
         # Features (disable/enable pass-fail, flexible grading, etc.)
-        layout.addWidget(self.make_features_group(), 2, 0, 1, 2)
+        layout.addWidget(self.make_features_group(), 1, 1, 1, 1)
         # Zoom behavior
-        layout.addWidget(self.make_zoom_group(), 3, 0, 1, 2)
+        layout.addWidget(self.make_zoom_group(), 2, 0, 1, 1)
         return layout
 
     @staticmethod
