@@ -61,6 +61,15 @@ def scroll_webpage(self: Reviewer, amount_hor: int = 0, amount_vert: int = 0) ->
     self.web.eval(f"  window.scrollBy({amount_hor}, {amount_vert});  ")
 
 
+def scroll_shortcuts(self) -> list[tuple[str, Callable]]:
+    return [
+        (config.scroll.up, functools.partial(scroll_webpage, self=self, amount_vert=-100)),
+        (config.scroll.down, functools.partial(scroll_webpage, self=self, amount_vert=100)),
+        (config.scroll.left, functools.partial(scroll_webpage, self=self, amount_hor=-100)),
+        (config.scroll.right, functools.partial(scroll_webpage, self=self, amount_hor=100)),
+    ]
+
+
 def new_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
     return [
         *number_shortcuts(self),
@@ -70,10 +79,7 @@ def new_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
         ],
         (config.get_key("undo"), self.mw.undo),
         (config.get_key("last_card"), LastEase.open_last_card),
-        (config.scroll.up, functools.partial(scroll_webpage, self=self, amount_vert=-100)),
-        (config.scroll.down, functools.partial(scroll_webpage, self=self, amount_vert=100)),
-        (config.scroll.left, functools.partial(scroll_webpage, self=self, amount_hor=-100)),
-        (config.scroll.right, functools.partial(scroll_webpage, self=self, amount_hor=100)),
+        *scroll_shortcuts(self),
     ]
 
 
