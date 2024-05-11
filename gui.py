@@ -7,6 +7,7 @@ from aqt import mw
 from aqt.qt import *
 from aqt.utils import restoreGeom, saveGeom
 
+from .ajt_common.grab_key import ShortCutGrabButton
 from .ajt_common.about_menu import menu_root_entry
 from .ajt_common.consts import ADDON_SERIES
 from .ajt_common.monospace_line_edit import MonoSpaceLineEdit
@@ -96,9 +97,14 @@ def make_toggleables() -> dict[str, QCheckBox]:
     return d
 
 
+def make_scroll_shortcut_edits() -> dict[str, ShortCutGrabButton]:
+    return {key: ShortCutGrabButton() for key in config.scroll.keys()}
+
+
 class SettingsMenuUI(QDialog):
     name = f"{ADDON_SERIES} {ADDON_NAME} Settings Dialog"
     _n_columns = 3
+    _scroll_shortcut_edits: dict[str, ShortCutGrabButton]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -107,6 +113,7 @@ class SettingsMenuUI(QDialog):
         self.colors = make_color_line_edits()
         self.answer_keys = make_answer_key_edits()
         self.toggleables = make_toggleables()
+        self._scroll_shortcut_edits = make_scroll_shortcut_edits()
         self.color_buttons_gbox = QGroupBox("Color buttons")
         self.button_box = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel,

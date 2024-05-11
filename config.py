@@ -9,8 +9,13 @@ from .ajt_common.addon_config import AddonConfigManager
 
 
 class ScrollKeysConfig:
+    _scroll: dict[str, str]
+
     def __init__(self, cfg_dict: dict):
         self._scroll = cfg_dict["scroll"]
+
+    def keys(self):
+        return self._scroll.keys()
 
     @property
     def up(self) -> str:
