@@ -14,10 +14,10 @@
     "last_card": ":"
   },
   "scroll": {
-    "up": "Shift+k",
-    "down": "Shift+j",
-    "left": "Shift+h",
-    "right": "Shift+l"
+    "up": "Shift+K",
+    "down": "Shift+J",
+    "left": "Shift+H",
+    "right": "Shift+L"
   },
   "color_buttons": true,
   "remove_buttons": true,
