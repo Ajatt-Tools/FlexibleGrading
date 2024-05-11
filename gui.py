@@ -144,6 +144,8 @@ class SettingsMenuUI(QDialog):
         layout.addWidget(self.make_features_group(), 1, 1, 1, 1)
         # Zoom behavior
         layout.addWidget(self.make_zoom_group(), 2, 0, 1, 1)
+        # Scroll shortcuts and scroll amount
+        layout.addWidget(self.make_scroll_group(), 2, 1, 1, 1)
         return layout
 
     @staticmethod
@@ -217,6 +219,15 @@ class SettingsMenuUI(QDialog):
         ))
         return gbox
 
+    def make_scroll_group(self):
+        gbox = QGroupBox("Scroll")
+        gbox.setCheckable(False)
+        form = QFormLayout()
+        for scroll_direction, key_edit_widget in self._scroll_shortcut_edits.items():
+            form.addRow(as_label(scroll_direction), key_edit_widget)
+        gbox.setLayout(form)
+        return gbox
+
     def add_tooltips(self):
         self.toggleables['pass_fail'].setToolTip(
             '"Hard" and "Easy" buttons will be hidden.'
@@ -269,6 +280,8 @@ class SettingsMenuDialog(SettingsMenuUI):
             self.colors[label].setText(color_text)
         for label, key_letter in cm.buttons.items():
             self.answer_keys[label].setText(key_letter)
+        for scroll_direction, shortcut_str in cm.scroll.items():
+            self._scroll_shortcut_edits[scroll_direction].setValue(shortcut_str)
 
     def connect_buttons(self):
         qconnect(self.restore_settings_button.clicked, lambda: self.restore_values(FlexibleGradingConfig(default=True)))
@@ -283,6 +296,8 @@ class SettingsMenuDialog(SettingsMenuUI):
             config.set_key(label, lineedit.text())
         for key, checkbox in self.toggleables.items():
             config[key] = checkbox.isChecked()
+        for scroll_direction, key_edit_widget in self._scroll_shortcut_edits.items():
+            config.scroll[scroll_direction] = key_edit_widget.value()
         config.write_config()
         return super().accept()
 
