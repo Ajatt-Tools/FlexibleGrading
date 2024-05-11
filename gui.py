@@ -105,13 +105,14 @@ class SettingsMenuUI(QDialog):
     _n_columns = 2
     _scroll_shortcut_edits: dict[str, ShortCutGrabButton]
     _colors: dict[str, ColorEditPicker]
+    _answer_keys: dict[str, QLineEdit]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setWindowTitle(f'{ADDON_SERIES} {ADDON_NAME}')
         self.setMinimumSize(640, 540)
         self._colors = make_color_line_edits()
-        self.answer_keys = make_answer_key_edits()
+        self._answer_keys = make_answer_key_edits()
         self.toggleables = make_toggleables()
         self._scroll_shortcut_edits = make_scroll_shortcut_edits()
         self.color_buttons_gbox = QGroupBox("Color buttons")
@@ -172,7 +173,7 @@ class SettingsMenuUI(QDialog):
         gbox = QGroupBox("Keys")
         gbox.setCheckable(False)
         form = QFormLayout()
-        for key, key_edit in self.answer_keys.items():
+        for key, key_edit in self._answer_keys.items():
             form.addRow(as_label(key), key_edit)
         gbox.setLayout(form)
         return gbox
@@ -280,7 +281,7 @@ class SettingsMenuDialog(SettingsMenuUI):
         for label, color_text in cm.colors.items():
             self._colors[label].setText(color_text)
         for label, key_letter in cm.buttons.items():
-            self.answer_keys[label].setText(key_letter)
+            self._answer_keys[label].setText(key_letter)
         for scroll_direction, shortcut_str in cm.scroll.items():
             self._scroll_shortcut_edits[scroll_direction].setValue(shortcut_str)
 
@@ -293,7 +294,7 @@ class SettingsMenuDialog(SettingsMenuUI):
         config['color_buttons'] = self.color_buttons_gbox.isChecked()
         for label, lineedit in self._colors.items():
             config.set_color(label, lineedit.text())
-        for label, lineedit in self.answer_keys.items():
+        for label, lineedit in self._answer_keys.items():
             config.set_key(label, lineedit.text())
         for key, checkbox in self.toggleables.items():
             config[key] = checkbox.isChecked()
