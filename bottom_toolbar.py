@@ -26,17 +26,17 @@ def only_pass_fail(buttons: tuple, default_ease: int) -> tuple[tuple[int, str], 
 
 def apply_label_colors(buttons: tuple, default_ease: int) -> tuple[tuple[int, str], ...]:
     def color_label(ease: int, label: str) -> tuple[int, str]:
-        return ease, f"<font color=\"{config.get_ease_color(ease, default_ease)}\">{label}</font>"
+        return ease, f'<font color="{config.get_ease_color(ease, default_ease)}">{label}</font>'
 
     return tuple(color_label(*button) for button in buttons)
 
 
 def filter_answer_buttons(buttons: tuple, self: Reviewer, _: Card) -> tuple[tuple[int, str], ...]:
     # Called by _answerButtonList, before _answerButtons gets called
-    if config['pass_fail'] is True:
+    if config["pass_fail"] is True:
         buttons = only_pass_fail(buttons, self._defaultEase())
 
-    if config['color_buttons'] is True:
+    if config["color_buttons"] is True:
         buttons = apply_label_colors(buttons, self._defaultEase())
 
     return buttons
@@ -56,10 +56,10 @@ def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
         # Get button time from the default function,
         # but remove `class="nobold"` since it introduces `position: absolute`
         # which prevents the text from being visible when there is no button.
-        html = self._buttonTime(ease, v3_labels=get_labels()).replace('class="nobold"', '')
-        if config['color_buttons'] is True:
+        html = self._buttonTime(ease, v3_labels=get_labels()).replace('class="nobold"', "")
+        if config["color_buttons"] is True:
             html = html.replace(
-                '<span',
+                "<span",
                 f'<span style="color: {config.get_ease_color(ease, self._defaultEase())};"',
             )
         return html
@@ -69,7 +69,7 @@ def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
         return f'<div class="ajt__stat_txt">{self._remaining()}</div>'
 
     ease_row = []
-    if front is False or config['flexible_grading'] is True:
+    if front is False or config["flexible_grading"] is True:
         ease_row.extend(button_time(ease) for ease, label in self._answerButtonList())
     if front is True:
         ease_row.insert(len(ease_row) // 2, stat_txt())
@@ -77,13 +77,13 @@ def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
 
 
 def disable_buttons(html: str) -> str:
-    return html.replace('<button', '<button disabled')
+    return html.replace("<button", "<button disabled")
 
 
 def make_backside_answer_buttons(self: Reviewer, _old: Callable) -> str:
-    if config['remove_buttons'] is True:
+    if config["remove_buttons"] is True:
         return make_buttonless_ease_row(self)
-    elif config['prevent_clicks'] is True:
+    elif config["prevent_clicks"] is True:
         return disable_buttons(_old(self))
     else:
         return _old(self)
@@ -102,12 +102,12 @@ def make_show_ans_table_cell(self: Reviewer):
             self._remaining(),
         )
 
-    return f'<td align=center>{make_show_ans_button()}</td>'
+    return f"<td align=center>{make_show_ans_button()}</td>"
 
 
 def calc_middle_insert_pos(buttons_html_table: str) -> int:
-    cell_positions = [m.start() for m in re.finditer(r'<td', buttons_html_table)]
-    return cell_positions[:len(cell_positions) // 2 + 1][-1]
+    cell_positions = [m.start() for m in re.finditer(r"<td", buttons_html_table)]
+    return cell_positions[: len(cell_positions) // 2 + 1][-1]
 
 
 def make_flexible_front_row(self: Reviewer) -> str:
@@ -119,11 +119,11 @@ def make_flexible_front_row(self: Reviewer) -> str:
 
 def make_frontside_answer_buttons(self: Reviewer) -> None:
     html = None
-    if config['remove_buttons'] is True:
+    if config["remove_buttons"] is True:
         html = make_buttonless_ease_row(self, front=True)
-    elif config['flexible_grading'] is True:
+    elif config["flexible_grading"] is True:
         html = make_flexible_front_row(self)
-        if config['prevent_clicks'] is True:
+        if config["prevent_clicks"] is True:
             html = disable_buttons(html)
     if html is not None:
         self.bottom.web.eval("showAnswer(%s);" % json.dumps(html))
@@ -132,16 +132,15 @@ def make_frontside_answer_buttons(self: Reviewer) -> None:
 
 def edit_bottom_html(self: Reviewer, _old: Callable):
     html = _old(self)
-    if config['remove_buttons'] is True:
+    if config["remove_buttons"] is True:
         html = (
-            html
-            .replace('<button ', '<div class="ajt__corner_button" ')
-            .replace('</button>', '</div>')
-            .replace(' class=stat>', ' class=ajt__corner_stat>')
-            .replace(' class=stattxt>', ' class=ajt__time_remaining>')
+            html.replace("<button ", '<div class="ajt__corner_button" ')
+            .replace("</button>", "</div>")
+            .replace(" class=stat>", " class=ajt__corner_stat>")
+            .replace(" class=stattxt>", " class=ajt__time_remaining>")
         )
         html += BOTTOM_TABLE_STYLE
-    if config['prevent_clicks'] is True:
+    if config["prevent_clicks"] is True:
         html = disable_buttons(html)
     return html
 

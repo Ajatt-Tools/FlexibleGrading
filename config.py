@@ -44,8 +44,7 @@ class FlexibleGradingConfig(AddonConfigManager):
     def _get_sub(self, sub_key: str) -> dict[str, str]:
         return {
             key.lower(): self._config[sub_key].get(key.lower(), default_value)
-            for key, default_value in
-            self._default_config[sub_key].items()
+            for key, default_value in self._default_config[sub_key].items()
         }
 
     @staticmethod
@@ -61,37 +60,37 @@ class FlexibleGradingConfig(AddonConfigManager):
         return "Unknown"
 
     def get_ease_color(self, ease: int, default_ease: int) -> str:
-        return self._config['colors'][self.get_label(ease, default_ease).lower()]
+        return self._config["colors"][self.get_label(ease, default_ease).lower()]
 
     def get_label_color(self, label: str) -> str:
-        return self._config['colors'][label.lower()]
+        return self._config["colors"][label.lower()]
 
     @property
     def colors(self) -> dict[str, str]:
         """Returns a dict mapping buttons' labels to their colors."""
-        return self._get_sub('colors')
+        return self._get_sub("colors")
 
     @property
     def buttons(self) -> dict[str, str]:
         """Returns a dict mapping buttons' labels to their key bindings."""
-        return self._get_sub('buttons')
+        return self._get_sub("buttons")
 
     def get_key(self, answer: str) -> str:
         """Returns shortcut key for answer button, e.g. 'again'=>'h'."""
-        return self._config['buttons'].get(answer.lower(), "").lower()
+        return self._config["buttons"].get(answer.lower(), "").lower()
 
     def set_key(self, answer: str, letter: str):
         """Sets shortcut key for answer button, e.g. 'again'=>'h'."""
-        self._config['buttons'][answer.lower()] = letter.lower()
+        self._config["buttons"][answer.lower()] = letter.lower()
 
     def set_color(self, btn_label: str, color: str):
-        self._config['colors'][btn_label.lower()] = color
+        self._config["colors"][btn_label.lower()] = color
 
     def get_zoom_state(self, state: str) -> float:
-        return self._config.setdefault('zoom_states', {}).get(state, 1)
+        return self._config.setdefault("zoom_states", {}).get(state, 1)
 
     def set_zoom_state(self, state: str, value: float) -> None:
-        self._config.setdefault('zoom_states', {})[state] = value
+        self._config.setdefault("zoom_states", {})[state] = value
 
 
 config = FlexibleGradingConfig()

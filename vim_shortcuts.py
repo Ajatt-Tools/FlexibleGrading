@@ -15,19 +15,15 @@ from .top_toolbar import LastEase
 
 def answer_card(self: Reviewer, grade: str):
     try:
-        if (
-                self.state == "question"
-                and grade
-                and config["press_answer_key_to_flip_card"] is True
-        ):
+        if self.state == "question" and grade and config["press_answer_key_to_flip_card"] is True:
             return self._getTypedAnswer()
-        if grade == 'again':
+        if grade == "again":
             return self._answerCard(1)
-        if grade == 'hard' and self._defaultEase() == 3:
+        if grade == "hard" and self._defaultEase() == 3:
             return self._answerCard(2)
-        if grade == 'good':
+        if grade == "good":
             return self._answerCard(self._defaultEase())
-        if grade == 'easy':
+        if grade == "easy":
             return self._answerCard(cast(Literal[3, 4], self._defaultEase() + 1))
     except IndexError as e:
         raise RuntimeError("Flexible grading error: Couldn't answer card due to a bug in Anki.") from e
@@ -35,23 +31,22 @@ def answer_card(self: Reviewer, grade: str):
 
 def enabled_answer_buttons() -> Iterable[str]:
     # In PassFail mode pressing 'Hard' and 'Easy' is not allowed.
-    return ('again', 'good') if config['pass_fail'] is True else ('again', 'hard', 'good', 'easy')
+    return ("again", "good") if config["pass_fail"] is True else ("again", "hard", "good", "easy")
 
 
 def enabled_number_keys() -> Iterable[str]:
     # In PassFail mode pressing 'Hard' and 'Easy' is not allowed.
-    return ('1', '3') if config['pass_fail'] is True else ('1', '2', '3', '4')
+    return ("1", "3") if config["pass_fail"] is True else ("1", "2", "3", "4")
 
 
 def number_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
     return [
         (key, func)
-        for key, func
-        in [
-            ("1", lambda: answer_card(self, grade='again')),
-            ("2", lambda: answer_card(self, grade='hard')),
-            ("3", lambda: answer_card(self, grade='good')),
-            ("4", lambda: answer_card(self, grade='easy')),
+        for key, func in [
+            ("1", lambda: answer_card(self, grade="again")),
+            ("2", lambda: answer_card(self, grade="hard")),
+            ("3", lambda: answer_card(self, grade="good")),
+            ("4", lambda: answer_card(self, grade="easy")),
         ]
         if key in enabled_number_keys()
     ]
@@ -99,16 +94,20 @@ def add_vim_shortcuts(state: MainWindowState, shortcuts: list[tuple[str, Callabl
     # Reviewer shortcuts are defined in Reviewer._shortcutKeys
     default_shortcuts = shortcuts.copy()
     shortcuts.clear()
-    shortcuts.extend(dict([
-        *filter(is_not_ease_key, default_shortcuts),
-        *filter(is_key_set, new_shortcuts(mw.reviewer)),
-    ]).items())
+    shortcuts.extend(
+        dict(
+            [
+                *filter(is_not_ease_key, default_shortcuts),
+                *filter(is_key_set, new_shortcuts(mw.reviewer)),
+            ]
+        ).items()
+    )
 
 
 def activate_vim_keys(self: Reviewer, ease: Literal[1, 2, 3, 4], _old: Callable) -> None:
     # Allows answering from the front side.
     # Reviewer._answerCard() is called when pressing default and configured keys.
-    if config['flexible_grading'] is True and self.state == "question":
+    if config["flexible_grading"] is True and self.state == "question":
         self.state = "answer"
 
     # min() makes sure the original _answerCard() never skips

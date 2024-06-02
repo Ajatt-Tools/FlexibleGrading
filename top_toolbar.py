@@ -67,10 +67,10 @@ class LastEase:
 
     @classmethod
     def open_last_card(cls) -> None:
-        browser: aqt.browser = aqt.dialogs.open('Browser', mw)
+        browser: aqt.browser = aqt.dialogs.open("Browser", mw)
         browser.activateWindow()
-        browser.form.searchEdit.lineEdit().setText(cls._browser_query) # search_for
-        if hasattr(browser, 'onSearch'):
+        browser.form.searchEdit.lineEdit().setText(cls._browser_query)  # search_for
+        if hasattr(browser, "onSearch"):
             browser.onSearch()
         else:
             browser.onSearchActivated()
@@ -89,34 +89,41 @@ class LastEase:
     @classmethod
     def update(cls, reviewer: Reviewer, card: Card, ease: int) -> None:
         """Called after a card was answered."""
-        if config['show_last_review'] is False:
+        if config["show_last_review"] is False:
             return
 
         label = config.get_label(ease, cls._last_default_ease)
         color = config.get_label_color(label)
         status = f"{_(label)[:1]}: {human_ivl(card)}"
 
-        reviewer.mw.toolbar.web.eval("""\
+        reviewer.mw.toolbar.web.eval(
+            """\
         {{
             const elem = document.getElementById("{}");
             elem.innerHTML = "{}";
             elem.style.color = "{}";
             elem.style.display = "inline";
         }};
-        """.format(cls._html_link_id, status, color))
+        """.format(
+                cls._html_link_id, status, color
+            )
+        )
 
         cls._browser_query = f"cid:{card.id}"
 
     @classmethod
     def hide(cls, _=None) -> None:
-        mw.toolbar.web.eval("""\
+        mw.toolbar.web.eval(
+            """\
         {
             const elem = document.getElementById("%s");
             elem.innerHTML = "";
             elem.style.color = "";
             elem.style.display = "none";
         };
-        """ % cls._html_link_id)
+        """
+            % cls._html_link_id
+        )
 
 
 def main():

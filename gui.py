@@ -2,6 +2,7 @@
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
 from gettext import gettext as _
+from typing import Optional
 
 from aqt import mw
 from aqt.qt import *
@@ -23,16 +24,16 @@ class ColorEdit(MonoSpaceLineEdit):
     font_size = 14
     min_height = 24
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        color_regex = QRegularExpression(r'^#?\w+$')
+        color_regex = QRegularExpression(r"^#?\w+$")
         color_validator = QRegularExpressionValidator(color_regex, self)
         self.setValidator(color_validator)
         self.setPlaceholderText("HTML color code")
 
 
 class ColorEditPicker(QWidget):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._edit = ColorEdit()
         self.setLayout(layout := QHBoxLayout())
@@ -43,15 +44,15 @@ class ColorEditPicker(QWidget):
         b.setBaseSize(32, 22)
         qconnect(b.clicked, self.choose_color)
 
-    def choose_color(self):
+    def choose_color(self) -> None:
         color = QColorDialog.getColor(initial=QColor.fromString(self._edit.text()))
         if color.isValid():
             self._edit.setText(color.name())
 
-    def setText(self, text: str):
+    def setText(self, text: str) -> None:
         return self._edit.setText(text)
 
-    def text(self):
+    def text(self) -> str:
         return self._edit.text()
 
 
@@ -59,7 +60,7 @@ class SimpleKeyEdit(MonoSpaceLineEdit):
     font_size = 14
     min_height = 24
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         key_regex = QRegularExpression(r'^[-a-z0-9:;<>=?@~|`_/&!#$%^*(){}"+\]\[\\\']?$')
         key_validator = QRegularExpressionValidator(key_regex, self)
@@ -72,7 +73,7 @@ class ScrollAmountSpinBox(QSpinBox):
     _default_allowed_range: tuple[int, int] = (10, 1000)
     _single_step_amount: int = 10
 
-    def __init__(self, initial_value: int = None):
+    def __init__(self, initial_value: Optional[int] = None) -> None:
         super().__init__()
         self.setRange(*self._default_allowed_range)
         self.setSingleStep(self._single_step_amount)
@@ -101,7 +102,7 @@ def make_toggleables() -> dict[str, QCheckBox]:
     """
     d = {}
     for toggleable in config.bool_keys():
-        if toggleable == 'color_buttons':
+        if toggleable == "color_buttons":
             # handled separately by a checkable groupbox
             continue
         d[toggleable] = QCheckBox(as_label(toggleable))
@@ -124,9 +125,9 @@ class SettingsMenuUI(QDialog):
     _restore_settings_button: QPushButton
     _scroll_amount_spin: QSpinBox
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.setWindowTitle(f'{ADDON_SERIES} {ADDON_NAME}')
+        self.setWindowTitle(f"{ADDON_SERIES} {ADDON_NAME}")
         self.setMinimumSize(640, 540)
         self._colors = make_color_line_edits()
         self._answer_keys = make_answer_key_edits()
@@ -169,7 +170,7 @@ class SettingsMenuUI(QDialog):
         return layout
 
     @staticmethod
-    def make_colors_link():
+    def make_colors_link() -> QLabel:
         label = QLabel()
         label.setText(
             f'For the list of colors, see <a style="color: SteelBlue;" href="{HTML_COLORS_LINK}">w3schools.com</a>.'
@@ -198,48 +199,54 @@ class SettingsMenuUI(QDialog):
 
     def make_buttons_group(self) -> QGroupBox:
         keys = (
-            'remove_buttons',
-            'prevent_clicks',
+            "remove_buttons",
+            "prevent_clicks",
         )
         gbox = QGroupBox("Buttons")
         gbox.setCheckable(False)
-        gbox.setLayout(place_widgets_in_grid(
-            (self._toggleables[key] for key in keys),
-            n_columns=self._n_columns,
-        ))
+        gbox.setLayout(
+            place_widgets_in_grid(
+                (self._toggleables[key] for key in keys),
+                n_columns=self._n_columns,
+            )
+        )
         return gbox
 
     def make_features_group(self) -> QGroupBox:
         keys = (
-            'pass_fail',
-            'flexible_grading',
-            'show_last_review',
-            'hide_card_type',
-            'press_answer_key_to_flip_card',
+            "pass_fail",
+            "flexible_grading",
+            "show_last_review",
+            "hide_card_type",
+            "press_answer_key_to_flip_card",
         )
         gbox = QGroupBox("Features")
         gbox.setCheckable(False)
-        gbox.setLayout(place_widgets_in_grid(
-            (self._toggleables[key] for key in keys),
-            n_columns=self._n_columns,
-        ))
+        gbox.setLayout(
+            place_widgets_in_grid(
+                (self._toggleables[key] for key in keys),
+                n_columns=self._n_columns,
+            )
+        )
         return gbox
 
     def make_zoom_group(self) -> QGroupBox:
         keys = (
-            'set_zoom_shortcuts',
-            'remember_zoom_level',
-            'tooltip_on_zoom_change',
+            "set_zoom_shortcuts",
+            "remember_zoom_level",
+            "tooltip_on_zoom_change",
         )
         gbox = QGroupBox("Zoom")
         gbox.setCheckable(False)
-        gbox.setLayout(place_widgets_in_grid(
-            (self._toggleables[key] for key in keys),
-            n_columns=self._n_columns,
-        ))
+        gbox.setLayout(
+            place_widgets_in_grid(
+                (self._toggleables[key] for key in keys),
+                n_columns=self._n_columns,
+            )
+        )
         return gbox
 
-    def make_scroll_group(self):
+    def make_scroll_group(self) -> QGroupBox:
         gbox = QGroupBox("Scroll")
         gbox.setCheckable(False)
         form = QFormLayout()
@@ -249,43 +256,32 @@ class SettingsMenuUI(QDialog):
         gbox.setLayout(form)
         return gbox
 
-    def add_tooltips(self):
-        self._toggleables['pass_fail'].setToolTip(
-            '"Hard" and "Easy" buttons will be hidden.'
-        )
-        self._toggleables['flexible_grading'].setToolTip(
+    def add_tooltips(self) -> None:
+        self._toggleables["pass_fail"].setToolTip('"Hard" and "Easy" buttons will be hidden.')
+        self._toggleables["flexible_grading"].setToolTip(
             "Grade cards from their front side\nwithout having to reveal the answer."
         )
-        self._toggleables['remove_buttons'].setToolTip(
+        self._toggleables["remove_buttons"].setToolTip(
             "Remove answer buttons.\nOnly the corresponding intervals will be visible."
         )
-        self._toggleables['prevent_clicks'].setToolTip(
-            "Make answer buttons disabled.\n"
-            "Disabled buttons are visible but unusable and un-clickable."
+        self._toggleables["prevent_clicks"].setToolTip(
+            "Make answer buttons disabled.\n" "Disabled buttons are visible but unusable and un-clickable."
         )
-        self._toggleables['show_last_review'].setToolTip(
-            "Print the result of the last review on the toolbar."
-        )
-        self._toggleables['set_zoom_shortcuts'].setToolTip(
-            "Change zoom value by pressing Ctrl+Plus and Ctrl+Minus."
-        )
-        self._toggleables['remember_zoom_level'].setToolTip(
-            "Remember last zoom level and restore it on state change."
-        )
-        self._toggleables['tooltip_on_zoom_change'].setToolTip(
-            "Show a tooltip when zoom level changes."
-        )
-        self._toggleables['hide_card_type'].setToolTip(
+        self._toggleables["show_last_review"].setToolTip("Print the result of the last review on the toolbar.")
+        self._toggleables["set_zoom_shortcuts"].setToolTip("Change zoom value by pressing Ctrl+Plus and Ctrl+Minus.")
+        self._toggleables["remember_zoom_level"].setToolTip("Remember last zoom level and restore it on state change.")
+        self._toggleables["tooltip_on_zoom_change"].setToolTip("Show a tooltip when zoom level changes.")
+        self._toggleables["hide_card_type"].setToolTip(
             "Turn off the indicator that tells you whether a card is new, review, or learn."
         )
-        self._toggleables['press_answer_key_to_flip_card'].setToolTip(
+        self._toggleables["press_answer_key_to_flip_card"].setToolTip(
             "Answer keys ('h', 'j', 'k', 'l' by default) will be used\n"
             "to reveal the back side, similarly to the Space bar."
         )
 
 
 class SettingsMenuDialog(SettingsMenuUI):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.connect_buttons()
         if mw.col.schedVer() < 2:
@@ -293,8 +289,8 @@ class SettingsMenuDialog(SettingsMenuUI):
         self.restore_values(config)
         restoreGeom(self, self.name)
 
-    def restore_values(self, cm: FlexibleGradingConfig):
-        self._color_buttons_gbox.setChecked(cm['color_buttons'])
+    def restore_values(self, cm: FlexibleGradingConfig) -> None:
+        self._color_buttons_gbox.setChecked(cm["color_buttons"])
         for key, checkbox in self._toggleables.items():
             checkbox.setChecked(cm[key])
         for label, color_text in cm.colors.items():
@@ -305,7 +301,7 @@ class SettingsMenuDialog(SettingsMenuUI):
             self._scroll_shortcut_edits[scroll_direction].setValue(shortcut_str)
         self._scroll_amount_spin.setValue(config.scroll_amount)
 
-    def connect_buttons(self):
+    def connect_buttons(self) -> None:
         qconnect(
             self._restore_settings_button.clicked,
             lambda: self.restore_values(FlexibleGradingConfig(default=True)),
@@ -314,7 +310,7 @@ class SettingsMenuDialog(SettingsMenuUI):
         qconnect(self._button_box.rejected, self.reject)
 
     def accept(self) -> None:
-        config['color_buttons'] = self._color_buttons_gbox.isChecked()
+        config["color_buttons"] = self._color_buttons_gbox.isChecked()
         for label, lineedit in self._colors.items():
             config.set_color(label, lineedit.text())
         for label, lineedit in self._answer_keys.items():
@@ -332,7 +328,8 @@ class SettingsMenuDialog(SettingsMenuUI):
         return super().done(*args, **kwargs)
 
 
-def on_open_settings():
+def on_open_settings() -> None:
+    assert mw
     if mw.state != "deckBrowser":
         mw.moveToState("deckBrowser")
     dialog = SettingsMenuDialog(mw)
@@ -345,6 +342,6 @@ def setup_settings_action(parent: QWidget) -> QAction:
     return action_settings
 
 
-def main():
+def main() -> None:
     root_menu = menu_root_entry()
     root_menu.addAction(setup_settings_action(root_menu))

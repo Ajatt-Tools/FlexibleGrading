@@ -9,11 +9,11 @@ from aqt.reviewer import Reviewer
 
 from .config import config
 
-HTML_TAG = re.compile(r'<[^<>]+>', flags=re.IGNORECASE | re.MULTILINE)
+HTML_TAG = re.compile(r"<[^<>]+>", flags=re.IGNORECASE | re.MULTILINE)
 
 
 def strip_html_tags(s: str) -> str:
-    return re.sub(HTML_TAG, '', s)
+    return re.sub(HTML_TAG, "", s)
 
 
 def to_number(s: str) -> Optional[int]:
@@ -24,7 +24,7 @@ def to_number(s: str) -> Optional[int]:
 
 
 def sum_remaining(html: str) -> int:
-    return sum(n for split in strip_html_tags(html).split('+') if (n := to_number(split)) is not None)
+    return sum(n for split in strip_html_tags(html).split("+") if (n := to_number(split)) is not None)
 
 
 def wrap_remaining(self: Reviewer, _old: Callable[[Reviewer], str]):

@@ -15,8 +15,17 @@ def relevant_states() -> tuple[str, ...]:
 
 
 def set_zoom_shortcuts():
-    mw.form.actionZoomIn.setShortcuts([QKeySequence('Ctrl++'), QKeySequence('Ctrl+='), ])
-    mw.form.actionZoomOut.setShortcuts([QKeySequence('Ctrl+-'), ])
+    mw.form.actionZoomIn.setShortcuts(
+        [
+            QKeySequence("Ctrl++"),
+            QKeySequence("Ctrl+="),
+        ]
+    )
+    mw.form.actionZoomOut.setShortcuts(
+        [
+            QKeySequence("Ctrl+-"),
+        ]
+    )
 
 
 def remove_zoom_shortcuts():
@@ -27,17 +36,17 @@ def remove_zoom_shortcuts():
 def set_zoom_factor(state: str, factor: float):
     mw.web.setZoomFactor(factor)
     config.set_zoom_state(state, round(factor, 2))
-    if config['tooltip_on_zoom_change']:
+    if config["tooltip_on_zoom_change"]:
         tooltip(f"{state.capitalize()} zoom: {mw.web.zoomFactor() * 100:.0f}%", period=1000)
 
 
 def on_state_change(new_state: Optional[str], _old_state: Optional[str]) -> None:
-    if config['set_zoom_shortcuts']:
+    if config["set_zoom_shortcuts"]:
         set_zoom_shortcuts()
     else:
         remove_zoom_shortcuts()
 
-    if config['remember_zoom_level'] and new_state in relevant_states():
+    if config["remember_zoom_level"] and new_state in relevant_states():
         config.write_config()  # Write previously set values
         saved_factor = config.get_zoom_state(new_state)
         if mw.web.zoomFactor() != saved_factor:
@@ -57,7 +66,7 @@ def reconnect_zoom_actions():
 
 
 def init():
-    if config['set_zoom_shortcuts']:
+    if config["set_zoom_shortcuts"]:
         set_zoom_shortcuts()
     reconnect_zoom_actions()
 
