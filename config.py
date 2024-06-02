@@ -7,9 +7,6 @@ from .ajt_common.addon_config import AddonConfigManager, ConfigSubViewBase
 class ScrollKeysConfig(ConfigSubViewBase):
     _view_key: str = "scroll"
 
-    def __init__(self, default: bool):
-        super().__init__(default)
-
     @property
     def up(self) -> str:
         return self["up"]
@@ -28,9 +25,9 @@ class ScrollKeysConfig(ConfigSubViewBase):
 
 
 class FlexibleGradingConfig(AddonConfigManager):
-    def __init__(self, default: bool = False):
+    def __init__(self, default: bool = False) -> None:
         super().__init__(default)
-        self._scroll = ScrollKeysConfig(default)
+        self._scroll = ScrollKeysConfig(self)
 
     @property
     def scroll(self) -> ScrollKeysConfig:
