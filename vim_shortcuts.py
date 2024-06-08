@@ -79,8 +79,8 @@ def new_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
 
 
 def is_not_ease_key(shortcut: tuple[str, Callable]) -> bool:
-    """ Filter out all keys that are used to rate cards by default. """
-    return bool(shortcut[0] not in ('1', '2', '3', '4', 'h', 'j', 'k', 'l',))
+    """Filter out all keys that are used to rate cards by default."""
+    return shortcut[0] not in ("1", "2", "3", "4", "h", "j", "k", "l") and shortcut[1] is not mw.undo
 
 
 def is_key_set(shortcut: tuple[str, Callable]) -> bool:
