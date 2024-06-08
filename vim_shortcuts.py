@@ -87,6 +87,9 @@ def is_not_ease_key(shortcut: tuple[str, Callable]) -> bool:
 
 
 def is_key_set(shortcut: tuple[str, Callable]) -> bool:
+    """
+    First field in the tuple is a key on the keyboard.
+    """
     return bool(shortcut[0])
 
 
