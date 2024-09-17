@@ -29,7 +29,7 @@ def sum_remaining(html: str) -> int:
 
 def wrap_remaining(self: Reviewer, _old: Callable[[Reviewer], str]) -> str:
     if config["hide_card_count"]:
-        return ''
+        return ""
     elif config["hide_card_type"]:
         return f'<span class="total-count">Left: {sum_remaining(_old(self))}</span>'
     else:

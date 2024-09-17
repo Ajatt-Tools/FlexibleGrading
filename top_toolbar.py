@@ -6,7 +6,7 @@ from gettext import gettext as _
 
 import aqt
 from anki.cards import Card
-from aqt import mw, gui_hooks
+from aqt import gui_hooks, mw
 from aqt.reviewer import Reviewer
 from aqt.toolbar import Toolbar
 

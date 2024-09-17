@@ -10,11 +10,12 @@ from aqt.utils import restoreGeom, saveGeom
 
 from .ajt_common.about_menu import menu_root_entry
 from .ajt_common.consts import ADDON_SERIES
+from .ajt_common.enum_select_combo import EnumSelectCombo
 from .ajt_common.grab_key import ShortCutGrabButton
 from .ajt_common.monospace_line_edit import MonoSpaceLineEdit
 from .ajt_common.utils import ui_translate
 from .ajt_common.widget_placement import place_widgets_in_grid
-from .config import config, FlexibleGradingConfig
+from .config import FlexibleGradingConfig, RemainingCountType, config
 from .consts import ADDON_NAME, HTML_COLORS_LINK, SCHED_NAG_MSG
 
 as_label = ui_translate
@@ -73,7 +74,7 @@ class ScrollAmountSpinBox(QSpinBox):
     _default_allowed_range: tuple[int, int] = (10, 1000)
     _single_step_amount: int = 10
 
-    def __init__(self, parent = None, initial_value: Optional[int] = None) -> None:
+    def __init__(self, parent=None, initial_value: Optional[int] = None) -> None:
         super().__init__(parent)
         self.setRange(*self._default_allowed_range)
         self.setSingleStep(self._single_step_amount)
@@ -127,6 +128,7 @@ class SettingsMenuUI(QDialog):
     _button_box: QDialogButtonBox
     _restore_settings_button: QPushButton
     _scroll_amount_spin: QSpinBox
+    _remaining_count_combo: EnumSelectCombo
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -138,6 +140,7 @@ class SettingsMenuUI(QDialog):
         self._scroll_shortcut_edits = make_scroll_shortcut_edits()
         self._color_buttons_gbox = QGroupBox("Color buttons")
         self._scroll_amount_spin = ScrollAmountSpinBox()
+        self._remaining_count_combo = EnumSelectCombo(enum_type=RemainingCountType)
         self._button_box = QDialogButtonBox(OK_AND_CANCEL, parent=self)
         self._restore_settings_button = self._button_box.addButton(
             _("Restore &Defaults"), QDialogButtonBox.ButtonRole.ResetRole
@@ -223,12 +226,15 @@ class SettingsMenuUI(QDialog):
         )
         gbox = QGroupBox("Features")
         gbox.setCheckable(False)
-        gbox.setLayout(
+        form = QFormLayout()
+        form.addRow(
             place_widgets_in_grid(
                 (self._toggleables[key] for key in keys),
                 n_columns=self._n_columns,
             )
         )
+        form.addRow("Show remaining count:", self._remaining_count_combo)
+        gbox.setLayout(form)
         return gbox
 
     def make_zoom_group(self) -> QGroupBox:
@@ -304,6 +310,7 @@ class SettingsMenuDialog(SettingsMenuUI):
         for scroll_direction, shortcut_str in cm.scroll.items():
             self._scroll_shortcut_edits[scroll_direction].setValue(shortcut_str)
         self._scroll_amount_spin.setValue(config.scroll_amount)
+        self._remaining_count_combo.setCurrentName(config.remaining_count_type)
 
     def connect_buttons(self) -> None:
         qconnect(
@@ -324,6 +331,7 @@ class SettingsMenuDialog(SettingsMenuUI):
         for scroll_direction, key_edit_widget in self._scroll_shortcut_edits.items():
             config.scroll[scroll_direction] = key_edit_widget.value()
         config.scroll_amount = self._scroll_amount_spin.value()
+        config.remaining_count_type = self._remaining_count_combo.currentData()
         config.write_config()
         return super().accept()
 

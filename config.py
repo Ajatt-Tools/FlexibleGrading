@@ -1,5 +1,6 @@
 # Copyright: Ren Tatsumoto <tatsu at autistici.org>
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
+import enum
 
 from .ajt_common.addon_config import AddonConfigManager, ConfigSubViewBase
 
@@ -24,10 +25,29 @@ class ScrollKeysConfig(ConfigSubViewBase):
         return self["right"]
 
 
+class RemainingCountType(enum.Enum):
+    """
+    How to display remaining cards on the bottom toolbar.
+    By default, new+learn+due are separate. Single number sums all queues. None prints nothing.
+    """
+
+    default = enum.auto()
+    single = enum.auto()
+    none = enum.auto()
+
+
 class FlexibleGradingConfig(AddonConfigManager):
     def __init__(self, default: bool = False) -> None:
         super().__init__(default)
         self._scroll = ScrollKeysConfig(self)
+
+    @property
+    def remaining_count_type(self) -> RemainingCountType:
+        return RemainingCountType[self["remaining_count_type"]]
+
+    @remaining_count_type.setter
+    def remaining_count_type(self, value: RemainingCountType) -> None:
+        self["remaining_count_type"] = value.name
 
     @property
     def scroll(self) -> ScrollKeysConfig:

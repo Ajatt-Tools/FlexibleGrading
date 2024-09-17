@@ -3,7 +3,7 @@
 
 from typing import Optional
 
-from aqt import mw, gui_hooks
+from aqt import gui_hooks, mw
 from aqt.qt import *
 from aqt.utils import tooltip
 

@@ -19,6 +19,7 @@
     "left": "Shift+H",
     "right": "Shift+L"
   },
+  "remaining_count_type": "default",
   "scroll_amount": 100,
   "color_buttons": true,
   "remove_buttons": true,
