@@ -218,6 +218,7 @@ class SettingsMenuUI(QDialog):
             "flexible_grading",
             "show_last_review",
             "hide_card_type",
+            "hide_card_count",
             "press_answer_key_to_flip_card",
         )
         gbox = QGroupBox("Features")
@@ -273,6 +274,9 @@ class SettingsMenuUI(QDialog):
         self._toggleables["tooltip_on_zoom_change"].setToolTip("Show a tooltip when zoom level changes.")
         self._toggleables["hide_card_type"].setToolTip(
             "Turn off the indicator that tells you whether a card is new, review, or learn."
+        )
+        self._toggleables["hide_card_count"].setToolTip(
+            "Completely turn off the indicator\nthat tells you how many cards are left."
         )
         self._toggleables["press_answer_key_to_flip_card"].setToolTip(
             "Answer keys ('h', 'j', 'k', 'l' by default) will be used\n"
