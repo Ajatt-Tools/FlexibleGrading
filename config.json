@@ -27,8 +27,6 @@
   "pass_fail": true,
   "flexible_grading": true,
   "show_last_review": true,
-  "hide_card_type": false,
-  "hide_card_count": false,
   "set_zoom_shortcuts": true,
   "remember_zoom_level": true,
   "tooltip_on_zoom_change": true,
