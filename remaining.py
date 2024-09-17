@@ -7,7 +7,7 @@ from typing import Callable, Optional
 from anki.hooks import wrap
 from aqt.reviewer import Reviewer
 
-from .config import config
+from .config import config, RemainingCountType
 
 HTML_TAG = re.compile(r"<[^<>]+>", flags=re.IGNORECASE | re.MULTILINE)
 
@@ -28,9 +28,9 @@ def sum_remaining(html: str) -> int:
 
 
 def wrap_remaining(self: Reviewer, _old: Callable[[Reviewer], str]) -> str:
-    if config["hide_card_count"]:
+    if config.remaining_count_type == RemainingCountType.none:
         return ""
-    elif config["hide_card_type"]:
+    elif config.remaining_count_type == RemainingCountType.single:
         return f'<span class="total-count">Left: {sum_remaining(_old(self))}</span>'
     else:
         return _old(self)
