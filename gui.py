@@ -73,8 +73,8 @@ class ScrollAmountSpinBox(QSpinBox):
     _default_allowed_range: tuple[int, int] = (10, 1000)
     _single_step_amount: int = 10
 
-    def __init__(self, initial_value: Optional[int] = None) -> None:
-        super().__init__()
+    def __init__(self, parent = None, initial_value: Optional[int] = None) -> None:
+        super().__init__(parent)
         self.setRange(*self._default_allowed_range)
         self.setSingleStep(self._single_step_amount)
         if initial_value:
@@ -113,6 +113,9 @@ def make_scroll_shortcut_edits() -> dict[str, ShortCutGrabButton]:
     return {key: ShortCutGrabButton() for key in config.scroll.keys()}
 
 
+OK_AND_CANCEL = QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+
+
 class SettingsMenuUI(QDialog):
     name = f"{ADDON_SERIES} {ADDON_NAME} Settings Dialog"
     _n_columns = 2
@@ -135,10 +138,7 @@ class SettingsMenuUI(QDialog):
         self._scroll_shortcut_edits = make_scroll_shortcut_edits()
         self._color_buttons_gbox = QGroupBox("Color buttons")
         self._scroll_amount_spin = ScrollAmountSpinBox()
-        self._button_box = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel,
-            parent=self,
-        )
+        self._button_box = QDialogButtonBox(OK_AND_CANCEL, parent=self)
         self._restore_settings_button = self._button_box.addButton(
             _("Restore &Defaults"), QDialogButtonBox.ButtonRole.ResetRole
         )
