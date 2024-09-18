@@ -64,11 +64,11 @@ def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
             )
         return html
 
-    def stat_txt():
+    def stat_txt() -> str:
         """Returns html showing remaining cards, e.g. 10+70+108"""
         return f'<div class="ajt__stat_txt">{self._remaining()}</div>'
 
-    ease_row = []
+    ease_row: list[str] = []
     if front is False or config["flexible_grading"] is True:
         ease_row.extend(button_time(ease) for ease, label in self._answerButtonList())
     if front is True:
