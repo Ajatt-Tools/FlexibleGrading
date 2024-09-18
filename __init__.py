@@ -1,4 +1,4 @@
-from . import bottom_toolbar, gui, remaining, top_toolbar, vim_shortcuts, zoom, styling
+from . import bottom_toolbar, gui, remaining, styling, top_toolbar, vim_shortcuts, zoom
 
 styling.init()
 top_toolbar.main()
