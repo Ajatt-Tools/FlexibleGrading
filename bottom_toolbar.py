@@ -73,7 +73,7 @@ def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
         ease_row.extend(button_time(ease) for ease, label in self._answerButtonList())
     if front is True:
         ease_row.insert(len(ease_row) // 2, stat_txt())
-    return EASE_ROW_STYLE + f'<div class="ajt__ease_row">{"".join(ease_row)}</div>'
+    return f'<div class="ajt__ease_row">{"".join(ease_row)}</div>'
 
 
 def disable_buttons(html: str) -> str:
@@ -139,7 +139,6 @@ def edit_bottom_html(self: Reviewer, _old: Callable):
             .replace(" class=stat>", " class=ajt__corner_stat>")
             .replace(" class=stattxt>", " class=ajt__time_remaining>")
         )
-        html += BOTTOM_TABLE_STYLE
     if config["prevent_clicks"] is True:
         html = disable_buttons(html)
     return html
