@@ -1,5 +1,6 @@
-from . import bottom_toolbar, gui, remaining, top_toolbar, vim_shortcuts, zoom
+from . import bottom_toolbar, gui, remaining, top_toolbar, vim_shortcuts, zoom, styling
 
+styling.init()
 top_toolbar.main()
 bottom_toolbar.main()
 gui.main()
