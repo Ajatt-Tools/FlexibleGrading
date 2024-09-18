@@ -138,6 +138,7 @@ def edit_bottom_html(self: Reviewer, _old: Callable):
             .replace("</button>", "</div>")
             .replace(" class=stat>", " class=ajt__corner_stat>")
             .replace(" class=stattxt>", " class=ajt__time_remaining>")
+            .replace(' id=innertable', ' id="innertable" class="ajt__innertable"')
         )
     if config["prevent_clicks"] is True:
         html = disable_buttons(html)
