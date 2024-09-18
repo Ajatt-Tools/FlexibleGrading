@@ -1,0 +1,73 @@
+/*
+ * AJT Flexible Grading CSS
+ * Copyright: Ajatt-Tools and contributors; https://github.com/Ajatt-Tools
+ * License: GNU AGPL, version 3 or later; https://www.gnu.org/licenses/agpl-3.0.html
+ */
+
+/* Ease row */
+
+.ajt__ease_row {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 450px;
+    min-width: 200px;
+    user-select: none;
+    margin: -3px auto 0;
+}
+
+.ajt__ease_row > * {
+    white-space: nowrap;
+    font-size: small;
+    font-weight: normal;
+}
+
+.ajt__ease_row > .ajt__stat_txt:only-child {
+    margin: 0 auto;
+}
+
+* + .ajt__studied-today {
+    /* Add a space before the 'studied today' count if there are elements before it. */
+    margin-left: 1ch;
+}
+
+/* Bottom table */
+
+.ajt__innertable tr {
+	/* The 'innertable' is provided by Anki. */
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+.ajt__innertable td {
+    flex: 2 0 100px;
+}
+
+.ajt__corner_stat:first-child,
+.ajt__corner_stat:last-child {
+    flex: 1 0 50px;
+    display: flex;
+}
+
+.ajt__corner_stat:first-child {
+    justify-content: flex-start;
+}
+
+.ajt__corner_stat:last-child {
+    justify-content: flex-end;
+}
+
+.ajt__corner_button {
+    display: block;
+    font-weight: normal;
+    font-size: small;
+    white-space: nowrap;
+    user-select: none;
+    margin: -3px 0 0;
+    padding: 0 5px;
+}
+
+.ajt__corner_button:hover {
+    color: RoyalBlue;
+}
