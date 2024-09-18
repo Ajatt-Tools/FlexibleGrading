@@ -38,8 +38,24 @@ def format_remaining_cards(self: Reviewer, get_default_html: Callable[[Reviewer]
         return get_default_html(self).strip()
 
 
+def prev_day_cutoff_ms(col: Collection) -> int:
+    return (col.sched.day_cutoff - 86_400) * 1000
+
+
+def studied_today_count(col: Collection) -> int:
+    return col.db.scalar(
+        """ SELECT COUNT(*) FROM revlog WHERE type != ? AND id > ? """,
+        REVLOG_RESCHED,
+        prev_day_cutoff_ms(col),
+    )
+
+
+def format_studied_today(col: Collection) -> str:
+    return f'<span class="ajt__studied-today">Reps: {studied_today_count(col)}</span>'
+
+
 def wrap_remaining(self: Reviewer, _old: Callable[[Reviewer], str]) -> str:
-    return format_remaining_cards(self, _old)
+    return format_remaining_cards(self, _old) + format_studied_today(self.mw.col)
 
 
 def init():
