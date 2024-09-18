@@ -220,6 +220,7 @@ class SettingsMenuUI(QDialog):
             "pass_fail",
             "flexible_grading",
             "show_last_review",
+            "show_reps_done_today",
             "press_answer_key_to_flip_card",
         )
         gbox = QGroupBox("Features")
@@ -284,6 +285,9 @@ class SettingsMenuUI(QDialog):
         self._toggleables["press_answer_key_to_flip_card"].setToolTip(
             "Answer keys ('h', 'j', 'k', 'l' by default) will be used\n"
             "to reveal the back side, similarly to the Space bar."
+        )
+        self._toggleables["show_reps_done_today"].setToolTip(
+            "Print the number of reviews done today on the bottom bar."
         )
 
 
