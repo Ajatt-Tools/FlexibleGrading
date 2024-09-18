@@ -113,6 +113,10 @@ class FlexibleGradingConfig(AddonConfigManager):
         self._config.setdefault("zoom_states", {})[state] = value
 
     @property
+    def show_last_review(self) -> bool:
+        return bool(self["show_last_review"])
+
+    @property
     def show_reps_done_today(self) -> bool:
         return bool(self["show_reps_done_today"])
 

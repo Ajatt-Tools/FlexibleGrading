@@ -89,7 +89,7 @@ class LastEase:
     @classmethod
     def update(cls, reviewer: Reviewer, card: Card, ease: int) -> None:
         """Called after a card was answered."""
-        if config["show_last_review"] is False:
+        if config.show_last_review is False:
             return
 
         label = config.get_label(ease, cls._last_default_ease)
