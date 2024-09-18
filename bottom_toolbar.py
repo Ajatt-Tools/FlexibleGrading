@@ -130,7 +130,7 @@ def make_frontside_answer_buttons(self: Reviewer) -> None:
         self.bottom.web.adjustHeightToFit()
 
 
-def edit_bottom_html(self: Reviewer, _old: Callable):
+def edit_bottom_html(self: Reviewer, _old: Callable) -> str:
     html = _old(self)
     if config["remove_buttons"] is True:
         html = (
