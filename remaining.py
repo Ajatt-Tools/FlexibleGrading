@@ -51,6 +51,8 @@ def studied_today_count(col: Collection) -> int:
 
 
 def format_studied_today(col: Collection) -> str:
+    if not config.show_reps_done_today:
+        return ""
     return f'<span class="ajt__studied-today">Reps: {studied_today_count(col)}</span>'
 
 
