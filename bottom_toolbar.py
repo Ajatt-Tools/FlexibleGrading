@@ -65,7 +65,11 @@ def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
         return html
 
     def stat_txt() -> str:
-        """Returns html showing remaining cards, e.g. 10+70+108"""
+        """
+        Returns html showing remaining cards, e.g. 10+70+108 (new+learn+review).
+        Note that if the "remaining_count_type" option is set to anything other than "default",
+        the HTML will be modified.
+        """
         return f'<div class="ajt__stat_txt">{self._remaining()}</div>'
 
     ease_row: list[str] = []
