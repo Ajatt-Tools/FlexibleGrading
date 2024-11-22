@@ -12,7 +12,6 @@ from aqt import gui_hooks, tr
 from aqt.reviewer import Reviewer
 
 from .config import config
-from .consts import *
 
 _ans_buttons_default = Reviewer._answerButtons
 
