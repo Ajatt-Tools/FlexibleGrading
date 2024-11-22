@@ -271,6 +271,11 @@ class SettingsMenuUI(QDialog):
         self._toggleables["remove_buttons"].setToolTip(
             "Remove answer buttons.\nOnly the corresponding intervals will be visible."
         )
+        self._toggleables["hide_button_times"].setToolTip(
+            "Remove text shown above each answer button\n"
+            "that tells you the future interval of the card\n"
+            "if you press the button."
+        )
         self._toggleables["prevent_clicks"].setToolTip(
             "Make answer buttons disabled.\n" "Disabled buttons are visible but unusable and un-clickable."
         )
