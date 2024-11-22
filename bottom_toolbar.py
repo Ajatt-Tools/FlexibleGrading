@@ -49,13 +49,15 @@ def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
             assert isinstance(self.mw.col.sched, V3Scheduler)
             return self.mw.col.sched.describe_next_states(v3.states)
 
-    def button_time(ease: int) -> str:
+    def text_for_ease(ease: int, label: str) -> str:
         """Returns html with button-time text for the specified Ease."""
-
         # Get button time from the default function,
         # but remove `class="nobold"` since it introduces `position: absolute`
         # which prevents the text from being visible when there is no button.
-        html = self._buttonTime(ease, v3_labels=get_labels()).replace('class="nobold"', "")
+
+        html = f"<span>{label}</span>"  # TODO
+
+        # html = self._buttonTime(ease, v3_labels=get_labels()).replace('class="nobold"', "")
         if config["color_buttons"] is True:
             html = html.replace(
                 "<span",
@@ -73,7 +75,7 @@ def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
 
     ease_row: list[str] = []
     if front is False or config["flexible_grading"] is True:
-        ease_row.extend(button_time(ease) for ease, label in self._answerButtonList())
+        ease_row.extend(text_for_ease(ease, label) for ease, label in self._answerButtonList())
     if front is True:
         ease_row.insert(len(ease_row) // 2, stat_txt())
     return f'<div class="ajt__ease_row">{"".join(ease_row)}</div>'
