@@ -134,6 +134,8 @@ def edit_bottom_html(self: Reviewer, _old: Callable) -> str:
     html = _old(self)
     if config["remove_buttons"] is True:
         html = (
+            # Shrink the "Edit" button on the left and the "More" button on the right.
+            # Change class name of the seconds passed counter.
             html.replace("<button ", '<div class="ajt__corner_button" ')
             .replace("</button>", "</div>")
             .replace(" class=stat>", " class=ajt__corner_stat>")
