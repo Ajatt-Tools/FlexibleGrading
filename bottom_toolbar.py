@@ -3,6 +3,7 @@
 
 import json
 import re
+from collections.abc import Sequence
 from typing import Callable
 
 from anki.cards import Card
@@ -44,10 +45,11 @@ def filter_answer_buttons(buttons: tuple, self: Reviewer, _: Card) -> tuple[tupl
 def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
     """Returns ease row html when config.remove_buttons is true"""
 
-    def get_labels():
-        if v3 := self._v3:
-            assert isinstance(self.mw.col.sched, V3Scheduler)
-            return self.mw.col.sched.describe_next_states(v3.states)
+    def get_labels() -> Sequence[str]:
+        # Note: Anki devs removed all schedulers before v3.
+        assert self._v3
+        assert isinstance(self.mw.col.sched, V3Scheduler)
+        return self.mw.col.sched.describe_next_states(self._v3.states)
 
     def text_for_ease(ease: int, label: str) -> str:
         """Returns html with button-time text for the specified Ease."""
