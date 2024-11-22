@@ -204,6 +204,7 @@ class SettingsMenuUI(QDialog):
         keys = (
             "remove_buttons",
             "prevent_clicks",
+            "hide_button_times",
         )
         gbox = QGroupBox("Buttons")
         gbox.setCheckable(False)

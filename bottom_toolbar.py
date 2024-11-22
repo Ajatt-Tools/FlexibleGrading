@@ -45,7 +45,7 @@ def filter_answer_buttons(buttons: tuple, self: Reviewer, _: Card) -> tuple[tupl
 def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
     """Returns ease row html when config.remove_buttons is true"""
 
-    def get_labels() -> Sequence[str]:
+    def get_button_times() -> Sequence[str]:
         # Note: Anki devs removed all schedulers before v3.
         assert self._v3
         assert isinstance(self.mw.col.sched, V3Scheduler)
@@ -57,9 +57,10 @@ def make_buttonless_ease_row(self: Reviewer, front: bool = False) -> str:
         # but remove `class="nobold"` since it introduces `position: absolute`
         # which prevents the text from being visible when there is no button.
 
-        html = f"<span>{label}</span>"  # TODO
-
-        # html = self._buttonTime(ease, v3_labels=get_labels()).replace('class="nobold"', "")
+        if config["hide_button_times"]:
+            html = f"""<span>{label}</span>"""
+        else:
+            html = self._buttonTime(ease, v3_labels=get_button_times()).replace('class="nobold"', "")
         if config["color_buttons"] is True:
             html = html.replace(
                 "<span",
@@ -154,6 +155,12 @@ def edit_bottom_html(self: Reviewer, _old: Callable) -> str:
     return html
 
 
+def edit_button_time(self: Reviewer, ease: int, v3_labels: Sequence[str], _old: Callable):
+    if config["hide_button_times"]:
+        return ""
+    return _old(self, ease, v3_labels)
+
+
 def main():
     # (*) Create html layout for the answer buttons on the back side.
     # Buttons are either removed, disabled or left unchanged depending on config options.
@@ -174,3 +181,7 @@ def main():
     # If the user chooses to remove buttons, convert them to <div>s to free vertical space.
     # noinspection PyProtectedMember
     Reviewer._bottomHTML = wrap(Reviewer._bottomHTML, edit_bottom_html, "around")
+
+    # Edit the text shown above answer buttons. Remove button times if the user wants to.
+    # noinspection PyProtectedMember
+    Reviewer._buttonTime = wrap(Reviewer._buttonTime, edit_button_time, "around")
