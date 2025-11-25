@@ -9,6 +9,7 @@ from aqt.qt import *
 from aqt.utils import restoreGeom, saveGeom
 
 from .ajt_common.about_menu import menu_root_entry
+from .ajt_common.color_picker import ColorEditPicker
 from .ajt_common.consts import ADDON_SERIES
 from .ajt_common.enum_select_combo import EnumSelectCombo
 from .ajt_common.grab_key import ShortCutGrabButton
@@ -19,42 +20,6 @@ from .config import FlexibleGradingConfig, RemainingCountType, config
 from .consts import ADDON_NAME, HTML_COLORS_LINK, SCHED_NAG_MSG
 
 as_label = ui_translate
-
-
-class ColorEdit(MonoSpaceLineEdit):
-    font_size = 14
-    min_height = 24
-
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        color_regex = QRegularExpression(r"^#?\w+$")
-        color_validator = QRegularExpressionValidator(color_regex, self)
-        self.setValidator(color_validator)
-        self.setPlaceholderText("HTML color code")
-
-
-class ColorEditPicker(QWidget):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self._edit = ColorEdit()
-        self.setLayout(layout := QHBoxLayout())
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.addWidget(self._edit)
-        layout.addWidget(b := QPushButton(_("Pick")))
-        b.setMinimumSize(32, 16)
-        b.setBaseSize(32, 22)
-        qconnect(b.clicked, self.choose_color)
-
-    def choose_color(self) -> None:
-        color = QColorDialog.getColor(initial=QColor.fromString(self._edit.text()))
-        if color.isValid():
-            self._edit.setText(color.name())
-
-    def setText(self, text: str) -> None:
-        return self._edit.setText(text)
-
-    def text(self) -> str:
-        return self._edit.text()
 
 
 class SimpleKeyEdit(MonoSpaceLineEdit):
