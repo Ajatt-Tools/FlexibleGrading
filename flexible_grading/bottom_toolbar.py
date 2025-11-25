@@ -161,7 +161,7 @@ def edit_button_time(self: Reviewer, ease: int, v3_labels: Sequence[str], _old: 
     return _old(self, ease, v3_labels)
 
 
-def main():
+def main() -> None:
     # (*) Create html layout for the answer buttons on the back side.
     # Buttons are either removed, disabled or left unchanged depending on config options.
     # noinspection PyProtectedMember
