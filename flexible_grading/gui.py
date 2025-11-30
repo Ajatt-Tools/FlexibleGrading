@@ -242,7 +242,7 @@ class SettingsMenuUI(QDialog):
             "if you press the button."
         )
         self._toggleables["prevent_clicks"].setToolTip(
-            "Make answer buttons disabled.\n" "Disabled buttons are visible but unusable and un-clickable."
+            "Make answer buttons disabled.\nDisabled buttons are visible but unusable and un-clickable."
         )
         self._toggleables["show_last_review"].setToolTip("Print the result of the last review on the toolbar.")
         self._toggleables["set_zoom_shortcuts"].setToolTip("Change zoom value by pressing Ctrl+Plus and Ctrl+Minus.")

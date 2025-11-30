@@ -56,84 +56,76 @@ def human_ivl(card: Card) -> str:
 
 
 class LastEase:
-    _html_link_id = "last_ease"
-    _browser_query = ""
-    _last_default_ease = 0
+    def __init__(self) -> None:
+        self._html_link_id = "last_ease"
+        self._browser_query = ""
+        self._last_default_ease = 0
 
-    @classmethod
-    def set_last_default_ease(cls, _: Card) -> None:
+    def set_last_default_ease(self, _: Card) -> None:
         # noinspection PyProtectedMember
-        cls._last_default_ease = mw.reviewer._defaultEase()
+        self._last_default_ease = mw.reviewer._defaultEase()
 
-    @classmethod
-    def open_last_card(cls) -> None:
-        browser: aqt.browser = aqt.dialogs.open("Browser", mw)
+    def open_last_card(self) -> None:
+        browser: aqt.browser.Browser = aqt.dialogs.open("Browser", mw)
         browser.activateWindow()
-        browser.form.searchEdit.lineEdit().setText(cls._browser_query)  # search_for
+        browser.form.searchEdit.lineEdit().setText(self._browser_query)  # search_for
         if hasattr(browser, "onSearch"):
             browser.onSearch()
         else:
             browser.onSearchActivated()
 
-    @classmethod
-    def append_link(cls, links: list, toolbar: Toolbar) -> None:
+    def append_link(self, links: list, toolbar: Toolbar) -> None:
         link = toolbar.create_link(
-            cls._html_link_id,
+            self._html_link_id,
             "Last Ease",
-            cls.open_last_card,
-            id=cls._html_link_id,
+            self.open_last_card,
+            id=self._html_link_id,
             tip="Last Ease",
         )
         links.insert(0, link)
 
-    @classmethod
-    def update(cls, reviewer: Reviewer, card: Card, ease: int) -> None:
+    def update(self, reviewer: Reviewer, card: Card, ease: int) -> None:
         """Called after a card was answered."""
         if config.show_last_review is False:
             return
 
-        label = config.get_label(ease, cls._last_default_ease)
+        label = config.get_label(ease, self._last_default_ease)
         color = config.get_label_color(label)
         status = f"{_(label)[:1]}: {human_ivl(card)}"
 
-        reviewer.mw.toolbar.web.eval(
-            """\
+        reviewer.mw.toolbar.web.eval("""\
         {{
             const elem = document.getElementById("{}");
             elem.innerHTML = "{}";
             elem.style.color = "{}";
             elem.style.display = "inline";
         }};
-        """.format(
-                cls._html_link_id, status, color
-            )
-        )
+        """.format(self._html_link_id, status, color))
 
-        cls._browser_query = f"cid:{card.id}"
+        self._browser_query = f"cid:{card.id}"
 
-    @classmethod
-    def hide(cls, _=None) -> None:
-        mw.toolbar.web.eval(
-            """\
+    def hide(self, _=None) -> None:
+        mw.toolbar.web.eval("""\
         {
             const elem = document.getElementById("%s");
             elem.innerHTML = "";
             elem.style.color = "";
             elem.style.display = "none";
         };
-        """
-            % cls._html_link_id
-        )
+        """ % self._html_link_id)
 
 
-def main():
+def main() -> None:
+    assert mw, "anki should be running"
+    mw.ajt__flexible_grading__last_ease = le = LastEase()
+
     # Remember if all 4 buttons are shown for the card.
-    gui_hooks.reviewer_did_show_question.append(LastEase.set_last_default_ease)
+    gui_hooks.reviewer_did_show_question.append(le.set_last_default_ease)
 
     # When Reviewer is open, print the last card's stats on the top toolbar.
-    gui_hooks.top_toolbar_did_init_links.append(LastEase.append_link)
-    gui_hooks.reviewer_did_answer_card.append(LastEase.update)
+    gui_hooks.top_toolbar_did_init_links.append(le.append_link)
+    gui_hooks.reviewer_did_answer_card.append(le.update)
 
     # Don't show the last card's stats when Reviewer is not open.
-    gui_hooks.collection_did_load.append(LastEase.hide)
-    gui_hooks.reviewer_will_end.append(LastEase.hide)
+    gui_hooks.collection_did_load.append(le.hide)
+    gui_hooks.reviewer_will_end.append(le.hide)

@@ -15,17 +15,13 @@ def relevant_states() -> tuple[str, ...]:
 
 
 def set_zoom_shortcuts():
-    mw.form.actionZoomIn.setShortcuts(
-        [
-            QKeySequence("Ctrl++"),
-            QKeySequence("Ctrl+="),
-        ]
-    )
-    mw.form.actionZoomOut.setShortcuts(
-        [
-            QKeySequence("Ctrl+-"),
-        ]
-    )
+    mw.form.actionZoomIn.setShortcuts([
+        QKeySequence("Ctrl++"),
+        QKeySequence("Ctrl+="),
+    ])
+    mw.form.actionZoomOut.setShortcuts([
+        QKeySequence("Ctrl+-"),
+    ])
 
 
 def remove_zoom_shortcuts():

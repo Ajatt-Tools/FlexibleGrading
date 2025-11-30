@@ -101,12 +101,10 @@ def add_vim_shortcuts(state: MainWindowState, shortcuts: list[tuple[str, Callabl
     default_shortcuts = shortcuts.copy()
     shortcuts.clear()
     shortcuts.extend(
-        dict(
-            [
-                *filter(is_not_ease_key, default_shortcuts),
-                *filter(is_key_set, new_shortcuts(mw.reviewer)),
-            ]
-        ).items()
+        dict([
+            *filter(is_not_ease_key, default_shortcuts),
+            *filter(is_key_set, new_shortcuts(mw.reviewer)),
+        ]).items()
     )
 
 
