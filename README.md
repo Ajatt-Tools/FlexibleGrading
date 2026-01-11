@@ -65,18 +65,16 @@ It goes further by removing review buttons and letting you grade your cards from
 
 ## Installation
 
-Install from [AnkiWeb](https://ankiweb.net/shared/info/1715096333), or manually with `git`:
+Install from [AnkiWeb](https://ankiweb.net/shared/info/1715096333).
 
-```
-$ git clone --recurse-submodules 'https://github.com/Ajatt-Tools/FlexibleGrading.git' ~/.local/share/Anki2/addons21/FlexibleGrading
-```
+## Contributing
 
-Make sure to disable other addons that may affect answer buttons or shortcuts, for example:
-* [Pass/Fail](https://web.archive.org/web/https://massimmersionapproach.com/table-of-contents/anki/low-key-anki/low-key-anki-pass-fail/)
-* [Vim Answer Shortcuts](https://ankiweb.net/shared/info/1197299782)
-* [Button Colours](https://ankiweb.net/shared/info/2494384865)
-* [Large and Colorful Buttons](https://ankiweb.net/shared/info/1829090218)
-* [Bigger Show All Answer Buttons](https://ankiweb.net/shared/info/2034935033)
+Install manually with `git`:
+
+```bash
+git clone --recurse-submodules 'https://github.com/Ajatt-Tools/FlexibleGrading.git'
+ln -sr FlexibleGrading/flexible_grading ~/.local/share/Anki2/addons21/flexible_grading
+```
 
 ## Usage
 
@@ -101,6 +99,16 @@ The most optimal settings come out of the box:
 
 * Answer buttons are hidden forcing you to use the vim keys.
 * Flexible grading and Pass-Fail are enabled.
+
+## Compatibility
+
+Make sure to disable other add-ons that may affect answer buttons or shortcuts, for example:
+
+* [Pass/Fail](https://web.archive.org/web/https://massimmersionapproach.com/table-of-contents/anki/low-key-anki/low-key-anki-pass-fail/)
+* [Vim Answer Shortcuts](https://ankiweb.net/shared/info/1197299782)
+* [Button Colours](https://ankiweb.net/shared/info/2494384865)
+* [Large and Colorful Buttons](https://ankiweb.net/shared/info/1829090218)
+* [Bigger Show All Answer Buttons](https://ankiweb.net/shared/info/2034935033)
 
 ## Our community
 
