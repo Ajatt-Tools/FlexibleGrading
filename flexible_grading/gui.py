@@ -188,6 +188,7 @@ class SettingsMenuUI(QDialog):
             "show_last_review",
             "show_reps_done_today",
             "press_answer_key_to_flip_card",
+            "flexible_reviewer",
         )
         gbox = QGroupBox("Features")
         gbox.setCheckable(False)
