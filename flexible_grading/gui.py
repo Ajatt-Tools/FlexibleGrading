@@ -282,8 +282,8 @@ class SettingsMenuDialog(SettingsMenuUI):
             self._answer_keys[label].setText(key_letter)
         for scroll_direction, shortcut_str in cm.scroll.items():
             self._scroll_shortcut_edits[scroll_direction].setValue(shortcut_str)
-        self._scroll_amount_spin.setValue(config.scroll_amount)
-        self._remaining_count_combo.setCurrentName(config.remaining_count_type)
+        self._scroll_amount_spin.setValue(cm.scroll_amount)
+        self._remaining_count_combo.setCurrentName(cm.remaining_count_type)
 
     def connect_buttons(self) -> None:
         qconnect(
