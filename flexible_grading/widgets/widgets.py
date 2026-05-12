@@ -4,10 +4,10 @@
 from __future__ import annotations
 
 import aqt
-from aqt import qconnect
+from aqt import mw
 from aqt.qt import *
 
-from flexible_grading.widgets.utils import clear_layout
+from .utils import clear_layout
 
 
 class FlexiblePushButton(QPushButton):
@@ -186,3 +186,14 @@ class FlexibleTimerLabel(QLabel):
             self.stop()
         else:
             self.setText(time_string)
+
+
+def get_flexible_bottom_bar() -> FlexibleBottomBar:
+    assert mw, "mw should be available"
+
+    try:
+        return mw.ajt__flexible_bottom_bar
+    except AttributeError:
+        mw.ajt__flexible_bottom_bar = bar = FlexibleBottomBar(mw)
+        mw.mainLayout.addWidget(bar)
+        return bar

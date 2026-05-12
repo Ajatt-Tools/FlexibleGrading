@@ -1,25 +1,22 @@
 # Copyright: Ajatt-Tools and contributors; https://github.com/Ajatt-Tools
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
-
+import functools
 from copy import deepcopy
 
+from aqt import tr
 from aqt.deckbrowser import DeckBrowser
+from aqt.utils import shortcut
+
+from .widgets import get_flexible_bottom_bar
+from .widgets import FlexiblePushButton
 
 
 class FlexibleDeckBrowser(DeckBrowser):
-    """
-    Adds *Flexible Grading* features to Anki as a separate Reviewer.
-    The idea is that Anki can have many Reviewer classes, and the user can choose which they prefer.
-
-    Initially, Flexible Grading was implemented as an add-on.
-    However, add-ons require patching every time Anki introduces a change that breaks add-on compatibility.
-    Thus, it proves better to add new features directly to Anki.
-    """
-
     def add_bottom_buttons(self) -> None:
-        self.mw.bottomWidget.left_bucket.reset(is_visible=False)
-        self.mw.bottomWidget.right_bucket.reset(is_visible=False)
-        self.mw.bottomWidget.middle_bucket.reset(is_visible=True)
+        bar = get_flexible_bottom_bar()
+        bar.left_bucket.reset(is_visible=False)
+        bar.right_bucket.reset(is_visible=False)
+        bar.middle_bucket.reset(is_visible=True)
 
         draw_links = deepcopy(self.drawLinks)
         pycmds = {
@@ -28,7 +25,7 @@ class FlexibleDeckBrowser(DeckBrowser):
             "import": self.mw.onImport,
         }
         for keyboard_shortcut, pycmd, button_text in draw_links:
-            button = self.mw.bottomWidget.middle_bucket.add_button(
+            button = bar.middle_bucket.add_button(
                 FlexiblePushButton(text=button_text),
                 on_clicked=functools.partial(pycmds[pycmd]),
             )

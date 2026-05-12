@@ -2,7 +2,6 @@
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
 from functools import partial
-from functools import partial
 from typing import Any, Literal, Optional, cast
 
 import aqt
@@ -20,20 +19,13 @@ from aqt.utils import (
     tr,
 )
 
-from flexible_grading.widgets.utils import ease_to_answer_key_short, studied_today_count
-from flexible_grading.widgets.widgets import FlexibleTimerLabel, FlexiblePushButton
+from ..config import FlexibleGradingConfig
+from .utils import ease_to_answer_key_short, studied_today_count
+from .widgets import FlexibleTimerLabel, FlexiblePushButton
+from .widgets import get_flexible_bottom_bar
 
 
 class FlexibleReviewer(Reviewer):
-    """
-    Adds *Flexible Grading* features to Anki as a separate Reviewer.
-    The idea is that Anki can have many Reviewer classes, and the user can choose which they prefer.
-
-    Initially, Flexible Grading was implemented as an add-on.
-    However, add-ons require patching every time Anki introduces a change that breaks add-on compatibility.
-    Thus, it proves better to add new features directly to Anki.
-    """
-
     _ease_to_color = {
         1: "FireBrick",
         2: "DarkGoldenRod",
@@ -48,29 +40,31 @@ class FlexibleReviewer(Reviewer):
 
     timer: Optional[FlexibleTimerLabel] = None
 
-    def __init__(self, mw: AnkiQt) -> None:
+    def __init__(self, mw: AnkiQt, config: FlexibleGradingConfig) -> None:
         super().__init__(mw)
         self.timer = None
+        self._config = config
+        self._bar = get_flexible_bottom_bar()
 
     def cleanup(self) -> None:
         super().cleanup()
-        self.mw.bottomWidget.middle_bucket.reset(is_visible=False)
-        self.mw.bottomWidget.left_bucket.reset(is_visible=False)
-        self.mw.bottomWidget.right_bucket.reset(is_visible=False)
+        self._bar.middle_bucket.reset(is_visible=False)
+        self._bar.left_bucket.reset(is_visible=False)
+        self._bar.right_bucket.reset(is_visible=False)
 
     def _bottomHTML(self) -> str:
         return "<style></style>"
 
     def _create_side_buttons(self) -> None:
         # Left side
-        self.mw.bottomWidget.left_bucket.reset(is_visible=True)
-        self.mw.bottomWidget.left_bucket.add_button(
+        self._bar.left_bucket.reset(is_visible=True)
+        self._bar.left_bucket.add_button(
             FlexiblePushButton(text=tr.studying_edit()),
             on_clicked=partial(self.mw.onEditCurrent),
         )
         # Right side
-        self.mw.bottomWidget.right_bucket.reset(is_visible=True)
-        self.mw.bottomWidget.right_bucket.add_button(
+        self._bar.right_bucket.reset(is_visible=True)
+        self._bar.right_bucket.add_button(
             FlexiblePushButton(text=tr.studying_more()),
             on_clicked=partial(self.showContextMenu),
         )
@@ -106,9 +100,9 @@ class FlexibleReviewer(Reviewer):
             return html_to_text_line(label)[:1].upper()
 
     def _create_middle_buttons_for_answer_side(self) -> None:
-        self.mw.bottomWidget.middle_bucket.reset(is_visible=True)
+        self._bar.middle_bucket.reset(is_visible=True)
         for ease, label in self._answerButtonList():
-            self.mw.bottomWidget.middle_bucket.add_button(
+            self._bar.middle_bucket.add_button(
                 FlexiblePushButton(
                     text=f"{self._answer_button_label(ease, label)}[{ease_to_answer_key_short(ease)}]",
                     text_color=self._ease_to_color[ease],
@@ -120,7 +114,7 @@ class FlexibleReviewer(Reviewer):
         """
         Show the number of remaining cards in three queues: New, Learning, Review.
         """
-        self.mw.bottomWidget.middle_bucket.reset(is_visible=True)
+        self._bar.middle_bucket.reset(is_visible=True)
 
         if self.mw.col.conf["dueCounts"]:
             counts = {
@@ -130,7 +124,7 @@ class FlexibleReviewer(Reviewer):
             }
             this_card = self._v3.top_card()
             for queue_type, count in counts.items():
-                self.mw.bottomWidget.middle_bucket.add_button(
+                self._bar.middle_bucket.add_button(
                     FlexiblePushButton(
                         text=f"{count}",
                         text_color=self._queue_to_color[queue_type],
@@ -140,8 +134,9 @@ class FlexibleReviewer(Reviewer):
                 )
 
         # show reps done today
-        if self.mw.pm.reviewer_show_reps_done_today():
-            self.mw.bottomWidget.middle_bucket.add_button(
+        if self._config.show_reps_done_today:
+            assert self.mw.col, "collection should be available"
+            self._bar.middle_bucket.add_button(
                 FlexiblePushButton(text=f"Reps: {studied_today_count(self.mw.col)}"),
                 on_clicked=partial(self.browse_query, "rated:1"),
             )
@@ -165,10 +160,8 @@ class FlexibleReviewer(Reviewer):
 
         # Right side: add timer
         if (max_time := self._max_time()) > 0:
-            self.timer = self.mw.bottomWidget.right_bucket.add_widget(
-                widget=FlexibleTimerLabel()
-            )  # type: ignore
-            self.timer.start(max_time=max_time)
+            self.timer = timer = self._bar.right_bucket.add_widget(widget=FlexibleTimerLabel())  # type: ignore
+            timer.start(max_time=max_time)
 
     def _should_stop_timer_on_answer(self) -> bool:
         conf = self.mw.col.decks.config_dict_for_deck_id(self.card.current_deck_id())

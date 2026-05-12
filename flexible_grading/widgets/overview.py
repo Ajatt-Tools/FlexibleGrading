@@ -1,20 +1,22 @@
 # Copyright: Ajatt-Tools and contributors; https://github.com/Ajatt-Tools
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
+import functools
+
+from aqt import tr
+from aqt.deckoptions import display_options_for_deck
+from aqt.overview import Overview
+from aqt.utils import shortcut
+
+from .widgets import get_flexible_bottom_bar
+from .widgets import FlexiblePushButton
+
 
 class FlexibleOverview(Overview):
-    """
-    Adds *Flexible Grading* features to Anki as a separate Reviewer.
-    The idea is that Anki can have many Reviewer classes, and the user can choose which they prefer.
-
-    Initially, Flexible Grading was implemented as an add-on.
-    However, add-ons require patching every time Anki introduces a change that breaks add-on compatibility.
-    Thus, it proves better to add new features directly to Anki.
-    """
-
     def add_bottom_buttons(self) -> None:
-        self.mw.bottomWidget.left_bucket.reset(is_visible=False)
-        self.mw.bottomWidget.right_bucket.reset(is_visible=False)
-        self.mw.bottomWidget.middle_bucket.reset(is_visible=True)
+        bar = get_flexible_bottom_bar()
+        bar.left_bucket.reset(is_visible=False)
+        bar.right_bucket.reset(is_visible=False)
+        bar.middle_bucket.reset(is_visible=True)
 
         links = self._make_bottom_links()
         pycmds = {
@@ -29,7 +31,7 @@ class FlexibleOverview(Overview):
             if len(keyboard_shortcut) == 1:
                 # if shortcut is one letter
                 button_text += f"[{keyboard_shortcut}]"
-            button = self.mw.bottomWidget.middle_bucket.add_button(
+            button = bar.middle_bucket.add_button(
                 FlexiblePushButton(text=button_text),
                 on_clicked=functools.partial(pycmds[pycmd]),
             )
@@ -44,3 +46,24 @@ class FlexibleOverview(Overview):
     def _renderBottom(self) -> None:
         self._clear_bottom_web()
         self.add_bottom_buttons()
+
+    def _make_bottom_links(self) -> list[list[str]]:
+        """
+        Create a list of lists, each holding [shortcut, pycmd, button text]
+        NOTE: copied from the Anki Overview class, method _renderBottom()
+        """
+        links = [
+            ["O", "opts", tr.actions_options()],
+        ]
+        is_dyn = self.mw.col.decks.current()["dyn"]
+        if is_dyn:
+            links.append(["R", "refresh", tr.actions_rebuild()])
+            links.append(["E", "empty", tr.studying_empty()])
+        else:
+            links.append(["C", "studymore", tr.actions_custom_study()])
+            # links.append(["F", "cram", _("Filter/Cram")])
+        if self.mw.col.sched.have_buried():
+            links.append(["U", "unbury", tr.studying_unbury()])
+        if not is_dyn:
+            links.append(["", "description", tr.scheduling_description()])
+        return links

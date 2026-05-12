@@ -1,0 +1,31 @@
+# Copyright: Ajatt-Tools and contributors; https://github.com/Ajatt-Tools
+# License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
+
+import aqt.webview
+from aqt import gui_hooks, mw
+from aqt.webview import AnkiWebViewKind
+
+from .config import config
+from .widgets.deck_browser import FlexibleDeckBrowser
+from .widgets.overview import FlexibleOverview
+from .widgets.reviewer import FlexibleReviewer
+from .widgets.widgets import get_flexible_bottom_bar
+
+
+def on_card_review_webview_did_init(_web: aqt.webview.AnkiWebView, kind: aqt.webview.AnkiWebViewKind) -> None:
+    if kind != AnkiWebViewKind.MAIN:
+        return
+    if config.flexible_reviewer:
+        get_flexible_bottom_bar()
+
+
+def on_main_window_did_init() -> None:
+    # called after mw.setupUI
+    mw.deckBrowser = FlexibleDeckBrowser(mw)
+    mw.reviewer = FlexibleReviewer(mw, config)
+    mw.overview = FlexibleOverview(mw)
+
+
+def main() -> None:
+    gui_hooks.card_review_webview_did_init.append(on_card_review_webview_did_init)
+    gui_hooks.main_window_did_init.append(on_main_window_did_init)
