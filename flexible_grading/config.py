@@ -120,5 +120,9 @@ class FlexibleGradingConfig(AddonConfigManager):
     def show_reps_done_today(self) -> bool:
         return bool(self["show_reps_done_today"])
 
+    @property
+    def flexible_reviewer(self) -> bool:
+        return bool(self["flexible_reviewer"])
+
 
 config = FlexibleGradingConfig()
