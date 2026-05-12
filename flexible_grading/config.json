@@ -20,7 +20,7 @@
     "right": "Shift+L"
   },
   "remaining_count_type": "default",
-  "scroll_amount": 100,
+  "scroll_amount": 300,
   "color_buttons": true,
   "remove_buttons": true,
   "hide_button_times": false,
