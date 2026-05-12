@@ -84,7 +84,7 @@ class FlexibleGradingConfig(AddonConfigManager):
 
     def get_label_color(self, label: str) -> str:
         """Returns color for answer button, e.g. 'again'=>'red', 'hard'=>'yellow'."""
-        return self._config["colors"][label.lower()]
+        return self._config["colors"].get(label.lower(), "black")
 
     @property
     def colors(self) -> dict[str, str]:

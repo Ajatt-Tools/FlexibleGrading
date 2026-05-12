@@ -8,8 +8,8 @@ from anki.collection import Collection
 from anki.hooks import wrap
 from aqt.reviewer import Reviewer
 
-from widgets.utils import studied_today_count
 from .config import RemainingCountType, config
+from .widgets.utils import studied_today_count
 
 HTML_TAG = re.compile(r"<[^<>]+>", flags=re.IGNORECASE | re.MULTILINE)
 

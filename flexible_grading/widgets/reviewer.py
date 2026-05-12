@@ -20,7 +20,7 @@ from aqt.utils import (
     tr,
 )
 
-from ..config import FlexibleGradingConfig
+from ..config import FlexibleGradingConfig, RemainingCountType
 from .utils import studied_today_count
 from .widgets import FlexiblePushButton, FlexibleTimerLabel, get_flexible_bottom_bar
 
@@ -29,6 +29,8 @@ QUEUE_TO_LABEL: typing.Final[Mapping[int, str]] = {
     QueuedCards.LEARNING: "Again",
     QueuedCards.REVIEW: "Good",
 }
+EMPTY_PLACEHOLDER = "・"
+NO_QUEUE = object()
 
 
 class FlexibleReviewer(Reviewer):
@@ -107,6 +109,28 @@ class FlexibleReviewer(Reviewer):
                 on_clicked=partial(self._answerCard, cast(Literal[1, 2, 3, 4], ease)),
             )
 
+    def _get_counts(self) -> dict[Union[int, NO_QUEUE], Union[int, str]]:
+        if self._config.remaining_count_type == RemainingCountType.none:
+            return {
+                QueuedCards.NEW: EMPTY_PLACEHOLDER,
+                QueuedCards.LEARNING: EMPTY_PLACEHOLDER,
+                QueuedCards.REVIEW: EMPTY_PLACEHOLDER,
+            }
+        elif self._config.remaining_count_type == RemainingCountType.single:
+            return {
+                NO_QUEUE: (
+                    self._v3.queued_cards.new_count
+                    + self._v3.queued_cards.learning_count
+                    + self._v3.queued_cards.review_count
+                ),
+            }
+        else:
+            return {
+                QueuedCards.NEW: self._v3.queued_cards.new_count,
+                QueuedCards.LEARNING: self._v3.queued_cards.learning_count,
+                QueuedCards.REVIEW: self._v3.queued_cards.review_count,
+            }
+
     def _create_middle_buttons_for_question_side(self) -> None:
         """
         Show the number of remaining cards in three queues: New, Learning, Review.
@@ -114,17 +138,12 @@ class FlexibleReviewer(Reviewer):
         self._bar.middle_bucket.reset(is_visible=True)
 
         if self.mw.col.conf["dueCounts"]:
-            counts = {
-                QueuedCards.NEW: self._v3.queued_cards.new_count,
-                QueuedCards.LEARNING: self._v3.queued_cards.learning_count,
-                QueuedCards.REVIEW: self._v3.queued_cards.review_count,
-            }
             this_card = self._v3.top_card()
-            for queue_type, count in counts.items():
+            for queue_type, button_text in self._get_counts().items():
                 self._bar.middle_bucket.add_button(
                     FlexiblePushButton(
-                        text=f"{count}",
-                        text_color=self._config.get_label_color(QUEUE_TO_LABEL[queue_type]),
+                        text=f"{button_text}",
+                        text_color=self._config.get_label_color(QUEUE_TO_LABEL.get(queue_type, EMPTY_PLACEHOLDER)),
                         text_underline=(this_card.queue == queue_type),
                     ),
                     on_clicked=partial(self.browse_queue, queue_type),
