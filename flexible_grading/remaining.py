@@ -5,10 +5,10 @@ import re
 from typing import Callable, Optional
 
 from anki.collection import Collection
-from anki.consts import REVLOG_RESCHED
 from anki.hooks import wrap
 from aqt.reviewer import Reviewer
 
+from widgets.utils import studied_today_count
 from .config import RemainingCountType, config
 
 HTML_TAG = re.compile(r"<[^<>]+>", flags=re.IGNORECASE | re.MULTILINE)
@@ -36,18 +36,6 @@ def format_remaining_cards(self: Reviewer, get_default_html: Callable[[Reviewer]
         return f'<span class="ajt__total-count">Left: {sum_remaining(get_default_html(self))}</span>'
     else:
         return get_default_html(self).strip()
-
-
-def prev_day_cutoff_ms(col: Collection) -> int:
-    return (col.sched.day_cutoff - 86_400) * 1000
-
-
-def studied_today_count(col: Collection) -> int:
-    return col.db.scalar(
-        """ SELECT COUNT(*) FROM revlog WHERE type != ? AND id > ? """,
-        REVLOG_RESCHED,
-        prev_day_cutoff_ms(col),
-    )
 
 
 def format_studied_today(col: Collection) -> str:

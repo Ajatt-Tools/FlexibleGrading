@@ -9,11 +9,7 @@ from aqt.qt import *
 
 
 def ease_to_answer_key(ease: int) -> str:
-    return (
-        tr.actions_shortcut_key(val=aqt.mw.pm.get_answer_key(ease))
-        if aqt.mw.pm.get_answer_key(ease)
-        else ""
-    )
+    return tr.actions_shortcut_key(val=aqt.mw.pm.get_answer_key(ease)) if aqt.mw.pm.get_answer_key(ease) else ""
 
 
 def ease_to_answer_key_short(ease: int) -> str:

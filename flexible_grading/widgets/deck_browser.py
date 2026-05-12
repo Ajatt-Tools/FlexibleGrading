@@ -7,8 +7,7 @@ from aqt import tr
 from aqt.deckbrowser import DeckBrowser
 from aqt.utils import shortcut
 
-from .widgets import get_flexible_bottom_bar
-from .widgets import FlexiblePushButton
+from .widgets import FlexiblePushButton, get_flexible_bottom_bar
 
 
 class FlexibleDeckBrowser(DeckBrowser):
@@ -30,9 +29,7 @@ class FlexibleDeckBrowser(DeckBrowser):
                 on_clicked=functools.partial(pycmds[pycmd]),
             )
             if keyboard_shortcut:
-                button.setToolTip(
-                    tr.actions_shortcut_key(val=shortcut(keyboard_shortcut))
-                )
+                button.setToolTip(tr.actions_shortcut_key(val=shortcut(keyboard_shortcut)))
 
     def _clear_bottom_web(self) -> None:
         self.bottom.web.setHtml("<style>body {margin:0;} html {height:0;}</style>")

@@ -10,7 +10,7 @@ from aqt import gui_hooks, mw
 from aqt.reviewer import Reviewer
 from aqt.toolbar import Toolbar
 
-from .config import config
+from .config import config, get_label
 
 
 def handle_due(card: Card) -> str:
@@ -89,7 +89,7 @@ class LastEase:
         if config.show_last_review is False:
             return
 
-        label = config.get_label(ease, self._last_default_ease)
+        label = get_label(ease, self._last_default_ease)
         color = config.get_label_color(label)
         status = f"{_(label)[:1]}: {human_ivl(card)}"
 

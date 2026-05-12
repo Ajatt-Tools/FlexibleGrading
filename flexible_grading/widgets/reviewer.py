@@ -1,6 +1,7 @@
 # Copyright: Ajatt-Tools and contributors; https://github.com/Ajatt-Tools
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
-
+import typing
+from collections.abc import Mapping
 from functools import partial
 from typing import Any, Literal, Optional, cast
 
@@ -20,24 +21,17 @@ from aqt.utils import (
 )
 
 from ..config import FlexibleGradingConfig
-from .utils import ease_to_answer_key_short, studied_today_count
-from .widgets import FlexibleTimerLabel, FlexiblePushButton
-from .widgets import get_flexible_bottom_bar
+from .utils import studied_today_count
+from .widgets import FlexiblePushButton, FlexibleTimerLabel, get_flexible_bottom_bar
+
+QUEUE_TO_LABEL: typing.Final[Mapping[int, str]] = {
+    QueuedCards.NEW: "Easy",
+    QueuedCards.LEARNING: "Again",
+    QueuedCards.REVIEW: "Good",
+}
 
 
 class FlexibleReviewer(Reviewer):
-    _ease_to_color = {
-        1: "FireBrick",
-        2: "DarkGoldenRod",
-        3: "ForestGreen",
-        4: "DodgerBlue",
-    }
-    _queue_to_color = {
-        QueuedCards.NEW: "DodgerBlue",
-        QueuedCards.LEARNING: "FireBrick",
-        QueuedCards.REVIEW: "ForestGreen",
-    }
-
     timer: Optional[FlexibleTimerLabel] = None
 
     def __init__(self, mw: AnkiQt, config: FlexibleGradingConfig) -> None:
@@ -104,8 +98,11 @@ class FlexibleReviewer(Reviewer):
         for ease, label in self._answerButtonList():
             self._bar.middle_bucket.add_button(
                 FlexiblePushButton(
-                    text=f"{self._answer_button_label(ease, label)}[{ease_to_answer_key_short(ease)}]",
-                    text_color=self._ease_to_color[ease],
+                    text=(
+                        f"{self._answer_button_label(ease, label)}"
+                        f"[{self._config.get_answer_key(ease, default_ease=self._defaultEase())}]"
+                    ),
+                    text_color=self._config.get_ease_color(ease, default_ease=self._defaultEase()),
                 ),
                 on_clicked=partial(self._answerCard, cast(Literal[1, 2, 3, 4], ease)),
             )
@@ -127,7 +124,7 @@ class FlexibleReviewer(Reviewer):
                 self._bar.middle_bucket.add_button(
                     FlexiblePushButton(
                         text=f"{count}",
-                        text_color=self._queue_to_color[queue_type],
+                        text_color=self._config.get_label_color(QUEUE_TO_LABEL[queue_type]),
                         text_underline=(this_card.queue == queue_type),
                     ),
                     on_clicked=partial(self.browse_queue, queue_type),

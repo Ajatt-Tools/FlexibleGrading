@@ -33,9 +33,7 @@ class FlexiblePushButton(QPushButton):
             self.sizePolicy().Policy.Fixed,
         )
 
-    def set_text_style(
-        self, text_color: str = "#111111", text_underline: bool = False
-    ) -> None:
+    def set_text_style(self, text_color: str = "#111111", text_underline: bool = False) -> None:
         stylesheet = (
             """
         FlexiblePushButton {

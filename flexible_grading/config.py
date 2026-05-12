@@ -36,6 +36,18 @@ class RemainingCountType(enum.Enum):
     none = enum.auto()
 
 
+def get_label(ease: int, default_ease: int = 3) -> str:
+    if ease == 1:
+        return "Again"
+    if ease == default_ease:
+        return "Good"
+    if ease == 2:
+        return "Hard"
+    if ease > default_ease:
+        return "Easy"
+    return "Unknown"
+
+
 class FlexibleGradingConfig(AddonConfigManager):
     def __init__(self, default: bool = False) -> None:
         super().__init__(default)
@@ -67,22 +79,11 @@ class FlexibleGradingConfig(AddonConfigManager):
             for key, default_value in self._default_config[sub_key].items()
         }
 
-    @staticmethod
-    def get_label(ease: int, default_ease: int = 3) -> str:
-        if ease == 1:
-            return "Again"
-        if ease == default_ease:
-            return "Good"
-        if ease == 2:
-            return "Hard"
-        if ease > default_ease:
-            return "Easy"
-        return "Unknown"
-
     def get_ease_color(self, ease: int, default_ease: int) -> str:
-        return self._config["colors"][self.get_label(ease, default_ease).lower()]
+        return self._config["colors"][get_label(ease, default_ease).lower()]
 
     def get_label_color(self, label: str) -> str:
+        """Returns color for answer button, e.g. 'again'=>'red', 'hard'=>'yellow'."""
         return self._config["colors"][label.lower()]
 
     @property
@@ -98,6 +99,10 @@ class FlexibleGradingConfig(AddonConfigManager):
     def get_key(self, answer: str) -> str:
         """Returns shortcut key for answer button, e.g. 'again'=>'h'."""
         return self._config["buttons"].get(answer.lower(), "").lower()
+
+    def get_answer_key(self, ease: int, default_ease: int) -> str:
+        """Returns keyboard shortcut key for ease, e.g. 1=>'h', 2=>'j', 3=>'k', 4=>'l'."""
+        return self._config["buttons"].get(get_label(ease, default_ease).lower(), "error").lower()
 
     def set_key(self, answer: str, letter: str):
         """Sets shortcut key for answer button, e.g. 'again'=>'h'."""

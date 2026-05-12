@@ -4,7 +4,6 @@ import sys
 
 from aqt import mw
 
-
 try:
     # https://github.com/beartype/beartype
     from beartype.claw import beartype_this_package
@@ -15,7 +14,16 @@ except ImportError:
 
 
 def start_addon() -> None:
-    from . import bottom_toolbar, gui, remaining, styling, top_toolbar, vim_shortcuts, zoom, flexible_reviewer
+    from . import (
+        bottom_toolbar,
+        flexible_reviewer,
+        gui,
+        remaining,
+        styling,
+        top_toolbar,
+        vim_shortcuts,
+        zoom,
+    )
 
     styling.init()
     top_toolbar.main()
