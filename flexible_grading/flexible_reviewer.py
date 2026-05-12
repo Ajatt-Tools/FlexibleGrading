@@ -21,6 +21,8 @@ def on_card_review_webview_did_init(_web: aqt.webview.AnkiWebView, kind: aqt.web
 
 def on_main_window_did_init() -> None:
     # called after mw.setupUI
+    if not config.flexible_reviewer:
+        return
     mw.deckBrowser = FlexibleDeckBrowser(mw)
     mw.reviewer = FlexibleReviewer(mw, config)
     mw.overview = FlexibleOverview(mw)
