@@ -111,7 +111,7 @@ class FlexibleGradingConfig(AddonConfigManager):
         """Returns keyboard shortcut key for ease, e.g. 1=>'h', 2=>'j', 3=>'k', 4=>'l'."""
         return self._config["buttons"].get(get_label(ease, default_ease).lower(), "error").lower()
 
-    def set_key(self, answer: str, letter: str):
+    def set_key(self, answer: str, letter: str) -> None:
         """Sets shortcut key for answer button, e.g. 'again'=>'h'."""
         self._config["buttons"][answer.lower()] = letter.lower()
 
