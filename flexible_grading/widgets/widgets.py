@@ -183,7 +183,7 @@ class FlexibleTimerLabel(QLabel):
         time_string = f"{m}:{s:02d}"
 
         if t >= self._max_time > 0:
-            self.setText(f"<font color='red'>{time_string}</font>")
+            self.setText(f"<font color='{TIMER_EXPIRED_COLOR}'>{time_string}</font>")
             self.stop()
         else:
             self.setText(time_string)
