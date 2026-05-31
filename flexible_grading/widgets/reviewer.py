@@ -1,9 +1,10 @@
 # Copyright: Ajatt-Tools and contributors; https://github.com/Ajatt-Tools
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
+import enum
 import typing
 from collections.abc import Mapping
 from functools import partial
-from typing import Any, Literal, Optional, cast
+from typing import Any, Literal, Optional, Union, cast
 
 import aqt
 import aqt.browser
@@ -32,8 +33,13 @@ QUEUE_TO_LABEL: typing.Final[Mapping[int, str]] = {
     QueuedCards.REVIEW: "Good",
 }
 
-# Sentinel key used in _get_counts() when all queues are summed into a single number.
-NO_QUEUE = object()
+class NoQueue(enum.Enum):
+    """Sentinel indicating a summed count that does not correspond to any single Anki queue."""
+
+    SENTINEL = enum.auto()
+
+
+NO_QUEUE = NoQueue.SENTINEL
 
 
 class FlexibleReviewer(Reviewer):
@@ -73,7 +79,8 @@ class FlexibleReviewer(Reviewer):
             on_clicked=partial(self.showContextMenu),
         )
 
-    def browse_queue(self, queue_type: Union[str, Any]) -> None:
+    def browse_queue(self, queue_type: Union[int, NoQueue]) -> None:
+        """Open the card browser filtered to the given queue type."""
         if queue_type == QueuedCards.LEARNING:
             queue_type = "learn"
         elif queue_type == QueuedCards.NEW:
@@ -117,7 +124,12 @@ class FlexibleReviewer(Reviewer):
                 on_clicked=partial(self._answerCard, cast(Literal[1, 2, 3, 4], ease)),
             )
 
-    def _get_counts(self) -> dict[Union[int, NO_QUEUE], Union[int, str]]:
+    def _get_counts(self) -> dict[Union[int, NoQueue], Union[int, str]]:
+        """Return remaining card counts keyed by queue type.
+
+        The keys are QueuedCards int constants when showing per-queue counts,
+        or NO_QUEUE when all queues are summed into a single number.
+        """
         if self._config.remaining_count_type == RemainingCountType.none:
             return {
                 QueuedCards.NEW: EMPTY_PLACEHOLDER,
