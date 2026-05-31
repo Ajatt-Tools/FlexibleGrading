@@ -13,3 +13,5 @@ manifest.json
 *TODO*
 __about__.py
 dist
+/*.md
+!/README.md
