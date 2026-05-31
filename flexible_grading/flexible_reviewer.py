@@ -15,6 +15,7 @@ from .widgets.widgets import get_flexible_bottom_bar
 
 
 def on_card_review_webview_did_init(_web: aqt.webview.AnkiWebView, kind: aqt.webview.AnkiWebViewKind) -> None:
+    """Create the flexible bottom bar widget when the main review webview initializes."""
     if kind != AnkiWebViewKind.MAIN:
         return
     if config.flexible_reviewer:
@@ -22,7 +23,12 @@ def on_card_review_webview_did_init(_web: aqt.webview.AnkiWebView, kind: aqt.web
 
 
 def on_main_window_did_init() -> None:
-    # called after mw.setupUI
+    """Replace Anki's default deck browser, reviewer, and overview with flexible variants.
+
+    Called after mw.setupUI completes.
+    Does nothing if the flexible reviewer feature is disabled in config
+    or if the V3 scheduler is not active.
+    """
     if not config.flexible_reviewer:
         return
     if not isinstance(mw.col.sched, V3Scheduler):
@@ -35,5 +41,6 @@ def on_main_window_did_init() -> None:
 
 
 def main() -> None:
+    """Register Anki hooks for the flexible reviewer feature."""
     gui_hooks.card_review_webview_did_init.append(on_card_review_webview_did_init)
     gui_hooks.main_window_did_init.append(on_main_window_did_init)
