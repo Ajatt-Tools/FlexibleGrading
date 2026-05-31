@@ -114,7 +114,8 @@ class FlexibleHorizontalBar(QWidget):
 
 class FlexibleButtonsList(FlexibleHorizontalBar):
     """Horizontal bar with spacing between buttons, used as a bucket in the bottom bar."""
-    _spacing: int = 8
+
+    _spacing: int = FLEXIBLE_BUTTONS_SPACING
 
 
 class FlexibleBottomBar(FlexibleHorizontalBar):
