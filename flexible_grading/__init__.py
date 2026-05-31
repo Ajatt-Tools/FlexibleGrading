@@ -14,7 +14,14 @@ except ImportError:
 
 
 def start_addon() -> None:
-    from . import (
+    """Initialize all addon modules and register Anki hooks.
+
+    Imports are deferred to avoid loading Anki-dependent modules at package import time.
+    This is required because the addon package is imported by Anki before the main window
+    and collection are fully initialized, and also allows pytest to import the package
+    without triggering Anki UI initialization.
+    """
+    from . import (  # noqa: PLC0415 (deferred imports, see docstring)
         bottom_toolbar,
         flexible_reviewer,
         gui,
