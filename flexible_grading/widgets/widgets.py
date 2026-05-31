@@ -73,7 +73,7 @@ class FlexiblePushButton(QPushButton):
 class FlexibleHorizontalBar(QWidget):
     """A bucket-like widget that holds other widgets and places them in a horizontal line."""
 
-    _height: int = 16
+    _height: int = FLEXIBLE_BUTTON_HEIGHT
     _spacing: int = 0
 
     mw: aqt.AnkiQt
