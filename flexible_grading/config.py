@@ -115,7 +115,8 @@ class FlexibleGradingConfig(AddonConfigManager):
         """Sets shortcut key for answer button, e.g. 'again'=>'h'."""
         self._config["buttons"][answer.lower()] = letter.lower()
 
-    def set_color(self, btn_label: str, color: str):
+    def set_color(self, btn_label: str, color: str) -> None:
+        """Sets color for answer button, e.g. 'again'=>'FireBrick'."""
         self._config["colors"][btn_label.lower()] = color
 
     def get_zoom_state(self, state: str) -> float:
