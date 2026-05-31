@@ -120,9 +120,7 @@ class FlexibleButtonsList(FlexibleHorizontalBar):
 
 
 class FlexibleBottomBar(FlexibleHorizontalBar):
-    """
-    Bottom bar. Shows answer buttons, answer timer, reps done today.
-    """
+    """Bottom bar with left, middle, and right buckets for answer buttons, timer, etc."""
 
     def __init__(self, mw: aqt.AnkiQt) -> None:
         super().__init__(mw)
@@ -134,6 +132,7 @@ class FlexibleBottomBar(FlexibleHorizontalBar):
         self._setup_ui()
 
     def _setup_ui(self) -> None:
+        """Arrange the three buckets with stretches between them."""
         self.add_widget(self.left_bucket)
         self.add_stretch()
         self.add_widget(self.middle_bucket)
@@ -142,6 +141,7 @@ class FlexibleBottomBar(FlexibleHorizontalBar):
 
 
 class FlexibleTimerLabel(QLabel):
+    """A label that counts up from 0 and turns red when the time limit is reached."""
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self._time = 0  # current time (seconds)
@@ -152,6 +152,7 @@ class FlexibleTimerLabel(QLabel):
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
     def start(self, max_time: int) -> None:
+        """Reset the counter and begin counting up to max_time seconds."""
         if max_time <= 0:
             raise ValueError("max time should be greater than 0")
         self._max_time = max_time
@@ -162,14 +163,17 @@ class FlexibleTimerLabel(QLabel):
         self._qtimer.start()
 
     def stop(self) -> None:
+        """Stop the timer if it is running."""
         if self._qtimer.isActive():
             self._qtimer.stop()
 
     def _on_tick(self) -> None:
+        """Increment elapsed time by one second and refresh the display."""
         self._time = min(self._time + 1, self._max_time)
         self._update_display()
 
     def _update_display(self) -> None:
+        """Render the current time as m:ss, switching to red when the limit is reached."""
         if self._max_time <= 0:
             raise ValueError("max time should be greater than 0")
 
@@ -186,6 +190,7 @@ class FlexibleTimerLabel(QLabel):
 
 
 def get_flexible_bottom_bar() -> FlexibleBottomBar:
+    """Return the singleton FlexibleBottomBar, creating and attaching it to mw if needed."""
     assert mw, "mw should be available"
 
     try:
