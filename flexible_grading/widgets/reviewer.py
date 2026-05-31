@@ -49,6 +49,7 @@ class FlexibleReviewer(Reviewer):
     timer: Optional[FlexibleTimerLabel] = None
 
     def __init__(self, mw: AnkiQt, config: FlexibleGradingConfig) -> None:
+        """Initialize the flexible reviewer with the given config."""
         super().__init__(mw)
         self.timer = None
         self._config = config

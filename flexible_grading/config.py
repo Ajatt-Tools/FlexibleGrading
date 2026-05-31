@@ -135,6 +135,7 @@ class FlexibleGradingConfig(AddonConfigManager):
 
     @property
     def flexible_reviewer(self) -> bool:
+        """Return True if the native Qt flexible reviewer is enabled."""
         return bool(self["flexible_reviewer"])
 
 

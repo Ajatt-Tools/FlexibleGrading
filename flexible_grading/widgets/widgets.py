@@ -36,6 +36,7 @@ class FlexiblePushButton(QPushButton):
         text_underline: bool = False,
         parent: Optional[QWidget] = None,
     ) -> None:
+        """Create a flat push button with the given text, color, and optional underline."""
         super().__init__(text, parent)
         # Fixed height 16px, let width be flexible
         self.setFixedHeight(self._height)
@@ -78,6 +79,7 @@ class FlexibleHorizontalBar(QWidget):
     mw: aqt.AnkiQt
 
     def __init__(self, mw: aqt.AnkiQt) -> None:
+        """Initialize the horizontal bar with a zero-margin layout."""
         super().__init__(mw)
         self.mw = mw
         # Setup Layout
@@ -123,6 +125,7 @@ class FlexibleBottomBar(FlexibleHorizontalBar):
     """Bottom bar with left, middle, and right buckets for answer buttons, timer, etc."""
 
     def __init__(self, mw: aqt.AnkiQt) -> None:
+        """Create the bottom bar with three button buckets."""
         super().__init__(mw)
         # Setup Buttons
         self.left_bucket = FlexibleButtonsList(self.mw)
@@ -144,6 +147,7 @@ class FlexibleTimerLabel(QLabel):
     """A label that counts up from 0 and turns red when the time limit is reached."""
 
     def __init__(self, parent: Optional[QWidget] = None) -> None:
+        """Initialize the timer label with a one-second tick interval."""
         super().__init__(parent)
         self._time = 0  # current time (seconds)
         self._max_time = 0  # maximum time (seconds); 0 means unset
