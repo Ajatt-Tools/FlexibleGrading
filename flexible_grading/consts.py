@@ -30,7 +30,7 @@ STATES_MUTATED_RETRY_MS = 50
 EMPTY_PLACEHOLDER = "\u30fb"
 
 # HTML injected into the bottom web view to collapse it when using native Qt widgets.
-BOTTOM_WEB_CLEAR_HTML = '<style>body {margin:0;} html {height:0;}</style>'
+BOTTOM_WEB_CLEAR_HTML = "<style>body {margin:0;} html {height:0;}</style>"
 
 # Font family list for the flexible push button stylesheet.
 FLEXIBLE_BUTTON_FONT_FAMILY = (
