@@ -180,8 +180,7 @@ class FlexibleTimerLabel(QLabel):
 
         t = min(self._max_time, self._time)
         m, s = divmod(t, 60)
-        s_str = f"{s:02d}"
-        time_string = f"{m}:{s_str}"
+        time_string = f"{m}:{s:02d}"
 
         if t >= self._max_time > 0:
             self.setText(f"<font color='red'>{time_string}</font>")
