@@ -25,15 +25,20 @@ from ..consts import BOTTOM_WEB_CLEAR_HTML, EMPTY_PLACEHOLDER, STATES_MUTATED_RE
 from .utils import studied_today_count
 from .widgets import FlexiblePushButton, FlexibleTimerLabel, get_flexible_bottom_bar
 
+# Maps Anki queue types to their human-readable answer labels for coloring.
 QUEUE_TO_LABEL: typing.Final[Mapping[int, str]] = {
     QueuedCards.NEW: "Easy",
     QueuedCards.LEARNING: "Again",
     QueuedCards.REVIEW: "Good",
 }
+
+# Sentinel key used in _get_counts() when all queues are summed into a single number.
 NO_QUEUE = object()
 
 
 class FlexibleReviewer(Reviewer):
+    """Card reviewer that renders answer buttons as native Qt widgets instead of HTML."""
+
     timer: Optional[FlexibleTimerLabel] = None
 
     def __init__(self, mw: AnkiQt, config: FlexibleGradingConfig) -> None:
@@ -43,15 +48,18 @@ class FlexibleReviewer(Reviewer):
         self._bar = get_flexible_bottom_bar()
 
     def cleanup(self) -> None:
+        """Hide all bottom bar buckets when leaving the reviewer."""
         super().cleanup()
         self._bar.middle_bucket.reset(is_visible=False)
         self._bar.left_bucket.reset(is_visible=False)
         self._bar.right_bucket.reset(is_visible=False)
 
     def _bottomHTML(self) -> str:
+        """Return minimal HTML since the bottom bar is rendered with native Qt widgets."""
         return "<style></style>"
 
     def _create_side_buttons(self) -> None:
+        """Add the Edit button (left) and More button (right) to the bottom bar."""
         # Left side
         self._bar.left_bucket.reset(is_visible=True)
         self._bar.left_bucket.add_button(

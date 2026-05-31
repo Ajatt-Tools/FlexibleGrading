@@ -12,7 +12,10 @@ from .widgets import FlexiblePushButton, get_flexible_bottom_bar
 
 
 class FlexibleOverview(Overview):
+    """Deck overview that uses native Qt buttons instead of the bottom web view."""
+
     def add_bottom_buttons(self) -> None:
+        """Populate the flexible bottom bar with overview action buttons."""
         bar = get_flexible_bottom_bar()
         bar.left_bucket.reset(is_visible=False)
         bar.right_bucket.reset(is_visible=False)
@@ -39,9 +42,11 @@ class FlexibleOverview(Overview):
                 button.setToolTip(tr.actions_shortcut_key(val=shortcut(keyboard_shortcut)))
 
     def _clear_bottom_web(self) -> None:
+        """Collapse the bottom web view so only the native Qt bar is visible."""
         self.bottom.web.setHtml(BOTTOM_WEB_CLEAR_HTML)
 
     def _renderBottom(self) -> None:
+        """Override the default bottom rendering to use native Qt widgets."""
         self._clear_bottom_web()
         self.add_bottom_buttons()
 
