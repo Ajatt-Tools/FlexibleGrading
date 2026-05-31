@@ -12,7 +12,10 @@ from .widgets import FlexiblePushButton, get_flexible_bottom_bar
 
 
 class FlexibleDeckBrowser(DeckBrowser):
+    """Deck browser that uses native Qt buttons instead of the bottom web view."""
+
     def add_bottom_buttons(self) -> None:
+        """Populate the flexible bottom bar with deck browser action buttons."""
         bar = get_flexible_bottom_bar()
         bar.left_bucket.reset(is_visible=False)
         bar.right_bucket.reset(is_visible=False)
@@ -33,8 +36,10 @@ class FlexibleDeckBrowser(DeckBrowser):
                 button.setToolTip(tr.actions_shortcut_key(val=shortcut(keyboard_shortcut)))
 
     def _clear_bottom_web(self) -> None:
+        """Collapse the bottom web view so only the native Qt bar is visible."""
         self.bottom.web.setHtml(BOTTOM_WEB_CLEAR_HTML)
 
     def _drawButtons(self) -> None:
+        """Override the default button drawing to use native Qt widgets."""
         self._clear_bottom_web()
         self.add_bottom_buttons()
