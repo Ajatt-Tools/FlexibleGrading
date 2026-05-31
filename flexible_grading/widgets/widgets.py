@@ -193,9 +193,9 @@ def get_flexible_bottom_bar() -> FlexibleBottomBar:
     """Return the singleton FlexibleBottomBar, creating and attaching it to mw if needed."""
     assert mw, "mw should be available"
 
-    try:
-        return mw.ajt__flexible_bottom_bar
-    except AttributeError:
-        mw.ajt__flexible_bottom_bar = bar = FlexibleBottomBar(mw)
-        mw.mainLayout.addWidget(bar)
+    bar = getattr(mw, "ajt__flexible_bottom_bar", None)
+    if bar is not None:
         return bar
+    mw.ajt__flexible_bottom_bar = bar = FlexibleBottomBar(mw)
+    mw.mainLayout.addWidget(bar)
+    return bar
