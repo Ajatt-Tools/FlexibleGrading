@@ -277,7 +277,7 @@ class SettingsMenuDialog(SettingsMenuUI):
         for key, checkbox in self._toggleables.items():
             checkbox.setChecked(cm[key])
         for label, color_text in cm.colors.items():
-            self._colors[label].setText(color_text)
+            self._colors[label].set_color(color_text)
         for label, key_letter in cm.buttons.items():
             self._answer_keys[label].setText(key_letter)
         for scroll_direction, shortcut_str in cm.scroll.items():
@@ -296,7 +296,7 @@ class SettingsMenuDialog(SettingsMenuUI):
     def accept(self) -> None:
         config["color_buttons"] = self._color_buttons_gbox.isChecked()
         for label, lineedit in self._colors.items():
-            config.set_color(label, lineedit.text())
+            config.set_color(label, lineedit.color_hex())
         for label, lineedit in self._answer_keys.items():
             config.set_key(label, lineedit.text())
         for key, checkbox in self._toggleables.items():
