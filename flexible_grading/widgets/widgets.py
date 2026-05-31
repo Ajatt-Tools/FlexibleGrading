@@ -142,7 +142,8 @@ class FlexibleBottomBar(FlexibleHorizontalBar):
 
 class FlexibleTimerLabel(QLabel):
     """A label that counts up from 0 and turns red when the time limit is reached."""
-    def __init__(self, parent=None) -> None:
+
+    def __init__(self, parent: Optional[QWidget] = None) -> None:
         super().__init__(parent)
         self._time = 0  # current time (seconds)
         self._max_time = 0  # maximum time (seconds); 0 means unset
