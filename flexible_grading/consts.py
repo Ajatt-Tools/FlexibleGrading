@@ -27,7 +27,7 @@ TIMER_INTERVAL_MS = 1000
 STATES_MUTATED_RETRY_MS = 50
 
 # Placeholder for empty queue counts in the reviewer bottom bar.
-EMPTY_PLACEHOLDER = "\u30fb"
+EMPTY_PLACEHOLDER = "・"
 
 # HTML injected into the bottom web view to collapse it when using native Qt widgets.
 BOTTOM_WEB_CLEAR_HTML = "<style>body {margin:0;} html {height:0;}</style>"

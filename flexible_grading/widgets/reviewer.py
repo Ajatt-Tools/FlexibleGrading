@@ -21,6 +21,7 @@ from aqt.utils import (
 )
 
 from ..config import FlexibleGradingConfig, RemainingCountType
+from ..consts import BOTTOM_WEB_CLEAR_HTML, EMPTY_PLACEHOLDER, STATES_MUTATED_RETRY_MS
 from .utils import studied_today_count
 from .widgets import FlexiblePushButton, FlexibleTimerLabel, get_flexible_bottom_bar
 
@@ -29,7 +30,6 @@ QUEUE_TO_LABEL: typing.Final[Mapping[int, str]] = {
     QueuedCards.LEARNING: "Again",
     QueuedCards.REVIEW: "Good",
 }
-EMPTY_PLACEHOLDER = "・"
 NO_QUEUE = object()
 
 
