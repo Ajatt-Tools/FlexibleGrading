@@ -99,6 +99,7 @@ class FlexibleHorizontalBar(QWidget):
     def add_button(self, button: QPushButton, *, on_clicked: Callable) -> QPushButton:
         """Add a push button to the layout and connect its clicked signal."""
         self.add_widget(button)
+        # https://doc.qt.io/qt-6/qabstractbutton.html#clicked
         qconnect(button.clicked, lambda button_checked=False: on_clicked())
         return button
 
