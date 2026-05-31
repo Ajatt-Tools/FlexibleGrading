@@ -13,6 +13,7 @@ from ..consts import (
     FLEXIBLE_BUTTON_FONT_FAMILY,
     FLEXIBLE_BUTTON_FONT_SIZE,
     FLEXIBLE_BUTTON_HEIGHT,
+    FLEXIBLE_BUTTON_STYLESHEET,
     FLEXIBLE_BUTTONS_SPACING,
     HOVER_BG_COLOR,
     PRESSED_BG_COLOR,
@@ -48,37 +49,18 @@ class FlexiblePushButton(QPushButton):
             self.sizePolicy().Policy.Fixed,
         )
 
-    def set_text_style(self, text_color: str = "#111111", text_underline: bool = False) -> None:
-        stylesheet = (
-            """
-        FlexiblePushButton {
-            border: none;
-            background: transparent;
-            color: TEXT_COLOR;
-            margin: 0;
-            padding: 0;
-            font-size: FONT_SIZEpx;
-            min-width: 0;
-            qproperty-flat: true;
-            font-family: "Noto Sans Mono", "Liberation Mono", "DejaVu Sans Mono", "Courier New", "Lucida Console", 
-                         Courier, Consolas, "Noto Sans Mono CJK JP", monospace;
-            TEXT_UNDERLINE
-        }
-        FlexiblePushButton:hover {
-            background: #d0d0d0;
-            color: #000;
-        }
-        FlexiblePushButton:pressed {
-            background: #b8b8b8;
-        }
-        """.replace("FONT_SIZE", f"{self._font_size}")
-            .replace("TEXT_COLOR", text_color)
-            .replace(
-                "TEXT_UNDERLINE",
-                "text-decoration: underline;" if text_underline else "",
+    def set_text_style(self, text_color: str = DEFAULT_TEXT_COLOR, text_underline: bool = False) -> None:
+        """Apply color, underline, and font styling via a Qt stylesheet."""
+        self.setStyleSheet(
+            FLEXIBLE_BUTTON_STYLESHEET.format(
+                text_color=text_color,
+                font_size=self._font_size,
+                font_family=FLEXIBLE_BUTTON_FONT_FAMILY,
+                underline_rule="text-decoration: underline;" if text_underline else "",
+                hover_bg=HOVER_BG_COLOR,
+                pressed_bg=PRESSED_BG_COLOR,
             )
         )
-        self.setStyleSheet(stylesheet)
 
     def sizeHint(self) -> QSize:
         """

@@ -37,3 +37,26 @@ FLEXIBLE_BUTTON_FONT_FAMILY = (
     '"Noto Sans Mono", "Liberation Mono", "DejaVu Sans Mono", "Courier New", "Lucida Console",'
     ' Courier, Consolas, "Noto Sans Mono CJK JP", monospace'
 )
+
+# Qt stylesheet template for FlexiblePushButton.
+# Placeholders: text_color, font_size, font_family, underline_rule, hover_bg, pressed_bg.
+FLEXIBLE_BUTTON_STYLESHEET = """\
+FlexiblePushButton {{
+    border: none;
+    background: transparent;
+    color: {text_color};
+    margin: 0;
+    padding: 0;
+    font-size: {font_size}px;
+    min-width: 0;
+    qproperty-flat: true;
+    font-family: {font_family};
+    {underline_rule}
+}}
+FlexiblePushButton:hover {{
+    background: {hover_bg};
+    color: #000;
+}}
+FlexiblePushButton:pressed {{
+    background: {pressed_bg};
+}}"""
