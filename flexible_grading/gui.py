@@ -261,6 +261,11 @@ class SettingsMenuUI(QDialog):
         self._toggleables["show_reps_done_today"].setToolTip(
             "Print the number of reviews done today on the bottom bar."
         )
+        self._toggleables["flexible_reviewer"].setToolTip(
+            "Replace the bottom web view with native Qt buttons\n"
+            "in the deck browser, overview, and reviewer.\n"
+            "Requires the V3 scheduler. Takes effect on restart."
+        )
 
 
 class SettingsMenuDialog(SettingsMenuUI):
