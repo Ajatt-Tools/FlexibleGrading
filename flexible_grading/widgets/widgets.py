@@ -1,7 +1,6 @@
 # Copyright: Ajatt-Tools and contributors; https://github.com/Ajatt-Tools
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
-import functools
 from typing import Optional
 
 import aqt
@@ -89,29 +88,32 @@ class FlexibleHorizontalBar(QWidget):
         self.setMaximumHeight(self._height)
 
     def add_stretch(self, stretch_value: int = 1) -> None:
+        """Add a stretchable spacer to the layout."""
         self._layout.addStretch(stretch_value)
 
     def add_widget(self, widget: QWidget) -> QWidget:
+        """Add a widget to the layout and return it."""
         self._layout.addWidget(widget)
         return widget
 
     def add_button(self, button: QPushButton, *, on_clicked: Callable) -> QPushButton:
+        """Add a push button to the layout and connect its clicked signal."""
         self.add_widget(button)
         qconnect(button.clicked, lambda button_checked=False: on_clicked())
         return button
 
     def clear_layout(self) -> None:
+        """Remove and delete all child widgets from the layout."""
         clear_layout(self._layout)
 
     def reset(self, is_visible: bool) -> None:
-        """
-        Prepare to show a new set of buttons.
-        """
+        """Clear the layout and set visibility, preparing for a new set of widgets."""
         self.setHidden(not is_visible)
         self.clear_layout()
 
 
 class FlexibleButtonsList(FlexibleHorizontalBar):
+    """Horizontal bar with spacing between buttons, used as a bucket in the bottom bar."""
     _spacing: int = 8
 
 
