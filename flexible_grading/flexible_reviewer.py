@@ -31,8 +31,8 @@ def on_main_window_did_init() -> None:
     """
     if not config.flexible_reviewer:
         return
+    assert mw.col, "collection should be available"
     if not isinstance(mw.col.sched, V3Scheduler):
-
         showWarning("Flexible Reviewer requires the V3 scheduler. Feature disabled.")
         return
     mw.deckBrowser = FlexibleDeckBrowser(mw)
