@@ -1,25 +1,40 @@
 # Copyright: Ajatt-Tools and contributors; https://github.com/Ajatt-Tools
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
-from __future__ import annotations
+import functools
+from typing import Optional
 
 import aqt
 from aqt import mw
 from aqt.qt import *
 
+from ..consts import (
+    DEFAULT_TEXT_COLOR,
+    FLEXIBLE_BUTTON_FONT_FAMILY,
+    FLEXIBLE_BUTTON_FONT_SIZE,
+    FLEXIBLE_BUTTON_HEIGHT,
+    FLEXIBLE_BUTTONS_SPACING,
+    HOVER_BG_COLOR,
+    PRESSED_BG_COLOR,
+    TIMER_EXPIRED_COLOR,
+    TIMER_INTERVAL_MS,
+)
 from .utils import clear_layout
 
 
 class FlexiblePushButton(QPushButton):
-    _height: int = 16
-    _font_size: int = _height - 4
+    """A compact, flat push button styled with a monospace font for the bottom bar."""
+
+    _height: int = FLEXIBLE_BUTTON_HEIGHT
+    _font_size: int = FLEXIBLE_BUTTON_FONT_SIZE
 
     def __init__(
         self,
-        text="",
-        text_color: str = "#111111",
+        text: str = "",
+        *,
+        text_color: str = DEFAULT_TEXT_COLOR,
         text_underline: bool = False,
-        parent=None,
+        parent: Optional[QWidget] = None,
     ) -> None:
         super().__init__(text, parent)
         # Fixed height 16px, let width be flexible
