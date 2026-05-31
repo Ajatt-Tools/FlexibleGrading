@@ -2,6 +2,7 @@
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
 import aqt.webview
+from anki.scheduler.v3 import Scheduler as V3Scheduler
 from aqt import gui_hooks, mw
 from aqt.webview import AnkiWebViewKind
 
@@ -22,6 +23,11 @@ def on_card_review_webview_did_init(_web: aqt.webview.AnkiWebView, kind: aqt.web
 def on_main_window_did_init() -> None:
     # called after mw.setupUI
     if not config.flexible_reviewer:
+        return
+    if not isinstance(mw.col.sched, V3Scheduler):
+        from aqt.utils import showWarning
+
+        showWarning("Flexible Reviewer requires the V3 scheduler. Feature disabled.")
         return
     mw.deckBrowser = FlexibleDeckBrowser(mw)
     mw.reviewer = FlexibleReviewer(mw, config)
