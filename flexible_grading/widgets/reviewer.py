@@ -182,7 +182,7 @@ class FlexibleReviewer(Reviewer):
 
     def _clear_bottom_web(self) -> None:
         """Collapse the bottom web view so only the native Qt bar is visible."""
-        self.bottom.web.setHtml("<style>body {margin:0;} html {height:0;}</style>")
+        self.bottom.web.setHtml(BOTTOM_WEB_CLEAR_HTML)
 
     def _max_time(self) -> int:
         """Return the card's time limit in seconds, or 0 if the timer is disabled."""
@@ -214,7 +214,7 @@ class FlexibleReviewer(Reviewer):
         Show Back side (Answer side). Buttons: Again, Hard, Good, Easy
         """
         if not self._states_mutated:
-            self.mw.progress.single_shot(50, self._showEaseButtons)
+            self.mw.progress.single_shot(STATES_MUTATED_RETRY_MS, self._showEaseButtons)
             return
         self._create_middle_buttons_for_answer_side()
         self._clear_bottom_web()
