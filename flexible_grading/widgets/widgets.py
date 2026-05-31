@@ -71,9 +71,7 @@ class FlexiblePushButton(QPushButton):
 
 
 class FlexibleHorizontalBar(QWidget):
-    """
-    A simple bucket-like widget that holds other widgets and places them in a horizontal line.
-    """
+    """A bucket-like widget that holds other widgets and places them in a horizontal line."""
 
     _height: int = 16
     _spacing: int = 0
