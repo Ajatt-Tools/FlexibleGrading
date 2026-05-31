@@ -37,6 +37,12 @@ class RemainingCountType(enum.Enum):
 
 
 def get_label(ease: int, default_ease: int = 3) -> str:
+    """Map a numeric ease value to its human-readable label.
+
+    Returns one of 'Again', 'Hard', 'Good', 'Easy', or 'Unknown'.
+    The mapping depends on the number of answer buttons available for the card,
+    which is indicated by default_ease (typically 3 or 4).
+    """
     if ease == 1:
         return "Again"
     if ease == default_ease:
