@@ -33,6 +33,7 @@ QUEUE_TO_LABEL: typing.Final[Mapping[int, str]] = {
     QueuedCards.REVIEW: "Good",
 }
 
+
 class NoQueue(enum.Enum):
     """Sentinel indicating a summed count that does not correspond to any single Anki queue."""
 
@@ -90,6 +91,7 @@ class FlexibleReviewer(Reviewer):
         self.browse_query(f"is:{queue_type}")
 
     def browse_query(self, query: str) -> None:
+        """Open the card browser and execute the given search query."""
         browser: aqt.browser.Browser = aqt.dialogs.open("Browser", self.mw)
         browser.activateWindow()
         browser.form.searchEdit.lineEdit().setText(query)  # search_for
@@ -111,6 +113,7 @@ class FlexibleReviewer(Reviewer):
             return html_to_text_line(label)[:1].upper()
 
     def _create_middle_buttons_for_answer_side(self) -> None:
+        """Populate the middle bucket with colored answer buttons (Again, Hard, Good, Easy)."""
         self._bar.middle_bucket.reset(is_visible=True)
         for ease, label in self._answerButtonList():
             self._bar.middle_bucket.add_button(
@@ -178,9 +181,11 @@ class FlexibleReviewer(Reviewer):
             )
 
     def _clear_bottom_web(self) -> None:
+        """Collapse the bottom web view so only the native Qt bar is visible."""
         self.bottom.web.setHtml("<style>body {margin:0;} html {height:0;}</style>")
 
     def _max_time(self) -> int:
+        """Return the card's time limit in seconds, or 0 if the timer is disabled."""
         if self.card.should_show_timer():
             return self.card.time_limit() // 1000
         else:
@@ -200,6 +205,7 @@ class FlexibleReviewer(Reviewer):
             timer.start(max_time=max_time)
 
     def _should_stop_timer_on_answer(self) -> bool:
+        """Return True if the deck config says to stop the timer when an answer is shown."""
         conf = self.mw.col.decks.config_dict_for_deck_id(self.card.current_deck_id())
         return bool(conf["stopTimerOnAnswer"])
 
@@ -217,6 +223,7 @@ class FlexibleReviewer(Reviewer):
             self.timer.stop()
 
     def onEnterKey(self) -> None:
+        """Handle Enter/Space key: flip card on question side, answer on answer side."""
         if self.state == "question":
             self._getTypedAnswer()
         elif self.state == "answer" and aqt.mw.pm.spacebar_rates_card():
