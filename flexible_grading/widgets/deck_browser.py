@@ -7,6 +7,7 @@ from aqt import tr
 from aqt.deckbrowser import DeckBrowser
 from aqt.utils import shortcut
 
+from ..consts import BOTTOM_WEB_CLEAR_HTML
 from .widgets import FlexiblePushButton, get_flexible_bottom_bar
 
 
@@ -32,7 +33,7 @@ class FlexibleDeckBrowser(DeckBrowser):
                 button.setToolTip(tr.actions_shortcut_key(val=shortcut(keyboard_shortcut)))
 
     def _clear_bottom_web(self) -> None:
-        self.bottom.web.setHtml("<style>body {margin:0;} html {height:0;}</style>")
+        self.bottom.web.setHtml(BOTTOM_WEB_CLEAR_HTML)
 
     def _drawButtons(self) -> None:
         self._clear_bottom_web()
