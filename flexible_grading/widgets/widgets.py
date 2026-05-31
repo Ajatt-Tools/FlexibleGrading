@@ -148,7 +148,7 @@ class FlexibleTimerLabel(QLabel):
         self._time = 0  # current time (seconds)
         self._max_time = 0  # maximum time (seconds); 0 means unset
         self._qtimer = QTimer(self)
-        self._qtimer.setInterval(1000)
+        self._qtimer.setInterval(TIMER_INTERVAL_MS)
         qconnect(self._qtimer.timeout, self._on_tick)
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
