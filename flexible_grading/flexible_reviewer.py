@@ -4,7 +4,7 @@
 import aqt.webview
 from anki.scheduler.v3 import Scheduler as V3Scheduler
 from aqt import gui_hooks, mw
-from aqt.utils import showWarning
+from aqt.utils import show_warning
 from aqt.webview import AnkiWebViewKind
 
 from .config import config
@@ -33,7 +33,7 @@ def on_main_window_did_init() -> None:
         return
     assert mw.col, "collection should be available"
     if not isinstance(mw.col.sched, V3Scheduler):
-        showWarning("Flexible Reviewer requires the V3 scheduler. Feature disabled.")
+        show_warning("Flexible Reviewer requires the V3 scheduler. Feature disabled.")
         return
     mw.deckBrowser = FlexibleDeckBrowser(mw)
     mw.reviewer = FlexibleReviewer(mw, config)
