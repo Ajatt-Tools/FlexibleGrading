@@ -21,16 +21,10 @@ class FlexibleDeckBrowser(DeckBrowser):
         bar.right_bucket.reset(is_visible=False)
         bar.middle_bucket.reset(is_visible=True)
 
-        draw_links = deepcopy(self.drawLinks)
-        pycmds = {
-            "shared": self._onShared,
-            "create": self._on_create,
-            "import": self.mw.onImport,
-        }
-        for keyboard_shortcut, pycmd, button_text in draw_links:
+        for keyboard_shortcut, pycmd, button_text in deepcopy(self.drawLinks):
             button = bar.middle_bucket.add_button(
                 FlexiblePushButton(text=button_text),
-                on_clicked=functools.partial(pycmds[pycmd]),
+                on_clicked=functools.partial(self._linkHandler, pycmd),
             )
             if keyboard_shortcut:
                 button.setToolTip(tr.actions_shortcut_key(val=shortcut(keyboard_shortcut)))

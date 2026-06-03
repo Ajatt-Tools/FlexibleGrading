@@ -3,7 +3,6 @@
 import functools
 
 from aqt import tr
-from aqt.deckoptions import display_options_for_deck
 from aqt.overview import Overview
 from aqt.utils import shortcut
 
@@ -21,22 +20,13 @@ class FlexibleOverview(Overview):
         bar.right_bucket.reset(is_visible=False)
         bar.middle_bucket.reset(is_visible=True)
 
-        links = self._make_bottom_links()
-        pycmds = {
-            "opts": lambda: display_options_for_deck(self.mw.col.decks.current()),
-            "refresh": lambda: self.rebuild_current_filtered_deck(),
-            "empty": lambda: self.empty_current_filtered_deck(),
-            "studymore": lambda: self.onStudyMore(),
-            "unbury": lambda: self.on_unbury(),
-            "description": lambda: self.edit_description(),
-        }
-        for keyboard_shortcut, pycmd, button_text in links:
+        for keyboard_shortcut, pycmd, button_text in self._make_bottom_links():
             if len(keyboard_shortcut) == 1:
                 # if shortcut is one letter
                 button_text += f"[{keyboard_shortcut}]"
             button = bar.middle_bucket.add_button(
                 FlexiblePushButton(text=button_text),
-                on_clicked=functools.partial(pycmds[pycmd]),
+                on_clicked=functools.partial(self._linkHandler, pycmd),
             )
             if keyboard_shortcut:
                 button.setToolTip(tr.actions_shortcut_key(val=shortcut(keyboard_shortcut)))
