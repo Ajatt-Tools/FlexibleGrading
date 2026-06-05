@@ -37,6 +37,20 @@ path = "flexible_grading/__about__.py"
 [tool.hatch.build.hooks.vcs]
 version-file = "flexible_grading/__about__.py"
 
+[tool.hatch.envs.hatch-test]
+# https://hatch.pypa.io/latest/config/internal/testing/
+# https://hatch.pypa.io/latest/tutorials/testing/overview/
+dependencies = [
+    "mypy>=1.0.0",
+    "pytest",
+    "pytest-asyncio",
+    "pytest-xdist",
+    "aqt",
+]
+system-packages = true
+parallel = true
+randomize = true
+
 [tool.hatch.envs.dev]
 dependencies = [
   "mypy>=1.0.0",
