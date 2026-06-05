@@ -3,7 +3,7 @@
 import enum
 
 from .ajt_common.addon_config import AddonConfigManager, ConfigSubViewBase
-from .consts import FALLBACK_LABEL_COLOR
+from .consts import DEFAULT_TEXT_COLOR
 
 
 class ScrollKeysConfig(ConfigSubViewBase):
@@ -91,7 +91,7 @@ class FlexibleGradingConfig(AddonConfigManager):
 
     def get_label_color(self, label: str) -> str:
         """Returns color for answer button, e.g. 'again'=>'red', 'hard'=>'yellow'."""
-        return self._config["colors"].get(label.lower(), FALLBACK_LABEL_COLOR)
+        return self._config["colors"].get(label.lower(), DEFAULT_TEXT_COLOR)
 
     @property
     def colors(self) -> dict[str, str]:
