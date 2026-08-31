@@ -10,6 +10,7 @@ from aqt.main import MainWindowState
 from aqt.reviewer import Reviewer
 
 from .config import config
+from .top_toolbar import LastEase
 
 
 def answer_card(self: Reviewer, grade: str):
@@ -64,7 +65,12 @@ def scroll_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
     ]
 
 
+def get_last_ease_instance() -> LastEase:
+    return getattr(mw, "ajt__flexible_grading__last_ease")
+
+
 def new_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
+    last_ease = get_last_ease_instance()
     return [
         *number_shortcuts(self),
         *[
@@ -72,7 +78,7 @@ def new_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
             for answer in enabled_answer_buttons()
         ],
         (config.get_key("undo"), self.mw.undo),
-        (config.get_key("last_card"), self.mw.ajt__flexible_grading__last_ease.open_last_card),
+        (config.get_key("last_card"), last_ease.open_last_card),
         *scroll_shortcuts(self),
     ]
 
