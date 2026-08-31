@@ -10,7 +10,7 @@ name = "flexible_grading"
 dynamic = ["version"]
 description = "Bring keyboard-driven reviewing to Anki"
 readme = "README.md"
-requires-python = "~=3.9" # anki officially only runs on 3.9
+requires-python = "~=3.10" # anki officially only runs on 3.10
 license = { file = "LICENSE" }
 keywords = ["ajatt"]
 authors = [
@@ -19,7 +19,7 @@ authors = [
 ]
 classifiers = [
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
 ]
 dependencies = []
 
@@ -60,11 +60,11 @@ dependencies = [
   "pytest",
   "pyupgrade",
 ]
-python = "3.9"
+python = "3.10"
 
 [[tool.hatch.envs.dev.matrix]]
 # https://hatch.pypa.io/latest/tutorials/testing/overview/#testing-projects
-python = ["3.9", ]
+python = ["3.10", ]
 
 [tool.hatch.envs.dev.scripts]
 # run as `hatch run dev:scriptname`
@@ -103,3 +103,24 @@ profile = "black"
 
 [tool.basedpyright]
 reportUnusedCallResult = false
+
+[tool.hatch.envs.hatch-static-analysis]
+# https://hatch.pypa.io/latest/how-to/static-analysis/behavior/
+dependencies = [
+    "black",
+    "flake8",
+    "isort",
+    "pyupgrade",
+]
+
+[tool.hatch.envs.hatch-static-analysis.scripts]
+format-check = [
+    "black --check --diff {args:.}",
+    "isort --check-only --diff {args:.}",
+]
+format-fix = [
+    # run as: hatch fmt -f
+    "bash \"$(git rev-parse --show-toplevel)/scripts/format.sh\" ",
+]
+lint-check = "flake8 --max-line-length 120 {args:.}"
+lint-fix = "lint-check"
