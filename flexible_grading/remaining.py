@@ -2,7 +2,8 @@
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
 import re
-from typing import Callable, Optional
+from collections.abc import Callable
+from typing import Optional
 
 from anki.collection import Collection
 from anki.hooks import wrap

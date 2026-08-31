@@ -1,8 +1,8 @@
 # Copyright: Ren Tatsumoto <tatsu at autistici.org>
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 import functools
-from collections.abc import Iterable
-from typing import Callable, Literal, cast
+from collections.abc import Callable, Iterable
+from typing import Literal, cast
 
 from anki.hooks import wrap
 from aqt import gui_hooks, mw

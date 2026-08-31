@@ -3,8 +3,7 @@
 
 import json
 import re
-from collections.abc import Sequence
-from typing import Callable
+from collections.abc import Callable, Sequence
 
 from anki.cards import Card
 from anki.hooks import wrap
