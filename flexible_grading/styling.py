@@ -14,7 +14,7 @@ REVIEWER_CSS_PATH: Final[pathlib.Path] = pathlib.Path(__file__).parent / "web/aj
 assert REVIEWER_CSS_PATH.is_file(), "reviewer CSS must exist"
 
 
-def on_webview_will_set_content(web_content: WebContent, context: Optional[Any]) -> None:
+def on_webview_will_set_content(web_content: WebContent, context: Any | None) -> None:
     if not isinstance(context, ReviewerBottomBar):
         # not bottom bar, do not modify content
         return

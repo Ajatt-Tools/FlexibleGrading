@@ -34,7 +34,7 @@ class FlexiblePushButton(QPushButton):
         *,
         text_color: str = DEFAULT_TEXT_COLOR,
         text_underline: bool = False,
-        parent: Optional[QWidget] = None,
+        parent: QWidget | None = None,
     ) -> None:
         """Create a flat push button with the given text, color, and optional underline."""
         super().__init__(text, parent)
@@ -146,7 +146,7 @@ class FlexibleBottomBar(FlexibleHorizontalBar):
 class FlexibleTimerLabel(QLabel):
     """A label that counts up from 0 and turns red when the time limit is reached."""
 
-    def __init__(self, parent: Optional[QWidget] = None) -> None:
+    def __init__(self, parent: QWidget | None = None) -> None:
         """Initialize the timer label with a one-second tick interval."""
         super().__init__(parent)
         self._time = 0  # current time (seconds)

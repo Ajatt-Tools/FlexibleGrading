@@ -39,7 +39,7 @@ class ScrollAmountSpinBox(QSpinBox):
     _default_allowed_range: tuple[int, int] = (10, 1000)
     _single_step_amount: int = 10
 
-    def __init__(self, parent=None, initial_value: Optional[int] = None) -> None:
+    def __init__(self, parent=None, initial_value: int | None = None) -> None:
         super().__init__(parent)
         self.setRange(*self._default_allowed_range)
         self.setSingleStep(self._single_step_amount)

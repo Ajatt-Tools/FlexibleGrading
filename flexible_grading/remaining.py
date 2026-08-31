@@ -19,7 +19,7 @@ def strip_html_tags(s: str) -> str:
     return re.sub(HTML_TAG, "", s)
 
 
-def to_number(s: str) -> Optional[int]:
+def to_number(s: str) -> int | None:
     try:
         return int(s.strip())
     except ValueError:

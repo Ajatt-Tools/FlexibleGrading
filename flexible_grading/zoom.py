@@ -36,7 +36,7 @@ def set_zoom_factor(state: str, factor: float):
         tooltip(f"{state.capitalize()} zoom: {mw.web.zoomFactor() * 100:.0f}%", period=1000)
 
 
-def on_state_change(new_state: Optional[str], _old_state: Optional[str]) -> None:
+def on_state_change(new_state: str | None, _old_state: str | None) -> None:
     if config["set_zoom_shortcuts"]:
         set_zoom_shortcuts()
     else:

@@ -46,7 +46,7 @@ NO_QUEUE = NoQueue.SENTINEL
 class FlexibleReviewer(Reviewer):
     """Card reviewer that renders answer buttons as native Qt widgets instead of HTML."""
 
-    timer: Optional[FlexibleTimerLabel] = None
+    timer: FlexibleTimerLabel | None = None
 
     def __init__(self, mw: AnkiQt, config: FlexibleGradingConfig) -> None:
         """Initialize the flexible reviewer with the given config."""
@@ -81,7 +81,7 @@ class FlexibleReviewer(Reviewer):
             on_clicked=partial(self.showContextMenu),
         )
 
-    def browse_queue(self, queue_type: Union[int, NoQueue]) -> None:
+    def browse_queue(self, queue_type: int | NoQueue) -> None:
         """Open the card browser filtered to the given queue type."""
         if queue_type == QueuedCards.LEARNING:
             queue_type = "learn"
@@ -128,7 +128,7 @@ class FlexibleReviewer(Reviewer):
                 on_clicked=partial(self._answerCard, cast(Literal[1, 2, 3, 4], ease)),
             )
 
-    def _get_counts(self) -> dict[Union[int, NoQueue], Union[int, str]]:
+    def _get_counts(self) -> dict[int | NoQueue, int | str]:
         """Return remaining card counts keyed by queue type.
 
         The keys are QueuedCards int constants when showing per-queue counts,
