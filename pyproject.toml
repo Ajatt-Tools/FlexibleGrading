@@ -45,8 +45,10 @@ dependencies = [
     "pytest",
     "pytest-asyncio",
     "pytest-xdist",
-    "aqt",
+    "aqt>=26.8", # needed to run Anki addon tests
+    "beartype",
 ]
+python = "3.10"
 system-packages = true
 parallel = true
 randomize = true
