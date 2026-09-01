@@ -3,7 +3,6 @@
 
 import re
 from collections.abc import Callable
-from typing import Optional
 
 from anki.collection import Collection
 from anki.hooks import wrap

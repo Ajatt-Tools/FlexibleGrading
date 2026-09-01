@@ -4,7 +4,7 @@ import enum
 import typing
 from collections.abc import Mapping
 from functools import partial
-from typing import Any, Literal, Optional, Union, cast
+from typing import Literal, cast
 
 import aqt
 import aqt.browser
@@ -15,7 +15,6 @@ from anki.scheduler.v3 import (
 from anki.scheduler.v3 import Scheduler as V3Scheduler
 from anki.utils import html_to_text_line
 from aqt import AnkiQt
-from aqt.qt import *
 from aqt.reviewer import Reviewer
 from aqt.utils import (
     tr,

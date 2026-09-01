@@ -1,7 +1,7 @@
 # Copyright: Ajatt-Tools and contributors; https://github.com/Ajatt-Tools
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 import pathlib
-from typing import Any, Final, Optional
+from typing import Any, Final
 
 from aqt import gui_hooks, mw
 from aqt.reviewer import ReviewerBottomBar

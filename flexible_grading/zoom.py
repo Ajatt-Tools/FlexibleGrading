@@ -1,8 +1,6 @@
 # Copyright: Ren Tatsumoto <tatsu at autistici.org>
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
-from typing import Optional
-
 from aqt import gui_hooks, mw
 from aqt.qt import *
 from aqt.utils import tooltip
