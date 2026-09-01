@@ -66,6 +66,7 @@ def scroll_shortcuts(self: Reviewer) -> list[tuple[str, Callable]]:
 
 
 def get_last_ease_instance() -> LastEase:
+    """Return the LastEase instance initialized on Anki's main window."""
     return getattr(mw, "ajt__flexible_grading__last_ease")
 
 
