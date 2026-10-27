@@ -36,3 +36,11 @@ updates:
         update-types:
           - "minor"
           - "patch"
+
+  # Git submodules (flexible_grading/ajt_common)
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "area/dependencies"
