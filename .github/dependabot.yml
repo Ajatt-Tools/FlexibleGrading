@@ -1,3 +1,4 @@
+# Adapted from https://github.com/Ajatt-Tools/PasteImagesAsWebP/blob/ef04c792a1227c06538ada440c16305f0303c395/.github/dependabot.yml
 version: 2
 updates:
   # GitHub Actions
