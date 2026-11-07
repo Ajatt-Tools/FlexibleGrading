@@ -105,12 +105,14 @@ profile = "black"
 reportUnusedCallResult = false
 
 [tool.hatch.envs.hatch-static-analysis]
+# pyupgrade>=3.22 needs Python 3.11+. Keep the tool runtime separate from Anki's compatibility target.
+python = "3.14"
 # https://hatch.pypa.io/latest/how-to/static-analysis/behavior/
 dependencies = [
     "black",
     "flake8",
     "isort",
-    "pyupgrade",
+    "pyupgrade>=3.22",
 ]
 
 [tool.hatch.envs.hatch-static-analysis.scripts]
